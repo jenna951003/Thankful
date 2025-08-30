@@ -36,10 +36,28 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 }
 
 
+// Validate ../../app/[locale]/onboarding/[step]/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/onboarding/[step]/page.js")
+  handler satisfies AppPageConfig<"/[locale]/onboarding/[step]">
+}
+
+// Validate ../../app/[locale]/onboarding/complete/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/onboarding/complete/page.js")
+  handler satisfies AppPageConfig<"/[locale]/onboarding/complete">
+}
+
 // Validate ../../app/[locale]/page.tsx
 {
   const handler = {} as typeof import("../../app/[locale]/page.js")
   handler satisfies AppPageConfig<"/[locale]">
+}
+
+// Validate ../../app/[locale]/splash/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/splash/page.js")
+  handler satisfies AppPageConfig<"/[locale]/splash">
 }
 
 // Validate ../../app/page.tsx
@@ -58,6 +76,12 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   const handler = {} as typeof import("../../app/[locale]/layout.js")
   handler satisfies LayoutConfig<"/[locale]">
+}
+
+// Validate ../../app/[locale]/onboarding/layout.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/onboarding/layout.js")
+  handler satisfies LayoutConfig<"/[locale]/onboarding">
 }
 
 // Validate ../../app/layout.tsx

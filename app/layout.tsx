@@ -6,7 +6,8 @@ import {
   Sour_Gummy,
   Hubballi,
   Dongle,
-  Noto_Serif_KR
+  Noto_Serif_KR,
+  Nanum_Brush_Script
 } from 'next/font/google'
 import './globals.css'
 
@@ -59,6 +60,13 @@ const notoSerifKR = Noto_Serif_KR({
   display: 'swap'
 })
 
+const nanumBrushScript = Nanum_Brush_Script({ 
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-nanum-brush-script',
+  display: 'swap'
+})
+
 export const metadata: Metadata = {
   title: 'Thankful - 감사 일기',
   description: '감사함을 기록하고 나누는 앱',
@@ -70,19 +78,32 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" style={{ backgroundColor: 'rgb(238, 234, 217)' }} data-scroll-behavior="smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            html, body {
+              background-color: rgb(238, 234, 217) !important;
+              margin: 0;
+              padding: 0;
+            }
+          `
+        }} />
       </head>
-      <body className={`
-        ${inter.variable} 
-        ${jua.variable}
-        ${fascinate.variable}
-        ${sourGummy.variable}
-        ${hubballi.variable}
-        ${dongle.variable}
-        ${notoSerifKR.variable}
-      `}>
+      <body 
+        className={`
+          ${inter.variable} 
+          ${jua.variable}
+          ${fascinate.variable}
+          ${sourGummy.variable}
+          ${hubballi.variable}
+          ${dongle.variable}
+          ${notoSerifKR.variable}
+          ${nanumBrushScript.variable}
+        `}
+        style={{ backgroundColor: 'rgb(238, 234, 217)' }}
+      >
         {children}
       </body>
     </html>

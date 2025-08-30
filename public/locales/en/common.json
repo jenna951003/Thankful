@@ -8,5 +8,162 @@
   },
   "splash": {
     "message": "Thank you, Lord"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to Thankful",
+      "subtitle": "Fill your heart with gratitude\nthrough spiritual journaling",
+      "startButton": "Get Started",
+      "signInButton": "I already have an account"
+    },
+    "faith": {
+      "title": "What kind of Christian are you?",
+      "subtitle": "Let us know for a more personalized experience",
+      "options": {
+        "protestant": "Protestant",
+        "catholic": "Catholic", 
+        "orthodox": "Orthodox",
+        "other": "Other",
+        "exploring": "I'm exploring"
+      },
+      "laterButton": "Later",
+      "nextButton": "Next"
+    },
+    "experience": {
+      "title": "Have you written a gratitude journal before?",
+      "subtitle": "We'll help you find the right starting point",
+      "options": {
+        "frequent": {
+          "label": "I write often",
+          "description": "We'll recommend advanced features"
+        },
+        "sometimes": {
+          "label": "Sometimes", 
+          "description": "We'll provide intermediate guidance"
+        },
+        "beginner": {
+          "label": "This is my first time",
+          "description": "We'll guide you step by step from the basics"
+        }
+      },
+      "nextButton": "Continue"
+    },
+    "interests": {
+      "title": "What would you like to\nexpress more gratitude for?",
+      "subtitle": "We'll prepare customized prompts for you",
+      "note": "Multiple selections allowed",
+      "options": {
+        "daily": "Daily little things",
+        "family": "Family and relationships", 
+        "guidance": "God's guidance",
+        "health": "Health and life",
+        "dreams": "Dreams and vision",
+        "prayers": "Prayer answers",
+        "community": "Church community"
+      },
+      "selectedCount": " selected",
+      "nextButton": "Continue",
+      "skipButton": "Skip"
+    },
+    "notifications": {
+      "title": "Shall we build a\ngratitude habit?",
+      "subtitle": "Daily gratitude reminders",
+      "timeOptions": {
+        "morning": {
+          "label": "8 AM",
+          "description": "After morning prayer"
+        },
+        "evening": {
+          "label": "6 PM",
+          "description": "On the way home"
+        },
+        "night": {
+          "label": "9 PM", 
+          "description": "Before bedtime"
+        },
+        "none": {
+          "label": "Don't set",
+          "description": "I'll set it up later"
+        }
+      },
+      "weeklyReview": {
+        "title": "Weekly review reminder",
+        "description": "Sunday evening (weekly reflection)"
+      },
+      "nextButton": "Continue"
+    },
+    "firstGratitude": {
+      "title": "Record your first\ngratitude",
+      "subtitle": "Is there something you're grateful to God for today?",
+      "placeholder": ". Write something you're grateful for...",
+      "tip": {
+        "title": "Tip",
+        "description": "Even small things are great! \"A warm cup of coffee\", \"A safe day\", etc."
+      },
+      "mood": {
+        "title": "How are you feeling right now?",
+        "options": {
+          "joyful": "Joyful",
+          "peaceful": "Peaceful", 
+          "grateful": "Grateful",
+          "hopeful": "Hopeful",
+          "blessed": "Blessed"
+        }
+      },
+      "saveButton": "Save and Continue",
+      "skipButton": "Skip"
+    },
+    "subscription": {
+      "title": "Start a deeper journey\nof gratitude",
+      "subtitle": "Enrich your gratitude life with Premium",
+      "features": {
+        "prompts": {
+          "title": "1000+ Gratitude Prompts",
+          "description": "Customized questions for various situations"
+        },
+        "ai": {
+          "title": "AI Personal Analysis",
+          "description": "Gratitude pattern analysis and insights"
+        },
+        "reports": {
+          "title": "Gratitude Growth Reports", 
+          "description": "Monthly/annual gratitude journey reports"
+        },
+        "notes": {
+          "title": "Sermon & Prayer Notes",
+          "description": "Integrated management of Word and prayer records"
+        },
+        "community": {
+          "title": "Faith Community",
+          "description": "Share gratitude together"
+        }
+      },
+      "pricing": {
+        "trial": "7-day free trial",
+        "price": "Then $4.99/month",
+        "cancel": "Cancel anytime"
+      },
+      "startTrialButton": "Start Free Trial ✨",
+      "exploreButton": "I'll explore later",
+      "terms": "You can cancel anytime before the free trial period ends.\nBy subscribing, you agree to the Terms of Service and Privacy Policy."
+    },
+    "complete": {
+      "title": "Onboarding completed! 🎉",
+      "subtitle": "You're ready to start your gratitude journey.\nRedirecting to the main screen soon..."
+    }
+  },
+  "main": {
+    "welcome": {
+      "title": "Welcome!",
+      "subtitle": "Your gratitude journey has begun.\nDiscover and record\nsmall blessings every day.",
+      "startButton": "Start Gratitude Journal",
+      "onboardingButton": "View Onboarding Again"
+    },
+    "development": {
+      "title": "Under Development",
+      "subtitle": "The main gratitude journal features\nwill be available soon!",
+      "backButton": "Back to Welcome Screen", 
+      "retryButton": "Experience Onboarding Again"
+    }
   }
 }

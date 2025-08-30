@@ -7,6 +7,163 @@
     "button": "스플래시 페이지로 가기"
   },
   "splash": {
-    "message": "Thank you, Lord"
+    "message": "주님, 감사합니다"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome to Thankful",
+      "subtitle": "감사의 마음으로 채워가는\n영적 저널링",
+      "startButton": "시작하기",
+      "signInButton": "이미 계정이 있어요"
+    },
+    "faith": {
+      "title": "당신은 어떤 기독교인인가요?",
+      "subtitle": "더 맞춤화된 경험을 위해 알려주세요",
+      "options": {
+        "protestant": "개신교",
+        "catholic": "가톨릭",
+        "orthodox": "정교회",
+        "other": "기타",
+        "exploring": "탐구 중이에요"
+      },
+      "laterButton": "나중에",
+      "nextButton": "다음"
+    },
+    "experience": {
+      "title": "감사 일기 써본 적 있어요?",
+      "subtitle": "당신에게 맞는 시작점을 찾아드릴게요",
+      "options": {
+        "frequent": {
+          "label": "자주 써요",
+          "description": "고급 기능을 추천해드릴게요"
+        },
+        "sometimes": {
+          "label": "가끔 써봤어요", 
+          "description": "중급 가이드로 안내해드릴게요"
+        },
+        "beginner": {
+          "label": "처음이에요",
+          "description": "기초부터 차근차근 알려드릴게요"
+        }
+      },
+      "nextButton": "다음으로"
+    },
+    "interests": {
+      "title": "어떤 것에 감사를\n더 표현하고 싶나요?",
+      "subtitle": "맞춤 프롬프트를 준비해드릴게요",
+      "note": "복수 선택 가능해요",
+      "options": {
+        "daily": "일상의 작은 것들",
+        "family": "가족과 관계", 
+        "guidance": "하나님의 인도하심",
+        "health": "건강과 생명",
+        "dreams": "꿈과 비전",
+        "prayers": "기도 응답",
+        "community": "교회 공동체"
+      },
+      "selectedCount": "개 선택됨",
+      "nextButton": "다음으로",
+      "skipButton": "건너뛰기"
+    },
+    "notifications": {
+      "title": "감사 습관을\n만들어볼까요?",
+      "subtitle": "매일 감사 리마인더",
+      "timeOptions": {
+        "morning": {
+          "label": "오전 8시",
+          "description": "새벽 기도 후"
+        },
+        "evening": {
+          "label": "오후 6시",
+          "description": "퇴근길"
+        },
+        "night": {
+          "label": "오후 9시", 
+          "description": "잠들기 전"
+        },
+        "none": {
+          "label": "설정하지 않음",
+          "description": "나중에 설정할게요"
+        }
+      },
+      "weeklyReview": {
+        "title": "주간 리뷰 알림",
+        "description": "일요일 저녁 (한 주 돌아보기)"
+      },
+      "nextButton": "다음으로"
+    },
+    "firstGratitude": {
+      "title": "첫 번째 감사를\n기록해보세요",
+      "subtitle": "오늘 하나님께 감사한 일이 있다면?",
+      "placeholder": ". 감사한 일을 적어보세요...",
+      "tip": {
+        "title": "팁",
+        "description": "아주 작은 것도 좋아요! \"따뜻한 커피 한 잔\", \"안전한 하루\" 등"
+      },
+      "mood": {
+        "title": "지금 기분은 어떤가요?",
+        "options": {
+          "joyful": "기쁨",
+          "peaceful": "평안", 
+          "grateful": "감사",
+          "hopeful": "소망",
+          "blessed": "축복"
+        }
+      },
+      "saveButton": "저장하고 계속",
+      "skipButton": "건너뛰기"
+    },
+    "subscription": {
+      "title": "더 깊은 감사 여정을\n시작해보세요",
+      "subtitle": "프리미엄으로 더욱 풍성한 감사 생활을",
+      "features": {
+        "prompts": {
+          "title": "1000+ 감사 프롬프트",
+          "description": "다양한 상황별 맞춤 질문들"
+        },
+        "ai": {
+          "title": "AI 개인 맞춤 분석",
+          "description": "감사 패턴 분석과 인사이트 제공"
+        },
+        "reports": {
+          "title": "감사 성장 리포트", 
+          "description": "월간/연간 감사 여정 리포트"
+        },
+        "notes": {
+          "title": "설교노트 & 기도노트",
+          "description": "말씀과 기도 기록 통합 관리"
+        },
+        "community": {
+          "title": "믿음의 커뮤니티",
+          "description": "함께 나누는 감사의 교제"
+        }
+      },
+      "pricing": {
+        "trial": "7일 무료 체험",
+        "price": "그 후 월 $4.99",
+        "cancel": "언제든 취소 가능"
+      },
+      "startTrialButton": "무료로 시작하기 ✨",
+      "exploreButton": "나중에 둘러볼게요",
+      "terms": "무료 체험 기간 종료 전 언제든 취소하실 수 있습니다.\n구독 시 이용약관 및 개인정보처리방침에 동의하게 됩니다."
+    },
+    "complete": {
+      "title": "온보딩이 완료되었습니다! 🎉",
+      "subtitle": "감사의 여정을 시작할 준비가 되었어요.\n곧 메인 화면으로 이동합니다..."
+    }
+  },
+  "main": {
+    "welcome": {
+      "title": "환영합니다!",
+      "subtitle": "감사의 여정이 시작되었습니다.\n매일 작은 은혜들을 발견하고\n기록해보세요.",
+      "startButton": "감사 일기 시작하기",
+      "onboardingButton": "온보딩 다시 보기"
+    },
+    "development": {
+      "title": "개발 중입니다",
+      "subtitle": "감사 일기 메인 기능은\n곧 만나보실 수 있습니다!",
+      "backButton": "환영 화면으로 돌아가기", 
+      "retryButton": "온보딩 다시 체험하기"
+    }
   }
 }

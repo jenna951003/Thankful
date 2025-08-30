@@ -8,5 +8,13 @@
   },
   "splash": {
     "message": "Gracias, Señor"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenido a Thankful",
+      "subtitle": "Llena tu corazón de gratitud\ncon el diario espiritual",
+      "startButton": "Comenzar",
+      "signInButton": "Ya tengo una cuenta"
+    }
   }
 }
