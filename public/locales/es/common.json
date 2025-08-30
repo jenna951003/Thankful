@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Thankful"
+  },
+  "welcome": {
+    "message": "¡Bienvenido a la aplicación de diario de gratitud!",
+    "button": "Ir a la página de presentación"
+  },
+  "splash": {
+    "message": "Gracias, Señor"
+  }
+}

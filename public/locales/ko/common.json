@@ -1,0 +1,12 @@
+{
+  "app": {
+    "title": "Thankful"
+  },
+  "welcome": {
+    "message": "감사 일기 앱에 오신 것을 환영합니다!",
+    "button": "스플래시 페이지로 가기"
+  },
+  "splash": {
+    "message": "Thank you, Lord"
+  }
+}
