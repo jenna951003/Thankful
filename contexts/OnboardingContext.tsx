@@ -20,6 +20,7 @@ export interface OnboardingData {
 interface OnboardingState {
   currentStep: number
   data: OnboardingData
+  isTransitioning: boolean
 }
 
 type OnboardingAction = 
@@ -29,6 +30,7 @@ type OnboardingAction =
   | { type: 'SET_INTERESTS'; payload: string[] }
   | { type: 'SET_NOTIFICATIONS'; payload: { dailyTime: string | null; weeklyReview: boolean } }
   | { type: 'SET_FIRST_GRATITUDE'; payload: { items: string[]; photo?: string; mood?: string } }
+  | { type: 'START_TRANSITION' }
   | { type: 'RESET' }
 
 const initialState: OnboardingState = {
@@ -44,13 +46,14 @@ const initialState: OnboardingState = {
     firstGratitude: {
       items: []
     }
-  }
+  },
+  isTransitioning: false
 }
 
 function onboardingReducer(state: OnboardingState, action: OnboardingAction): OnboardingState {
   switch (action.type) {
     case 'SET_STEP':
-      return { ...state, currentStep: action.payload }
+      return { ...state, currentStep: action.payload, isTransitioning: false }
     
     case 'SET_FAITH_BACKGROUND':
       return {
@@ -82,6 +85,14 @@ function onboardingReducer(state: OnboardingState, action: OnboardingAction): On
         data: { ...state.data, firstGratitude: action.payload }
       }
     
+    case 'START_TRANSITION':
+      return {
+        ...state,
+        isTransitioning: true
+      }
+    
+
+    
     case 'RESET':
       return initialState
     
@@ -98,6 +109,7 @@ interface OnboardingContextType {
   setInterests: (interests: string[]) => void
   setNotifications: (notifications: { dailyTime: string | null; weeklyReview: boolean }) => void
   setFirstGratitude: (gratitude: { items: string[]; photo?: string; mood?: string }) => void
+  startTransition: () => void
   reset: () => void
 }
 
@@ -116,6 +128,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'SET_NOTIFICATIONS', payload: notifications }),
     setFirstGratitude: (gratitude: { items: string[]; photo?: string; mood?: string }) => 
       dispatch({ type: 'SET_FIRST_GRATITUDE', payload: gratitude }),
+    startTransition: () => dispatch({ type: 'START_TRANSITION' }),
     reset: () => dispatch({ type: 'RESET' })
   }
 

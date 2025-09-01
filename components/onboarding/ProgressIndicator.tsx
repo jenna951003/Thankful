@@ -17,10 +17,10 @@ export default function ProgressIndicator() {
         return (
           <div
             key={stepNumber}
-            className="flex-1 h-1 rounded-full overflow-hidden bg-[#d8d3ba]"
+            className="flex-1 h-1 rounded-full overflow-hidden bg-[#c8c6b1] relative retro-progress-bar"
           >
             <div
-              className={`h-full transition-all duration-300 ease-out ${
+              className={`h-full transition-all duration-300 ease-out relative ${
                 isCompleted 
                   ? 'w-full' 
                   : isActive 
@@ -29,7 +29,7 @@ export default function ProgressIndicator() {
               }`}
               style={{
                 background: isCompleted || isActive ? 
-                  'linear-gradient(90deg, #b8a085 0%,rgb(167, 168, 130) 25%, #87a674 50%, #7ba470 75%,rgb(73, 109, 67) 100%)' : 
+                  'linear-gradient(90deg,rgb(165, 147, 90),rgb(78, 148, 50))' : 
                   'transparent',
                 animation: isActive ? 'progressFill 0.8s ease-out forwards' : undefined
               }}
@@ -50,6 +50,37 @@ export default function ProgressIndicator() {
         
         .animate-progress-fill {
           animation: progressFill 0.8s ease-out forwards;
+        }
+
+        /* 레트로 스크린 효과 */
+        .retro-progress-bar::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 1px,
+            rgba(255, 255, 255, 0.09) 1px,
+            rgba(255, 255, 255, 0.06) 2px
+          );
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        .retro-progress-bar::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: 
+          z-index: 2;
+          pointer-events: none;
         }
       `}</style>
     </div>

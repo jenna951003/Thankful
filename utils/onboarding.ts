@@ -32,7 +32,7 @@ export function resetOnboarding(): void {
   }
 }
 
-export const TOTAL_ONBOARDING_STEPS = 7
+export const TOTAL_ONBOARDING_STEPS = 8
 
 export function getStepProgress(currentStep: number): number {
   return (currentStep / TOTAL_ONBOARDING_STEPS) * 100

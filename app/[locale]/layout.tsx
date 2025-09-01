@@ -1,4 +1,5 @@
 import { TranslationProvider } from '../../contexts/TranslationProvider'
+import { AuthProvider } from '../../contexts/AuthProvider'
 
 export async function generateStaticParams() {
   return [
@@ -21,10 +22,12 @@ export default async function LocaleLayout({
   const { locale } = await params
 
   return (
-    <TranslationProvider locale={locale}>
-      <div className="locale-wrapper">
-        {children}
-      </div>
-    </TranslationProvider>
+    <AuthProvider>
+      <TranslationProvider locale={locale}>
+        <div className="locale-wrapper">
+          {children}
+        </div>
+      </TranslationProvider>
+    </AuthProvider>
   )
 }

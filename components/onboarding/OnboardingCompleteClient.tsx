@@ -16,57 +16,86 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
   useEffect(() => {
     // 온보딩 완료 상태 저장
     completeOnboarding()
-    
-    // 3초 후 로케일 메인 페이지로 이동
-    const timer = setTimeout(() => {
-      router.replace(`/${locale}`)
-    }, 3000)
+  }, [])
 
-    return () => clearTimeout(timer)
-  }, [router, locale])
+  const handleStart = () => {
+    router.replace(`/${locale}`)
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center fade-in-staggered">
-      {/* 완료 애니메이션 배경 */}
-      <div className="relative mb-8">
-        {/* 중앙 체크 아이콘 */}
-        <div className="w-24 h-24 retro-green rounded-full flex items-center justify-center">
-          <svg 
-            className="w-12 h-12 text-white" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={3} 
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-        </div>
+    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+      {/* CSS 애니메이션 스타일 */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
         
-        {/* 플로팅 원형 요소들 */}
-        <div className="floating-circle floating-circle-1" style={{ width: '24px', height: '24px' }} />
-        <div className="floating-circle floating-circle-2" style={{ width: '16px', height: '16px' }} />
-        <div className="floating-circle floating-circle-3" style={{ width: '20px', height: '20px' }} />
-        <div className="floating-circle floating-circle-4" style={{ width: '12px', height: '12px' }} />
+        .fade-start { opacity: 0; }
+        
+        .fade-icon { 
+          animation: fadeIn 0.8s ease-out 0.8s forwards; 
+        }
+        
+        .fade-title { 
+          animation: fadeIn 0.8s ease-out 1.2s forwards; 
+        }
+        
+        .fade-subtitle { 
+          animation: fadeIn 0.8s ease-out 1.6s forwards; 
+        }
+        
+        .fade-loading { 
+          animation: fadeIn 0.8s ease-out 2.0s forwards; 
+        }
+
+        .simple-button {
+          transition: transform 0.15s ease-out;
+        }
+        
+        .simple-button:active {
+          transform: scale(0.98);
+        }
+      `}</style>
+
+      {/* 메인 콘텐츠 */}
+      <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
+        {/* 완료 아이콘 */}
+        <div className="mb-8 relative fade-start fade-icon">
+          <div className="flex justify-center mb-4">
+            <div className="w-36 h-36 flex items-center justify-center">
+              <img 
+                src="/Complete.png" 
+                alt="완료"
+                className="w-36 h-36 object-contain"
+              />
+            </div>
+          </div>
+          <div className="w-20 h-1 retro-meadow rounded-full mx-auto"></div>
+        </div>
+
+        {/* 타이틀 */}
+        <h1 className="text-xl -mx-2 font-extrabold text-gray-800 mb-4 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
+          모든 준비가 완료되었어요!
+        </h1>
+
+        {/* 부제목 */}
+        <p className="text-base text-gray-500 mb-6 font-bold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+          매일 작은 감사를 찾아<br />기록해보세요
+        </p>
       </div>
 
-      {/* 완료 메시지 */}
-      <h1 className="text-3xl font-bold text-gray-800 mb-4 font-jua">
-        {t('onboarding.complete.title')}
-      </h1>
-      
-      <p className="text-lg text-gray-600 mb-8 font-noto-serif-kr">
-        {t('onboarding.complete.subtitle')}
-      </p>
-
-      {/* 로딩 인디케이터 */}
-      <div className="flex space-x-2">
-        <div className="w-3 h-3 retro-blue rounded-full animate-pulse"></div>
-        <div className="w-3 h-3 retro-green rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-        <div className="w-3 h-3 retro-yellow rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+      {/* 시작하기 버튼 */}
+      <div className="w-full max-w-sm px-4 pb-4 fade-start fade-loading">
+        <button
+          onClick={handleStart}
+          className="w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg simple-button"
+          style={{ 
+            background: '#4f8750'
+          }}
+        >
+          시작하기
+        </button>
       </div>
     </div>
   )

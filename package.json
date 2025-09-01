@@ -14,12 +14,15 @@
     "@capacitor/core": "^7.4.3",
     "@capacitor/device": "^7.0.2",
     "@capacitor/ios": "^7.4.3",
+    "@supabase/supabase-js": "^2.56.1",
     "@tailwindcss/postcss": "^4.1.12",
+    "fabric": "^6.7.1",
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
+    "@modelcontextprotocol/server-filesystem": "^2025.8.21",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -27,5 +30,18 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "깔끔하게 새로 시작한 Next.js 프로젝트입니다.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jenna951003/Thankful.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jenna951003/Thankful/issues"
+  },
+  "homepage": "https://github.com/jenna951003/Thankful#readme"
 }

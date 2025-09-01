@@ -2,15 +2,24 @@
 
 import { useRouter, useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useOnboarding } from '../../contexts/OnboardingContext'
 
 export default function WelcomeScreen() {
   const router = useRouter()
   const params = useParams()
   const locale = params.locale as string
   const { t } = useTranslation()
+  const { startTransition, setStep } = useOnboarding()
 
   const handleStart = () => {
-    router.push(`/${locale}/onboarding/2`)
+    // 전환 시작
+    startTransition()
+    
+    // 페이드아웃 후 페이지 이동
+    setTimeout(() => {
+      setStep(2)
+      router.push(`/${locale}/onboarding/2`)
+    }, 400) // 400ms 후 페이지 이동 (페이드아웃 시간과 맞춤)
   }
 
   const handleSignIn = () => {
@@ -20,7 +29,7 @@ export default function WelcomeScreen() {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center p-2 relative">
+    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -31,23 +40,23 @@ export default function WelcomeScreen() {
         .fade-start { opacity: 0; }
         
         .fade-icon { 
-          animation: fadeIn 0.8s ease-out 0.8s forwards; 
+          animation: fadeIn 0.4s ease-out 0.2s forwards; 
         }
         
         .fade-title { 
-          animation: fadeIn 0.8s ease-out 1.2s forwards; 
+          animation: fadeIn 0.4s ease-out 1.0s forwards; 
         }
         
         .fade-subtitle { 
-          animation: fadeIn 0.8s ease-out 1.6s forwards; 
+          animation: fadeIn 0.4s ease-out 1.4s forwards; 
         }
         
         .fade-start-btn { 
-          animation: fadeIn 0.8s ease-out 2.0s forwards; 
+          animation: fadeIn 0.4s ease-out 1.8s forwards; 
         }
         
         .fade-signin-btn { 
-          animation: fadeIn 0.8s ease-out 2.4s forwards; 
+          animation: fadeIn 0.4s ease-out 2.2s forwards; 
         }
         
         .simple-button {
@@ -55,45 +64,45 @@ export default function WelcomeScreen() {
         }
         
         .simple-button:active {
-          transform: scale(0.95);
+          transform: scale(0.98);
         }
       `}</style>
 
       {/* 메인 콘텐츠 */}
-      <div>
+      <div className="flex-1 flex flex-col justify-start items-center px-4">
         {/* 웰컴 이미지 */}
-        <div className="mb-8 relative fade-start fade-icon">
-          <div className="flex justify-center mb-4">
+        <div className="mb-12  relative fade-start fade-icon w-full max-w-sm">
+          <div className="px-4">
             <img 
-              src="/Welcome2.png" 
+              src="/Welcome3.png" 
               alt="Welcome" 
-              className="w-42 h-42 object-contain"
+              className="w-full h-auto max-h-[30vh] object-contain rounded-2xl"
             />
           </div>
-          <div className="w-20 h-1 retro-warm rounded-full mx-auto"></div>
+          <div className="w-16 h-1 retro-warm rounded-full mx-auto mt-2"></div>
         </div>
 
         {/* 타이틀 */}
-        <h1 className="text-2xl font-bold text-gray-800 mb-4 font-sour-gummy tracking-wide fade-start fade-title">
+        <h1 className="text-2xl font-bold text-gray-800 mb-3 font-sour-gummy tracking-wide fade-start fade-title">
           {t('onboarding.welcome.title')}
         </h1>
 
         {/* 부제목 */}
-        <p className="text-lg text-gray-600 mb-16 font-semibold font-noto-serif-kr leading-relaxed max-w-sm mx-auto fade-start fade-subtitle">
+        <p className="text-lg text-gray-600 mb-8 font-semibold font-noto-serif-kr leading-relaxed max-w-sm mx-auto fade-start fade-subtitle">
           {t('onboarding.welcome.subtitle')}
         </p>
-
-        {/* 장식선 */}
-
       </div>
 
       {/* 버튼들 */}
-      <div className="w-full max-w-sm space-y-4">
+      <div className="w-full max-w-sm space-y-3 px-4 pb-4">
+        {/* Welcome4.png - 시작하기 버튼 왼쪽 */}
+
+
         {/* 시작하기 버튼 */}
         <button
           onClick={handleStart}
           className={`w-full retro-button button-screen-texture tracking-wider
-                   font-semibold py-4 px-6 text-white font-jua text-lg
+                   font-semibold py-4 px-6 text-white font-jua text-lg 
                    fade-start fade-start-btn simple-button`}
           style={{ 
             background: '#4f8750'
@@ -106,12 +115,14 @@ export default function WelcomeScreen() {
         <button
           onClick={handleSignIn}
           className={`w-full retro-card text-gray-700 font-semibold py-4 px-6 
-                   font-noto-serif-kr
+                   font-jua text-lg 
                    fade-start fade-signin-btn simple-button`}
         >
           {t('onboarding.welcome.signInButton')}
         </button>
       </div>
+
+
 
     </div>
   )

@@ -1,19 +1,21 @@
 import WelcomeScreen from '../../../../components/onboarding/WelcomeScreen'
-import FaithBackgroundScreen from '../../../../components/onboarding/FaithBackgroundScreen'
+import FirstGratitudeScreen from '../../../../components/onboarding/FirstGratitudeScreen'
+import UsagePurposeScreen from '../../../../components/onboarding/UsagePurposeScreen'
 import GratitudeExperienceScreen from '../../../../components/onboarding/GratitudeExperienceScreen'
 import InterestAreasScreen from '../../../../components/onboarding/InterestAreasScreen'
 import NotificationSettingsScreen from '../../../../components/onboarding/NotificationSettingsScreen'
-import FirstGratitudeScreen from '../../../../components/onboarding/FirstGratitudeScreen'
 import SubscriptionScreen from '../../../../components/onboarding/SubscriptionScreen'
+import OnboardingCompleteClient from '../../../../components/onboarding/OnboardingCompleteClient'
 
 const stepComponents = {
   '1': WelcomeScreen,
-  '2': FaithBackgroundScreen,
-  '3': GratitudeExperienceScreen,
+  '2': GratitudeExperienceScreen,
+  '3': UsagePurposeScreen,
   '4': InterestAreasScreen,
   '5': NotificationSettingsScreen,
   '6': FirstGratitudeScreen,
   '7': SubscriptionScreen,
+  '8': () => <OnboardingCompleteClient locale="ko" />,
 } as const
 
 interface OnboardingStepProps {

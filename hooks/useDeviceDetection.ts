@@ -336,6 +336,13 @@ export function useDeviceDetection() {
       try {
         const info = await detectDeviceInfo()
         setDeviceInfo(info)
+        
+        // CSS 변수로 세이프존 설정
+        if (typeof window !== 'undefined' && document.documentElement) {
+          document.documentElement.style.setProperty('--actual-safe-top', `${info.safeArea.top}px`)
+          document.documentElement.style.setProperty('--actual-safe-bottom', `${info.safeArea.bottom}px`)
+          console.log('🎨 CSS 변수 설정:', `top: ${info.safeArea.top}px, bottom: ${info.safeArea.bottom}px`)
+        }
       } catch (error) {
         console.error('기기 감지 에러:', error)
         setDeviceInfo({
@@ -348,7 +355,21 @@ export function useDeviceDetection() {
       }
     }
 
+    // 리사이즈 이벤트 리스너 추가 (개발자 도구에서 기기 변경 감지)
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        console.log('🔄 화면 크기 변경 감지, 기기 정보 재감지')
+        initializeDeviceInfo()
+      }
+    }
+
     initializeDeviceInfo()
+    
+    // 웹 환경에서만 리사이즈 이벤트 리스너 추가
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   return {

@@ -10,6 +10,7 @@ import {
   Nanum_Brush_Script
 } from 'next/font/google'
 import './globals.css'
+import OfflineIndicator from '../components/common/OfflineIndicator'
 
 // Google Fonts 설정
 const inter = Inter({ 
@@ -104,6 +105,7 @@ export default function RootLayout({
         `}
         style={{ backgroundColor: 'rgb(238, 234, 217)' }}
       >
+        <OfflineIndicator />
         {children}
       </body>
     </html>

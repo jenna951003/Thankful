@@ -1,112 +1,214 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { OnboardingProvider } from '../../contexts/OnboardingContext'
+import { useEffect, useState, createContext, useContext } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { OnboardingProvider, useOnboarding } from '../../contexts/OnboardingContext'
 import ProgressIndicator from './ProgressIndicator'
+import SubscriptionModal from './SubscriptionModal'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
+
+// 구독 모달 컨텍스트
+const SubscriptionModalContext = createContext<{
+  isModalOpen: boolean
+  setIsModalOpen: (open: boolean) => void
+}>({
+  isModalOpen: false,
+  setIsModalOpen: () => {}
+})
+
+export const useSubscriptionModal = () => useContext(SubscriptionModalContext)
 
 interface OnboardingLayoutClientProps {
   children: React.ReactNode
   locale: string
 }
 
-export default function OnboardingLayoutClient({ children, locale }: OnboardingLayoutClientProps) {
-  const { safeArea, isWebEnvironment } = useDeviceDetection()
+function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
+  const { isWebEnvironment } = useDeviceDetection()
   const [showProgress, setShowProgress] = useState(false)
   const [showContent, setShowContent] = useState(false)
+  const [showBottomImage, setShowBottomImage] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { state } = useOnboarding()
+  const router = useRouter()
+  const pathname = usePathname()
+
+  // 현재 스텝 번호 추출
+  const currentStep = parseInt(pathname.split('/').pop() || '1')
+  const canGoBack = currentStep > 1
+
+
 
   useEffect(() => {
+    // 페이지 변경 시 스크롤을 맨 위로 이동
+    window.scrollTo(0, 0)
+    
+    // 전환 중이면 콘텐츠를 숨김
+    if (state.isTransitioning) {
+      setShowProgress(false)
+      setShowContent(false)
+      setShowBottomImage(false)
+      return
+    }
+
     // UI 요소만 스테거드 애니메이션 (세이프존 제외)
     console.log('🎭 Starting UI-focused staggered fade-in')
     
-    // 1단계: 프로그레스 바 (300ms 후)
+    // 1단계: 프로그레스 바 (150ms 후)
     const timer1 = setTimeout(() => {
       console.log('🟠 Step 1: Showing progress bar')
       setShowProgress(true)
-    }, 300)
+    }, 150)
     
-    // 2단계: 메인 콘텐츠 (600ms 후)
+    // 2단계: 메인 콘텐츠 (300ms 후)
     const timer2 = setTimeout(() => {
       console.log('🟡 Step 2: Showing main content')
       setShowContent(true)
-    }, 600)
+    }, 300)
+
+    // 3단계: 하단 이미지 (450ms 후)
+    const timer3 = setTimeout(() => {
+      console.log('🟢 Step 3: Showing bottom image')
+      setShowBottomImage(true)
+    }, 450)
 
     return () => {
       clearTimeout(timer1)
       clearTimeout(timer2)
+      clearTimeout(timer3)
     }
-  }, [])
+  }, [state.isTransitioning, pathname])
+
+
 
   return (
-    <OnboardingProvider>
+    <SubscriptionModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
       <div 
-        className="min-h-screen relative overflow-hidden" 
         style={{ 
           background: 'var(--bg-base)',
-          touchAction: 'pan-y',
-          overscrollBehaviorX: 'none',
-          userSelect: 'none'
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          overflow: 'hidden'
         }}
       >
-        {/* 상단 세이프존 - 항상 표시 */}
-        <div 
-          style={{ 
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: `${safeArea.top}px`,
-            backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-            opacity: '0.8',
-            zIndex: 1000
-          }}
-        />
+      {/* 상단 세이프존 - 고정 표시 */}
+      <div 
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 'var(--actual-safe-top)',
+          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
+          opacity: '0.8',
+          zIndex: 1000
+        }}
+      />
 
-        {/* 프로그레스 인디케이터 */}
-        <div 
-          style={{ 
-            position: 'fixed',
-            top: `${safeArea.top + 32}px`,
-            left: '20px',
-            right: '20px',
-            zIndex: 999,
-            opacity: showProgress ? '1' : '0',
-            transition: 'opacity 1.5s ease-out'
-          }}
-        >
-          <ProgressIndicator />
-        </div>
+      {/* 프로그레스 인디케이터 */}
+      <div 
+        style={{ 
+          padding: '16px 20px 0 20px',
+          marginTop: 'var(--actual-safe-top)',
+          opacity: showProgress ? '1' : '0',
+          transition: 'opacity 0.6s ease-out',
+          flexShrink: 0,
+          position: 'relative',
+          zIndex: 10
+        }}
+      >
+        <ProgressIndicator />
+      </div>
 
-        {/* 메인 콘텐츠 영역 */}
-        <div 
-          className="flex-grow relative"
-          style={{
-            minHeight: '100vh',
-            paddingTop: `${safeArea.top + 60}px`,
-            paddingBottom: `${safeArea.bottom + 20}px`,
-            paddingLeft: '20px',
-            paddingRight: '20px',
-            opacity: showContent ? '1' : '0',
-            transition: 'opacity 1.5s ease-out'
-          }}
-        >
-          {children}
-        </div>
+      {/* 메인 콘텐츠 영역 */}
+      <div 
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '20px',
+          opacity: showContent ? '1' : '0',
+          transform: showContent ? 'translateY(0)' : 'translateY(0)',
+          transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+          minHeight: 0,
+          overflow: 'hidden',
+          position: 'relative',
+          zIndex: 10
+        }}
+      >
+        {children}
+      </div>
 
-        {/* 하단 세이프존 - 항상 표시 */}
-        <div 
+      {/* 하단 세이프존 - 고정 표시 */}
+      <div 
+        style={{ 
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 'var(--actual-safe-bottom)',
+          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
+          opacity: '0.8',
+          zIndex: 1000
+        }}
+      />
+
+
+
+      {/* 하단 이미지 - 단계별로 다른 이미지 */}
+      <div 
+        style={{ 
+          position: 'absolute',
+          bottom: 'var(--actual-safe-bottom)',
+          left: 0,
+          right: 0,
+          zIndex: 1,
+          opacity: showBottomImage ? '1' : '0',
+          transform: showBottomImage ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+          maxHeight: '25vh',
+          display: 'flex',
+          alignItems: 'flex-end'
+        }}
+      >
+        <img 
+          src={
+            currentStep === 2 ? "/Grow5.png" :
+            currentStep === 3 ? "/Grow6.png" :
+            currentStep === 4 ? "/Grow7.png" :
+            currentStep === 5 ? "/Grow8.png" :
+            currentStep === 6 ? "/Grow9.png" :
+            currentStep === 7 ? "/Grow10.png" :
+            currentStep === 8 ? "/Grow11.png" :
+            "/Grow4.png"
+          } 
+          alt="Grow" 
           style={{ 
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: `${safeArea.bottom}px`,
-            backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-            opacity: '0.8',
-            zIndex: 1000
+            width: '100%', 
+            height: 'auto',
+            maxHeight: '25vh',
+            objectFit: 'contain'
           }}
         />
       </div>
+
+      {/* 구독 모달 */}
+      <SubscriptionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+      </div>
+    </SubscriptionModalContext.Provider>
+  )
+}
+
+export default function OnboardingLayoutClient({ children, locale }: OnboardingLayoutClientProps) {
+  return (
+    <OnboardingProvider>
+      <OnboardingContent children={children} locale={locale} />
     </OnboardingProvider>
   )
 }
