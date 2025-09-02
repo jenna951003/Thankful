@@ -15,6 +15,20 @@
       "subtitle": "Llena tu corazón de gratitud\ncon el diario espiritual",
       "startButton": "Comenzar",
       "signInButton": "Ya tengo una cuenta"
+    },
+    "login": {
+      "title": "¡Qué bueno verte de nuevo!",
+      "subtitle": "Inicia sesión en tu cuenta para continuar tu viaje de gratitud",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Iniciar sesión",
+      "loggingIn": "Iniciando sesión...",
+      "cancelButton": "Cancelar",
+      "noAccount": "¿Aún no tienes una cuenta?",
+      "signUpButton": "Registrarse"
     }
   }
 }

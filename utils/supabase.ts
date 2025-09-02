@@ -1,12 +1,19 @@
+// This file is deprecated - use utils/supabase/client.ts or utils/supabase/server.ts instead
+// Keeping for backward compatibility
+
 import { createClient } from '@supabase/supabase-js'
+import { Database } from './supabase/types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
-// Database Types
-export interface Database {
+// Re-export types for backward compatibility
+export type { Database } from './supabase/types'
+
+// Legacy Database interface (keeping for compatibility)
+interface LegacyDatabase {
   public: {
     Tables: {
       profiles: {

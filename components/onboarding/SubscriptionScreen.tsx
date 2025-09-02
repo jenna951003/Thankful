@@ -49,7 +49,12 @@ export default function SubscriptionScreen() {
     return () => clearTimeout(timer)
   }, [])
 
-  const handleStartTrial = () => {
+  const handleStartTrial = (e: React.MouseEvent) => {
+    // 버튼 강제 blur 처리
+    const button = e.currentTarget as HTMLElement
+    setTimeout(() => {
+      button.blur()
+    }, 10)
     setIsModalOpen(true)
   }
 
@@ -142,14 +147,14 @@ export default function SubscriptionScreen() {
           {premiumFeatures.map((feature) => (
             <div 
               key={feature.title}
-              className="flex items-center justify-between py-1  px-2 bg-white font-noto-serif-kr rounded-xl"
+              className="flex items-center justify-between py-2  px-4 bg-white font-noto-serif-kr rounded-xl"
             >
               <div className="flex items-center space-x-3 w-full">
-                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
                   <img 
                     src={`/${feature.image}`} 
                     alt={feature.title}
-                    className="w-14 h-14 object-contain"
+                    className="w-12 h-12 object-contain"
                   />
                 </div>
                 <div className="text-left flex-1">
@@ -170,7 +175,7 @@ export default function SubscriptionScreen() {
           onClick={handleStartTrial}
           className="w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg simple-button premium-button"
           style={{ 
-            background: 'linear-gradient(135deg, #d4a574 0%, #a8644d 50%,rgb(55, 139, 90) 100%)',
+            background: 'linear-gradient(135deg,rgb(212, 207, 116) 0%, #a8644d 50%,rgb(55, 139, 90) 100%)',
 
           }}
         >

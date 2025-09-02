@@ -147,12 +147,10 @@ body {
 
 /* 부드러운 버튼 스타일 */
 .retro-button {
-  background: var(--retro-blue-gradient);
   border: none;
   border-radius: 24px;
   padding: 16px 24px;
   font-weight: 600;
-  color: white;
   box-shadow: var(--soft-shadow);
 }
 

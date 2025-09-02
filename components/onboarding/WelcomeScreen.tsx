@@ -3,6 +3,7 @@
 import { useRouter, useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useLoginModal } from './OnboardingLayoutClient'
 
 export default function WelcomeScreen() {
   const router = useRouter()
@@ -10,6 +11,7 @@ export default function WelcomeScreen() {
   const locale = params.locale as string
   const { t } = useTranslation()
   const { startTransition, setStep } = useOnboarding()
+  const { setIsModalOpen } = useLoginModal()
 
   const handleStart = () => {
     // 전환 시작
@@ -23,8 +25,13 @@ export default function WelcomeScreen() {
   }
 
   const handleSignIn = () => {
-    // TODO: 로그인 로직 구현
-    console.log('Sign in clicked')
+    setIsModalOpen(true)
+  }
+
+  const handleLoginSuccess = () => {
+    // 로그인 성공 시 메인 페이지로 이동 또는 다른 처리
+    console.log('로그인 성공')
+    // TODO: 로그인 성공 후 적절한 페이지로 리다이렉션
   }
 
 
@@ -121,9 +128,6 @@ export default function WelcomeScreen() {
           {t('onboarding.welcome.signInButton')}
         </button>
       </div>
-
-
-
     </div>
   )
 }

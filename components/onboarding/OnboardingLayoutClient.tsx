@@ -5,6 +5,9 @@ import { useRouter, usePathname } from 'next/navigation'
 import { OnboardingProvider, useOnboarding } from '../../contexts/OnboardingContext'
 import ProgressIndicator from './ProgressIndicator'
 import SubscriptionModal from './SubscriptionModal'
+import LoginModal from './LoginModal'
+import SignUpModal from './SignUpModal'
+import ForgotPasswordModal from './ForgotPasswordModal'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 // 구독 모달 컨텍스트
@@ -18,6 +21,39 @@ const SubscriptionModalContext = createContext<{
 
 export const useSubscriptionModal = () => useContext(SubscriptionModalContext)
 
+// 로그인 모달 컨텍스트
+const LoginModalContext = createContext<{
+  isModalOpen: boolean
+  setIsModalOpen: (open: boolean) => void
+}>({
+  isModalOpen: false,
+  setIsModalOpen: () => {}
+})
+
+export const useLoginModal = () => useContext(LoginModalContext)
+
+// 회원가입 모달 컨텍스트
+const SignUpModalContext = createContext<{
+  isModalOpen: boolean
+  setIsModalOpen: (open: boolean) => void
+}>({
+  isModalOpen: false,
+  setIsModalOpen: () => {}
+})
+
+export const useSignUpModal = () => useContext(SignUpModalContext)
+
+// 비밀번호 찾기 모달 컨텍스트
+const ForgotPasswordModalContext = createContext<{
+  isModalOpen: boolean
+  setIsModalOpen: (open: boolean) => void
+}>({
+  isModalOpen: false,
+  setIsModalOpen: () => {}
+})
+
+export const useForgotPasswordModal = () => useContext(ForgotPasswordModalContext)
+
 interface OnboardingLayoutClientProps {
   children: React.ReactNode
   locale: string
@@ -29,6 +65,9 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
   const [showContent, setShowContent] = useState(false)
   const [showBottomImage, setShowBottomImage] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false)
   const { state } = useOnboarding()
   const router = useRouter()
   const pathname = usePathname()
@@ -83,6 +122,9 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
 
   return (
     <SubscriptionModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
+      <LoginModalContext.Provider value={{ isModalOpen: isLoginModalOpen, setIsModalOpen: setIsLoginModalOpen }}>
+        <SignUpModalContext.Provider value={{ isModalOpen: isSignUpModalOpen, setIsModalOpen: setIsSignUpModalOpen }}>
+          <ForgotPasswordModalContext.Provider value={{ isModalOpen: isForgotPasswordModalOpen, setIsModalOpen: setIsForgotPasswordModalOpen }}>
       <div 
         style={{ 
           background: 'var(--bg-base)',
@@ -198,9 +240,119 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
       {/* 구독 모달 */}
       <SubscriptionModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => {
+          setIsModalOpen(false)
+          // 모달이 닫힐 때 모든 버튼 리셋
+          setTimeout(() => {
+            document.querySelectorAll('.simple-button').forEach((button) => {
+              const btn = button as HTMLElement
+              btn.blur()
+              btn.style.transform = ''
+              // 강제로 reflow 트리거
+              btn.offsetHeight
+            })
+            // 빈 곳 클릭 효과
+            const event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: 0,
+              clientY: 0
+            })
+            document.body.dispatchEvent(event)
+          }, 100)
+        }} 
+      />
+
+      {/* 로그인 모달 */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => {
+          setIsLoginModalOpen(false)
+          // 모달이 닫힐 때 모든 버튼 리셋
+          setTimeout(() => {
+            document.querySelectorAll('.simple-button').forEach((button) => {
+              const btn = button as HTMLElement
+              btn.blur()
+              btn.style.transform = ''
+              // 강제로 reflow 트리거
+              btn.offsetHeight
+            })
+            // 빈 곳 클릭 효과
+            const event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: 0,
+              clientY: 0
+            })
+            document.body.dispatchEvent(event)
+          }, 100)
+        }} 
+      />
+
+      {/* 회원가입 모달 */}
+      <SignUpModal 
+        isOpen={isSignUpModalOpen} 
+        onClose={() => {
+          setIsSignUpModalOpen(false)
+          // 모달이 닫힐 때 모든 버튼 리셋
+          setTimeout(() => {
+            document.querySelectorAll('.simple-button').forEach((button) => {
+              const btn = button as HTMLElement
+              btn.blur()
+              btn.style.transform = ''
+              btn.offsetHeight
+            })
+            const event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: 0,
+              clientY: 0
+            })
+            document.body.dispatchEvent(event)
+          }, 100)
+        }}
+        onSignUpSuccess={() => {
+          // 회원가입 성공 시 처리
+          console.log('회원가입 성공!')
+          // TODO: 온보딩 완료 처리 또는 메인 페이지로 이동
+        }} 
+      />
+
+      {/* 비밀번호 찾기 모달 */}
+      <ForgotPasswordModal 
+        isOpen={isForgotPasswordModalOpen} 
+        onClose={() => {
+          setIsForgotPasswordModalOpen(false)
+          // 모달이 닫힐 때 모든 버튼 리셋
+          setTimeout(() => {
+            document.querySelectorAll('.simple-button').forEach((button) => {
+              const btn = button as HTMLElement
+              btn.blur()
+              btn.style.transform = ''
+              btn.offsetHeight
+            })
+            const event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: 0,
+              clientY: 0
+            })
+            document.body.dispatchEvent(event)
+          }, 100)
+        }}
+        onSuccess={() => {
+          // 비밀번호 재설정 이메일 전송 성공 시 처리
+          console.log('비밀번호 재설정 이메일 전송 완료!')
+        }} 
       />
       </div>
+          </ForgotPasswordModalContext.Provider>
+        </SignUpModalContext.Provider>
+      </LoginModalContext.Provider>
     </SubscriptionModalContext.Provider>
   )
 }

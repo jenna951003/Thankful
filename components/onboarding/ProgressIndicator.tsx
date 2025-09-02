@@ -29,7 +29,7 @@ export default function ProgressIndicator() {
               }`}
               style={{
                 background: isCompleted || isActive ? 
-                  'linear-gradient(90deg,rgb(165, 147, 90),rgb(78, 148, 50))' : 
+                  'linear-gradient(90deg,rgb(162, 208, 162),rgb(114, 166, 122))' : 
                   'transparent',
                 animation: isActive ? 'progressFill 0.8s ease-out forwards' : undefined
               }}

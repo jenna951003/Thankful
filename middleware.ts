@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { updateSession } from './utils/supabase/middleware'
 
 const locales = ['ko', 'en', 'es', 'pt']
 
@@ -81,7 +82,7 @@ function getLocale(request: NextRequest): string {
   return detectedLocale
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
   // 정적 파일 및 API 경로는 건너뛰기
@@ -93,6 +94,9 @@ export function middleware(request: NextRequest) {
   ) {
     return
   }
+
+  // Supabase 세션 업데이트 (인증 처리)
+  await updateSession(request)
 
   // 로케일이 없는 경로인지 확인
   const pathnameHasLocale = locales.some(

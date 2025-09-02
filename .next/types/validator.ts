@@ -36,6 +36,30 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 }
 
 
+// Validate ../../app/[locale]/auth/callback/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/auth/callback/page.js")
+  handler satisfies AppPageConfig<"/[locale]/auth/callback">
+}
+
+// Validate ../../app/[locale]/community/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/community/page.js")
+  handler satisfies AppPageConfig<"/[locale]/community">
+}
+
+// Validate ../../app/[locale]/create/[type]/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/create/[type]/page.js")
+  handler satisfies AppPageConfig<"/[locale]/create/[type]">
+}
+
+// Validate ../../app/[locale]/home/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/home/page.js")
+  handler satisfies AppPageConfig<"/[locale]/home">
+}
+
 // Validate ../../app/[locale]/onboarding/[step]/page.tsx
 {
   const handler = {} as typeof import("../../app/[locale]/onboarding/[step]/page.js")
@@ -52,6 +76,24 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   const handler = {} as typeof import("../../app/[locale]/page.js")
   handler satisfies AppPageConfig<"/[locale]">
+}
+
+// Validate ../../app/[locale]/reset-password/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/reset-password/page.js")
+  handler satisfies AppPageConfig<"/[locale]/reset-password">
+}
+
+// Validate ../../app/[locale]/saved/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/saved/page.js")
+  handler satisfies AppPageConfig<"/[locale]/saved">
+}
+
+// Validate ../../app/[locale]/settings/page.tsx
+{
+  const handler = {} as typeof import("../../app/[locale]/settings/page.js")
+  handler satisfies AppPageConfig<"/[locale]/settings">
 }
 
 // Validate ../../app/[locale]/splash/page.tsx
