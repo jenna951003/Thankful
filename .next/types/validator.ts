@@ -102,6 +102,12 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   handler satisfies AppPageConfig<"/[locale]/splash">
 }
 
+// Validate ../../app/auth/callback/page.tsx
+{
+  const handler = {} as typeof import("../../app/auth/callback/page.js")
+  handler satisfies AppPageConfig<"/auth/callback">
+}
+
 // Validate ../../app/page.tsx
 {
   const handler = {} as typeof import("../../app/page.js")

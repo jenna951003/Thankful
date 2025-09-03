@@ -9,7 +9,7 @@ import { useSignUpModal, useForgotPasswordModal } from './OnboardingLayoutClient
 interface LoginModalProps {
   isOpen: boolean
   onClose: () => void
-  onLoginSuccess?: () => void
+  onLoginSuccess?: (shouldRedirectToOnboarding?: boolean) => void
 }
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
@@ -320,33 +320,46 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   }, [onClose])
 
   const handleLogin = async () => {
-    if (!email || !password) return
+    if (!email || !password) {
+      console.log('❌ Email or password missing')
+      return
+    }
     
-    // 기존 에러가 있어도 지우지 않고 유지 (깜빡임 방지)
+    console.log('🚀 Starting login process in modal')
+    setError(null) // 에러 초기화
     setIsLoading(true)
     
     try {
+      console.log('📞 Calling signIn from modal')
       const result = await signIn(email, password)
+      console.log('📋 Login result:', result)
       
       if (result.success) {
+        console.log('✅ Login successful, calling onLoginSuccess')
         if (onLoginSuccess) {
-          onLoginSuccess()
+          onLoginSuccess(result.shouldRedirectToOnboarding)
         }
-        handleClose()
+        // 약간의 지연 후 모달 닫기 (상태 업데이트 완료를 위함)
+        setTimeout(() => {
+          handleClose()
+        }, 100)
       } else {
+        console.error('❌ Login failed:', result.error)
         setError(result.error || '로그인에 실패했습니다.')
       }
     } catch (error) {
-      console.error('로그인 실패:', error)
+      console.error('💥 Login exception:', error)
       setError('로그인 중 오류가 발생했습니다.')
     } finally {
+      console.log('🏁 Login process finished, resetting loading state')
       setIsLoading(false)
     }
   }
 
   // Google 소셜 로그인 핸들러
   const handleGoogleLogin = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
+    // AuthContext의 loading만 사용하여 깜빡거림 방지
     setError(null)
     
     try {
@@ -363,14 +376,13 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     } catch (error) {
       console.error('Google 로그인 실패:', error)
       setError('Google 로그인 중 오류가 발생했습니다.')
-    } finally {
-      setIsLoading(false)
     }
+    // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
 
   // Facebook 소셜 로그인 핸들러
   const handleFacebookLogin = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
     setError(null)
     
     try {
@@ -387,14 +399,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     } catch (error) {
       console.error('Facebook 로그인 실패:', error)
       setError('Facebook 로그인 중 오류가 발생했습니다.')
-    } finally {
-      setIsLoading(false)
     }
   }
 
   // Apple 소셜 로그인 핸들러
   const handleAppleLogin = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
     setError(null)
     
     try {
@@ -411,8 +421,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     } catch (error) {
       console.error('Apple 로그인 실패:', error)
       setError('Apple 로그인 중 오류가 발생했습니다.')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -670,7 +678,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className={`w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua text-lg plan-button-clickable oauth-button oauth-google flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -687,7 +695,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <button
               onClick={handleFacebookLogin}
               disabled={isLoading}
-              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable oauth-button oauth-facebook flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               style={{ 
@@ -705,7 +713,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             <button
               onClick={handleAppleLogin}
               disabled={isLoading}
-              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable oauth-button oauth-apple flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               style={{ 
@@ -988,6 +996,42 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
         
         .modal-open .premium-button:active ~ .premium-badge {
           transform: scale(1) !important;
+        }
+        
+        /* OAuth 버튼 전용 스타일 */
+        .oauth-button {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.2s ease-out;
+          backdrop-filter: blur(0);
+        }
+        
+        .oauth-button:not(:disabled):hover {
+          transform: translateY(-1px);
+          filter: brightness(1.05);
+        }
+        
+        .oauth-button:not(:disabled):active {
+          transform: translateY(0) scale(0.98) !important;
+          transition: transform 0.1s ease-out;
+        }
+        
+        .oauth-google:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(66, 133, 244, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .oauth-facebook:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(24, 119, 242, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .oauth-apple:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(44, 44, 44, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* OAuth 버튼 로딩 상태 최적화 */
+        .oauth-button:disabled {
+          transform: none !important;
+          filter: none !important;
         }
       `}</style>
     </>

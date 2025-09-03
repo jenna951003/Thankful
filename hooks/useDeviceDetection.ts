@@ -322,6 +322,27 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
   }
 }
 
+// 홈버튼이 있는 기종(노치 없음)인지 확인하는 함수
+export function isHomeButtonDevice(model: string): boolean {
+  const homeButtonModels = [
+    'iPhone SE',
+    'iPhone SE (2nd generation)',
+    'iPhone SE (3rd generation)',
+    'iPhone 5',
+    'iPhone 5s',
+    'iPhone 6',
+    'iPhone 6s',
+    'iPhone 6 Plus',
+    'iPhone 6s Plus',
+    'iPhone 7',
+    'iPhone 7 Plus',
+    'iPhone 8',
+    'iPhone 8 Plus'
+  ]
+  
+  return homeButtonModels.some(homeModel => model.includes(homeModel))
+}
+
 export function useDeviceDetection() {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
     brand: 'Unknown',
@@ -378,6 +399,7 @@ export function useDeviceDetection() {
     safeArea: deviceInfo.safeArea,
     deviceName: `${deviceInfo.brand} ${deviceInfo.model}`,
     isIPhone: deviceInfo.brand === 'iPhone',
-    isWebEnvironment: deviceInfo.brand === 'Web Browser'
+    isWebEnvironment: deviceInfo.brand === 'Web Browser',
+    isHomeButtonDevice: isHomeButtonDevice(deviceInfo.model)
   }
 }

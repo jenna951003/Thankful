@@ -3,6 +3,7 @@
 import { useRouter, useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 const moodOptions = [
   { id: 'joyful', image: 'Smile.png', label: '기쁨' },
@@ -17,6 +18,7 @@ export default function FirstGratitudeScreen() {
   const params = useParams()
   const locale = params.locale as string
   const { setFirstGratitude, startTransition, setStep } = useOnboarding()
+  const { isHomeButtonDevice } = useDeviceDetection()
   const [gratitudeItems, setGratitudeItems] = useState([''])
   const [selectedMood, setSelectedMood] = useState<string | null>(null)
   const [showContent, setShowContent] = useState(false)
@@ -120,7 +122,7 @@ export default function FirstGratitudeScreen() {
   const hasAnyContent = gratitudeItems.some(item => item.trim() !== '')
 
   return (
-    <div className="flex flex-col mb-[10vh] items-center w-full h-full text-center relative">
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {

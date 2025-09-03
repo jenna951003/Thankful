@@ -226,7 +226,8 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
 
   // Google 소셜 회원가입/로그인 핸들러
   const handleGoogleSignUp = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
+    // AuthContext의 loading만 사용하여 깜빡거림 방지
     setErrors({})
     
     try {
@@ -243,14 +244,14 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     } catch (error) {
       console.error('Google 회원가입 실패:', error)
       setErrors({ general: 'Google 회원가입 중 오류가 발생했습니다.' })
-    } finally {
-      setIsLoading(false)
     }
+    // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
 
   // Facebook 소셜 회원가입/로그인 핸들러
   const handleFacebookSignUp = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
+    // AuthContext의 loading만 사용하여 깜빡거림 방지
     setErrors({})
     
     try {
@@ -267,14 +268,14 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     } catch (error) {
       console.error('Facebook 회원가입 실패:', error)
       setErrors({ general: 'Facebook 회원가입 중 오류가 발생했습니다.' })
-    } finally {
-      setIsLoading(false)
     }
+    // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
 
   // Apple 소셜 회원가입/로그인 핸들러
   const handleAppleSignUp = async () => {
-    setIsLoading(true)
+    // OAuth는 즉시 리다이렉션되므로 로컬 로딩 상태 설정하지 않음
+    // AuthContext의 loading만 사용하여 깜빡거림 방지
     setErrors({})
     
     try {
@@ -291,9 +292,8 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     } catch (error) {
       console.error('Apple 회원가입 실패:', error)
       setErrors({ general: 'Apple 회원가입 중 오류가 발생했습니다.' })
-    } finally {
-      setIsLoading(false)
     }
+    // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
 
   // Handle sign up
@@ -700,7 +700,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             <button
               onClick={handleGoogleSignUp}
               disabled={isLoading}
-              className={`w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua text-lg plan-button-clickable oauth-button oauth-google flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -717,7 +717,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             <button
               onClick={handleFacebookSignUp}
               disabled={isLoading}
-              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable oauth-button oauth-facebook flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               style={{ 
@@ -735,7 +735,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             <button
               onClick={handleAppleSignUp}
               disabled={isLoading}
-              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable flex items-center justify-center ${
+              className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable oauth-button oauth-apple flex items-center justify-center ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               style={{ 
@@ -1091,6 +1091,42 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         
         .modal-open .premium-button:active ~ .premium-badge {
           transform: scale(1) !important;
+        }
+        
+        /* OAuth 버튼 전용 스타일 */
+        .oauth-button {
+          position: relative;
+          overflow: hidden;
+          transition: all 0.2s ease-out;
+          backdrop-filter: blur(0);
+        }
+        
+        .oauth-button:not(:disabled):hover {
+          transform: translateY(-1px);
+          filter: brightness(1.05);
+        }
+        
+        .oauth-button:not(:disabled):active {
+          transform: translateY(0) scale(0.98) !important;
+          transition: transform 0.1s ease-out;
+        }
+        
+        .oauth-google:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(66, 133, 244, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .oauth-facebook:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(24, 119, 242, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .oauth-apple:not(:disabled):hover {
+          box-shadow: 0 6px 20px rgba(44, 44, 44, 0.25), 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* OAuth 버튼 로딩 상태 최적화 */
+        .oauth-button:disabled {
+          transform: none !important;
+          filter: none !important;
         }
       `}</style>
     </>

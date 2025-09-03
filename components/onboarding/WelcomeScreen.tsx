@@ -28,11 +28,6 @@ export default function WelcomeScreen() {
     setIsModalOpen(true)
   }
 
-  const handleLoginSuccess = () => {
-    // 로그인 성공 시 메인 페이지로 이동 또는 다른 처리
-    console.log('로그인 성공')
-    // TODO: 로그인 성공 후 적절한 페이지로 리다이렉션
-  }
 
 
   return (

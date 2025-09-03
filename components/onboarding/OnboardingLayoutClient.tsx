@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, createContext, useContext } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname, useParams } from 'next/navigation'
 import { OnboardingProvider, useOnboarding } from '../../contexts/OnboardingContext'
 import ProgressIndicator from './ProgressIndicator'
 import SubscriptionModal from './SubscriptionModal'
@@ -68,13 +68,31 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false)
-  const { state } = useOnboarding()
+  const { state, startTransition, setStep } = useOnboarding()
   const router = useRouter()
   const pathname = usePathname()
+  const params = useParams()
 
   // 현재 스텝 번호 추출
   const currentStep = parseInt(pathname.split('/').pop() || '1')
   const canGoBack = currentStep > 1
+
+  // 로그인 성공 핸들러
+  const handleLoginSuccess = (shouldRedirectToOnboarding?: boolean) => {
+    console.log('로그인 성공', { shouldRedirectToOnboarding })
+    
+    if (shouldRedirectToOnboarding) {
+      // 온보딩 미완료 시 2페이지로 이동
+      startTransition()
+      setTimeout(() => {
+        setStep(2)
+        router.push(`/${locale}/onboarding/2`)
+      }, 400)
+    } else {
+      // 온보딩 완료 시 홈페이지로 이동
+      router.replace(`/${locale}`)
+    }
+  }
 
 
 
@@ -288,7 +306,8 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
             })
             document.body.dispatchEvent(event)
           }, 100)
-        }} 
+        }}
+        onLoginSuccess={handleLoginSuccess}
       />
 
       {/* 회원가입 모달 */}

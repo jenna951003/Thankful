@@ -3,6 +3,7 @@
 import { useRouter, useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 const interestOptions = [
   { 
@@ -52,6 +53,7 @@ export default function InterestAreasScreen() {
   const params = useParams()
   const locale = params.locale as string
   const { setInterests, startTransition, setStep } = useOnboarding()
+  const { isHomeButtonDevice } = useDeviceDetection()
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [showContent, setShowContent] = useState(false)
 
@@ -96,7 +98,7 @@ export default function InterestAreasScreen() {
   }
 
   return (
-    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {

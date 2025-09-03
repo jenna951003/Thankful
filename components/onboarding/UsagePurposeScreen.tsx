@@ -4,6 +4,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useState } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 export default function UsagePurposeScreen() {
   const router = useRouter()
@@ -11,6 +12,7 @@ export default function UsagePurposeScreen() {
   const locale = params.locale as string
   const { t } = useTranslation()
   const { startTransition, setStep } = useOnboarding()
+  const { isHomeButtonDevice } = useDeviceDetection()
   const [selectedPurpose, setSelectedPurpose] = useState<string>('')
 
   const purposes = [
@@ -49,7 +51,7 @@ export default function UsagePurposeScreen() {
   }
 
   return (
-    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -114,7 +116,7 @@ export default function UsagePurposeScreen() {
       {/* 메인 콘텐츠 */}
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
-        <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 tracking-wide fade-start fade-title">
+        <h1 className="text-[18px] -mx-2 font-bold text-gray-800 mb-1 mt-6 tracking-wide fade-start fade-title">
           <span className="font-sour-gummy">Thankful </span>
           <span className="font-noto-serif-kr">을 어떻게 사용하고 싶나요?</span>
         </h1>
@@ -130,7 +132,7 @@ export default function UsagePurposeScreen() {
             <button
               key={purpose.id}
               onClick={() => handlePurposeSelect(purpose.id)}
-              className={`w-full h-12 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+              className={`w-full h-14 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                          ${selectedPurpose === purpose.id 
                            ? 'bg-[#dad8c8] text-[#4d6f5e] ' 
                            : 'bg-white text-gray-700 '
