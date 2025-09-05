@@ -7,6 +7,7 @@ import { useLoginModal } from './OnboardingLayoutClient'
 import { resetOnboarding, clearOnboardingData } from '../../utils/onboarding'
 import { useAuth } from '../../contexts/AuthContext'
 import { createClient } from '../../utils/supabase/client'
+import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 export default function WelcomeScreen() {
   const router = useRouter()
@@ -17,6 +18,7 @@ export default function WelcomeScreen() {
   const { setIsModalOpen } = useLoginModal()
   const { signOut } = useAuth()
   const supabase = createClient()
+  const { isHomeButtonDevice } = useDeviceDetection()
 
   const handleStart = () => {
     // 전환 시작
@@ -86,7 +88,7 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {

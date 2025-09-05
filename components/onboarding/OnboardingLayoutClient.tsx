@@ -63,9 +63,10 @@ interface OnboardingLayoutClientProps {
 
 function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
   const { isWebEnvironment } = useDeviceDetection()
-  const [showProgress, setShowProgress] = useState(false)
+  const [showProgress, setShowProgress] = useState(true)
   const [showContent, setShowContent] = useState(false)
   const [showBottomImage, setShowBottomImage] = useState(false)
+  const [displayStep, setDisplayStep] = useState(1)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
@@ -124,9 +125,8 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
     // 페이지 변경 시 스크롤을 맨 위로 이동
     window.scrollTo(0, 0)
     
-    // 전환 중이면 콘텐츠를 숨김
+    // 전환 중이면 콘텐츠를 숨김 (프로그레스바는 항상 표시)
     if (state.isTransitioning) {
-      setShowProgress(false)
       setShowContent(false)
       setShowBottomImage(false)
       return
@@ -135,28 +135,24 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
     // UI 요소만 스테거드 애니메이션 (세이프존 제외)
     console.log('🎭 Starting UI-focused staggered fade-in')
     
-    // 1단계: 프로그레스 바 (150ms 후)
-    const timer1 = setTimeout(() => {
-      console.log('🟠 Step 1: Showing progress bar')
-      setShowProgress(true)
-    }, 150)
+    // 프로그레스바는 항상 표시 상태로 유지
     
-    // 2단계: 메인 콘텐츠 (300ms 후)
-    const timer2 = setTimeout(() => {
-      console.log('🟡 Step 2: Showing main content')
+    // 1단계: 메인 콘텐츠 (150ms 후)
+    const timer1 = setTimeout(() => {
+      console.log('🟡 Step 1: Showing main content')
       setShowContent(true)
-    }, 300)
+    }, 150)
 
-    // 3단계: 하단 이미지 (450ms 후)
-    const timer3 = setTimeout(() => {
-      console.log('🟢 Step 3: Showing bottom image')
+    // 2단계: 하단 이미지 (300ms 후)
+    const timer2 = setTimeout(() => {
+      console.log('🟢 Step 2: Showing bottom image')
+      setDisplayStep(currentStep) // 이미지가 나타나기 직전에 단계 업데이트
       setShowBottomImage(true)
-    }, 450)
+    }, 300)
 
     return () => {
       clearTimeout(timer1)
       clearTimeout(timer2)
-      clearTimeout(timer3)
     }
   }, [state.isTransitioning, pathname])
 
@@ -260,13 +256,13 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
       >
         <img 
           src={
-            currentStep === 2 ? "/Grow5.png" :
-            currentStep === 3 ? "/Grow6.png" :
-            currentStep === 4 ? "/Grow7.png" :
-            currentStep === 5 ? "/Grow8.png" :
-            currentStep === 6 ? "/Grow9.png" :
-            currentStep === 7 ? "/Grow10.png" :
-            currentStep === 8 ? "/Grow11.png" :
+            displayStep === 2 ? "/Grow5.png" :
+            displayStep === 3 ? "/Grow6.png" :
+            displayStep === 4 ? "/Grow7.png" :
+            displayStep === 5 ? "/Grow8.png" :
+            displayStep === 6 ? "/Grow9.png" :
+            displayStep === 7 ? "/Grow10.png" :
+            displayStep === 8 ? "/Grow11.png" :
             "/Grow4.png"
           } 
           alt="Grow" 
