@@ -1,43 +1,20 @@
+interface SubscriptionScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
-import { useSubscriptionModal } from './OnboardingLayoutClient'
+import { useSubscriptionModal } from './OnboardingFlow'
 
-const premiumFeatures = [
-  { 
-    image: 'Prompt.png', 
-    title: '1000+ 감사 프롬프트',
-    description: '다양한 상황별 맞춤 질문들'
-  },
-  { 
-    image: 'Ai.png', 
-    title: 'AI 개인 맞춤 분석',
-    description: '감사 패턴 분석과 인사이트 제공'
-  },
-  { 
-    image: 'Report.png', 
-    title: '감사 성장 리포트',
-    description: '월간/연간 감사 여정 리포트'
-  },
-  { 
-    image: 'Palette.png', 
-    title: '감사/설교/기도 노트 꾸미기',
-    description: '아름다운 템플릿으로 기록을 특별하게'
-  },
-  { 
-    image: 'Community.png', 
-    title: '믿음의 커뮤니티',
-    description: '함께 나누는 감사의 교제'
-  }
-]
 
-export default function SubscriptionScreen() {
-  const router = useRouter()
+export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { startTransition, setStep } = useOnboarding()
+  const { setStep } = useOnboarding()
   const [showContent, setShowContent] = useState(false)
   const { setIsModalOpen } = useSubscriptionModal()
 
@@ -58,32 +35,39 @@ export default function SubscriptionScreen() {
     setIsModalOpen(true)
   }
 
-  const handleExploreFirst = () => {
-    // 스텝 먼저 설정
-    setStep(8)
-    // 전환 시작
-    startTransition()
+  const handleNext = () => {
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 짧은 지연 후 페이지 이동
+    // 다음 스텝으로 이동 (8페이지 - 완료 페이지)
     setTimeout(() => {
-      router.push(`/${locale}/onboarding/8`)
-    }, 100)
+      onStepChange?.(8)
+    }, 400)
+  }
+
+  const handleExploreFirst = () => {
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
+    
+    // 온보딩 완료 처리
+    setTimeout(() => {
+      // 홈으로 이동하거나 온보딩 완료 처리
+      window.location.href = `/${locale}`
+    }, 400)
   }
 
   const handleBack = () => {
-    // 스텝 먼저 설정
-    setStep(6)
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 짧은 지연 후 페이지 이동
+    // 이전 스텝으로 이동
     setTimeout(() => {
-      router.push(`/${locale}/onboarding/6`)
-    }, 100)
+      onStepChange?.(6)
+    }, 400)
   }
 
   return (
-    <div className="flex flex-col mb-[10vh] items-center w-full h-full text-center relative">
+    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -130,6 +114,19 @@ export default function SubscriptionScreen() {
         button.premium-button:hover ~ .premium-badge {
           transform:  scale(1.05);
         }
+
+        /* 프리미엄 박스 효과 */
+        .premium-box {
+          transition: transform 0.15s ease-out;
+        }
+
+        .premium-box:hover {
+          transform: scale(1.06);
+        }
+
+        .premium-box:active {
+          transform: scale(0.98);
+        }
       `}</style>
 
       {/* 메인 콘텐츠 */}
@@ -140,32 +137,17 @@ export default function SubscriptionScreen() {
         </h1>
 
         {/* 부제목 */}
-        <p className="text-sm text-gray-600 mb-4 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-sm text-gray-600 mb-12 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           더 많은 도구로 감사를 깊이 기록해보세요
         </p>
 
-        {/* 프리미엄 기능들 */}
-        <div className="space-y-3 mb-8 fade-start fade-features">
-          {premiumFeatures.map((feature) => (
-            <div 
-              key={feature.title}
-              className="flex items-center justify-between py-2  px-4 bg-white font-noto-serif-kr rounded-xl"
-            >
-              <div className="flex items-center space-x-3 w-full">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
-                  <img 
-                    src={`/${feature.image}`} 
-                    alt={feature.title}
-                    className="w-12 h-12 object-contain"
-                  />
-                </div>
-                <div className="text-left flex-1">
-                  <div className="font-extrabold text-[14px] text-gray-800">{feature.title}</div>
-                  <div className="text-[11px] font-bold text-gray-500">{feature.description}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* 프리미엄 박스 이미지 */}
+        <div className="mb-8 fade-start fade-features flex justify-center">
+          <img 
+            src="/PremiumBox2.png" 
+            alt="Premium Features"
+            className="w-full max-w-[212px] object-contain premium-box cursor-pointer"
+          />
         </div>
       </div>
 
@@ -202,7 +184,7 @@ export default function SubscriptionScreen() {
           </button>
 
           <button
-            onClick={handleExploreFirst}
+            onClick={handleNext}
             className="flex-1 retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
           >
             나중에

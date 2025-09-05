@@ -1,19 +1,31 @@
+interface UsagePurposeScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
-export default function UsagePurposeScreen() {
-  const router = useRouter()
+export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
   const { t } = useTranslation()
-  const { startTransition, setStep } = useOnboarding()
+  const { setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
   const [selectedPurpose, setSelectedPurpose] = useState<string>('')
+  const [showContent, setShowContent] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   const purposes = [
     { id: 'personal', label: '개인적인 감사 기록', icon: '/Note.png' },
@@ -28,25 +40,23 @@ export default function UsagePurposeScreen() {
 
   const handleNext = () => {
     if (selectedPurpose) {
-      // 전환 시작
-      startTransition()
+      // 컨텐츠 페이드아웃
+      setShowContent(false)
       
-      // 페이드아웃 후 페이지 이동
+      // 다음 스텝으로 이동
       setTimeout(() => {
-        setStep(4)
-        router.push(`/${locale}/onboarding/4`)
+        onStepChange?.(4)
       }, 400)
     }
   }
 
   const handleBack = () => {
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 이전 스텝으로 이동
     setTimeout(() => {
-      setStep(2)
-      router.push(`/${locale}/onboarding/2`)
+      onStepChange?.(2)
     }, 400)
   }
 
@@ -132,7 +142,7 @@ export default function UsagePurposeScreen() {
             <button
               key={purpose.id}
               onClick={() => handlePurposeSelect(purpose.id)}
-              className={`w-full h-14 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+              className={`w-full h-15 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                          ${selectedPurpose === purpose.id 
                            ? 'bg-[#dad8c8] text-[#4d6f5e] ' 
                            : 'bg-white text-gray-700 '

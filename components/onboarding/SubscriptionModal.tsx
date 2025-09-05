@@ -609,22 +609,22 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
             <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
-              더 풍성한 감사의 삶을 경험하세요!
+              프리미엄으로 더 깊이!
             </h1>
             <p className="text-sm text-gray-600 font-semibold font-noto-serif-kr leading-relaxed">
-              더 많은 도구로 감사를 깊이 기록해보세요
+              특별한 기능으로 감사 기록을 시작하세요
             </p>
           </div>
 
           {/* 프리미엄 기능들 */}
-          <div className="space-y-3 mb-6 fade-start fade-features">
+          <div className="space-y-4 mb-6 fade-start fade-features">
             {premiumFeatures.map((feature, index) => (
               <div key={feature.title}>
                 <div 
                   className="flex items-center justify-between py-2 px-4 bg-white font-noto-serif-kr rounded-xl"
                 >
                   <div className="flex items-center space-x-3 w-full">
-                    <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-12 h-14 flex items-center justify-center">
                       <img 
                         src={`/${feature.image}`} 
                         alt={feature.title}
@@ -933,8 +933,12 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
         
         /* 플랜 버튼 클릭 효과 */
         .plan-button-clickable {
-          transition: transform 0.15s ease-out, background-color 0.6s ease, color 0.6s ease;
+          transition: transform 0.3s ease-out, background-color 0.5s ease-out;
           -webkit-tap-highlight-color: transparent;
+        }
+        
+        .plan-button-clickable * {
+          transition: color 0s ease;
         }
         
         .plan-button-clickable:active {

@@ -22,6 +22,15 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
   const [showOverlay, setShowOverlay] = useState(false)
   const [overlayMessage, setOverlayMessage] = useState('잠시만 기다려주세요...')
   const [buttonState, setButtonState] = useState<'normal' | 'processing' | 'loading'>('normal')
+  const [showContent, setShowContent] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true)
+    }, 300)
+    
+    return () => clearTimeout(timer)
+  }, [])
 
   // 시작하기 버튼 클릭 핸들러
   const handleStart = async () => {
@@ -130,7 +139,13 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       `}</style>
 
       {/* 메인 콘텐츠 */}
-      <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
+      <div 
+        className="flex-1 flex flex-col justify-start w-full max-w-md px-4"
+        style={{
+          opacity: showContent ? '1' : '0',
+          transition: 'opacity 0.6s ease-out'
+        }}
+      >
         {/* 완료 아이콘 */}
         <div className="mb-8 relative fade-start fade-icon">
           <div className="flex justify-center mb-4">

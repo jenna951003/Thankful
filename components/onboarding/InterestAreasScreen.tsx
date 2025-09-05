@@ -1,6 +1,11 @@
+interface InterestAreasScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
@@ -48,11 +53,10 @@ const interestOptions = [
   }
 ]
 
-export default function InterestAreasScreen() {
-  const router = useRouter()
+export default function InterestAreasScreen({ onStepChange }: InterestAreasScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { setInterests, startTransition, setStep } = useOnboarding()
+  const { setInterests, setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [showContent, setShowContent] = useState(false)
@@ -76,24 +80,22 @@ export default function InterestAreasScreen() {
   const handleNext = () => {
     setInterests(selectedInterests)
     
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 다음 스텝으로 이동
     setTimeout(() => {
-      setStep(5)
-      router.push(`/${locale}/onboarding/5`)
+      onStepChange?.(5)
     }, 400)
   }
 
   const handleBack = () => {
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 이전 스텝으로 이동
     setTimeout(() => {
-      setStep(3)
-      router.push(`/${locale}/onboarding/3`)
+      onStepChange?.(3)
     }, 400)
   }
 
@@ -178,22 +180,22 @@ export default function InterestAreasScreen() {
             <button
               key={interest.id}
               onClick={() => handleToggleInterest(interest.id)}
-              className={`h-12 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+              className={`h-14 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                          ${selectedInterests.includes(interest.id)
                            ? 'bg-[#dad8c8] text-[#4d6f5e]'
                            : 'bg-white text-gray-700'
                          }`}
             >
               <div className="flex items-center space-x-1 w-full">
-                <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                <div className="flex-shrink-0 w-15 h-15 flex items-center justify-center">
                   <img 
                     src={interest.icon} 
                     alt={interest.label}
-                    className="w-14 h-14 object-contain"
+                    className="w-15 h-15 object-contain"
                   />
                 </div>
                 <div className="text-left flex-1">
-                  <div className="font-extrabold text-[12px]">{interest.label}</div>
+                  <div className="font-extrabold text-[13px]">{interest.label}</div>
                 </div>
               </div>
               

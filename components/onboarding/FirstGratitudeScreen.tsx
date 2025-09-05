@@ -1,6 +1,11 @@
+interface FirstGratitudeScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
@@ -13,11 +18,10 @@ const moodOptions = [
   { id: 'blessed', image: 'Blessing.png', label: '축복' }
 ]
 
-export default function FirstGratitudeScreen() {
-  const router = useRouter()
+export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { setFirstGratitude, startTransition, setStep } = useOnboarding()
+  const { setFirstGratitude, setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
   const [gratitudeItems, setGratitudeItems] = useState([''])
   const [selectedMood, setSelectedMood] = useState<string | null>(null)
@@ -98,24 +102,22 @@ export default function FirstGratitudeScreen() {
       mood: selectedMood || undefined
     })
     
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 다음 스텝으로 이동
     setTimeout(() => {
-      setStep(7)
-      router.push(`/${locale}/onboarding/7`)
+      onStepChange?.(7)
     }, 400)
   }
 
   const handleBack = () => {
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 이전 스텝으로 이동
     setTimeout(() => {
-      setStep(5)
-      router.push(`/${locale}/onboarding/5`)
+      onStepChange?.(5)
     }, 400)
   }
 

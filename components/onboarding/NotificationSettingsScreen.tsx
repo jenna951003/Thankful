@@ -1,6 +1,11 @@
+interface NotificationSettingsScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 
@@ -21,11 +26,10 @@ const timeOptions = [
   }
 ]
 
-export default function NotificationSettingsScreen() {
-  const router = useRouter()
+export default function NotificationSettingsScreen({ onStepChange }: NotificationSettingsScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { setNotifications, startTransition, setStep } = useOnboarding()
+  const { setNotifications, setStep } = useOnboarding()
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [weeklyReview, setWeeklyReview] = useState(true)
   const [showContent, setShowContent] = useState(false)
@@ -44,27 +48,24 @@ export default function NotificationSettingsScreen() {
       dailyTime: selectedOption?.time || null,
       weeklyReview
     })
-    setStep(6)
     
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 짧은 지연 후 페이지 이동
+    // 다음 스텝으로 이동
     setTimeout(() => {
-      router.push(`/${locale}/onboarding/6`)
-    }, 100)
+      onStepChange?.(6)
+    }, 400)
   }
 
   const handleBack = () => {
-    // 스텝 먼저 설정
-    setStep(4)
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 짧은 지연 후 페이지 이동
+    // 이전 스텝으로 이동
     setTimeout(() => {
-      router.push(`/${locale}/onboarding/4`)
-    }, 100)
+      onStepChange?.(4)
+    }, 400)
   }
 
   return (
@@ -217,7 +218,7 @@ export default function NotificationSettingsScreen() {
               <button
                 key={option.id}
                 onClick={() => setSelectedTime(option.id)}
-                className={`h-13 py-3 pr-3 pl-1 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+                className={`h-14 py-3 pr-3 pl-1 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                            ${isSelected
                              ? 'bg-[#dad8c8] text-[#3f5a4d]'
                              : 'bg-white text-gray-700'
@@ -232,8 +233,8 @@ export default function NotificationSettingsScreen() {
                     />
                   </div>
                   <div className="text-left flex-1">
-                    <div className="font-extrabold text-[12px]">{option.label}</div>
-                    <div className="text-[10px] font-extrabold text-gray-400">{option.description}</div>
+                    <div className="font-extrabold text-[13px]">{option.label}</div>
+                    <div className="text-[11px] font-extrabold text-gray-400">{option.description}</div>
                   </div>
                 </div>
                 

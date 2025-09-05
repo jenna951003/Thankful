@@ -1,16 +1,21 @@
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useOnboarding } from '../../contexts/OnboardingContext'
-import { useLoginModal } from './OnboardingLayoutClient'
+import { useLoginModal } from './OnboardingFlow'
 import { resetOnboarding, clearOnboardingData } from '../../utils/onboarding'
 import { useAuth } from '../../contexts/AuthContext'
 import { createClient } from '../../utils/supabase/client'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
-export default function WelcomeScreen() {
-  const router = useRouter()
+interface WelcomeScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
+
+export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
   const { t } = useTranslation()
@@ -19,16 +24,24 @@ export default function WelcomeScreen() {
   const { signOut } = useAuth()
   const supabase = createClient()
   const { isHomeButtonDevice } = useDeviceDetection()
+  const [showContent, setShowContent] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowContent(true)
+    }, 300)
+    
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleStart = () => {
-    // 전환 시작
-    startTransition()
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
     
-    // 페이드아웃 후 페이지 이동
+    // 다음 스텝으로 이동
     setTimeout(() => {
-      setStep(2)
-      router.push(`/${locale}/onboarding/2`)
-    }, 400) // 400ms 후 페이지 이동 (페이드아웃 시간과 맞춤)
+      onStepChange?.(2)
+    }, 400)
   }
 
   const handleSignIn = () => {
@@ -75,8 +88,9 @@ export default function WelcomeScreen() {
       console.log('✅ Complete reset done!')
       alert('모든 데이터가 초기화되었습니다!\n페이지를 새로고침합니다.')
       
-      // 8. 페이지 강제 새로고침 (캐시 무시)
-      window.location.href = `/${locale}/onboarding/1`
+      // 8. 첫 번째 단계로 이동
+      setStep(1)
+      onStepChange?.(1)
       
     } catch (error) {
       console.error('Reset error:', error)
@@ -99,27 +113,27 @@ export default function WelcomeScreen() {
         .fade-start { opacity: 0; }
         
         .fade-icon { 
-          animation: fadeIn 0.4s ease-out 0.2s forwards; 
+          animation: fadeIn 0.8s ease-out 0.8s forwards; 
         }
         
         .fade-title { 
-          animation: fadeIn 0.4s ease-out 1.0s forwards; 
+          animation: fadeIn 0.8s ease-out 1.2s forwards; 
         }
         
         .fade-subtitle { 
-          animation: fadeIn 0.4s ease-out 1.4s forwards; 
+          animation: fadeIn 0.8s ease-out 1.6s forwards; 
         }
         
         .fade-start-btn { 
-          animation: fadeIn 0.4s ease-out 1.8s forwards; 
+          animation: fadeIn 0.8s ease-out 2.0s forwards; 
         }
         
         .fade-signin-btn { 
-          animation: fadeIn 0.4s ease-out 2.2s forwards; 
+          animation: fadeIn 0.8s ease-out 2.4s forwards; 
         }
         
         .fade-reset-btn { 
-          animation: fadeIn 0.4s ease-out 2.6s forwards; 
+          animation: fadeIn 0.8s ease-out 2.8s forwards; 
         }
         
         .simple-button {

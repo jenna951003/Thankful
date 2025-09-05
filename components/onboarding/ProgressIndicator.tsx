@@ -6,11 +6,10 @@ import { TOTAL_ONBOARDING_STEPS } from '../../utils/onboarding'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 
 export default function ProgressIndicator() {
-  const params = useParams()
-  const currentStep = parseInt(params.step as string) || 1
   const [shrinkingStep, setShrinkingStep] = useState<number | null>(null)
   const [fillingStep, setFillingStep] = useState<number | null>(null)
-  const { setStep } = useOnboarding()
+  const { state, setStep } = useOnboarding()
+  const currentStep = state.currentStep
 
   useEffect(() => {
     const prevStep = parseInt(sessionStorage.getItem('onboarding_prev_step') || '1')
@@ -74,7 +73,7 @@ export default function ProgressIndicator() {
               className={`h-full transition-all duration-300 ease-out relative ${barClass}`}
               style={{
                 background: hasBackground 
-                  ? 'linear-gradient(90deg,rgb(162, 208, 162),rgb(114, 166, 122))' 
+                  ? 'linear-gradient(90deg,rgb(109, 157, 104))' 
                   : 'transparent',
                 animation: barAnimation || undefined
               }}

@@ -1,8 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+
+interface GratitudeExperienceScreenProps {
+  onStepChange?: (step: number) => void
+  currentStep?: number
+}
 
 const experienceOptions = [
   { 
@@ -25,9 +29,8 @@ const experienceOptions = [
   }
 ]
 
-export default function GratitudeExperienceScreen() {
-  const router = useRouter()
-  const { setGratitudeExperience, startTransition, setStep } = useOnboarding()
+export default function GratitudeExperienceScreen({ onStepChange }: GratitudeExperienceScreenProps) {
+  const { setGratitudeExperience, setStep } = useOnboarding()
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null)
   const [showContent, setShowContent] = useState(false)
 
@@ -43,15 +46,24 @@ export default function GratitudeExperienceScreen() {
     if (selectedExperience) {
       setGratitudeExperience(selectedExperience)
       
-      // 전환 시작
-      startTransition()
+      // 컨텐츠 페이드아웃
+      setShowContent(false)
       
-      // 페이드아웃 후 페이지 이동
+      // 다음 스텝으로 이동
       setTimeout(() => {
-        setStep(3)
-        router.push('/onboarding/3')
+        onStepChange?.(3)
       }, 400)
     }
+  }
+
+  const handleBack = () => {
+    // 컨텐츠 페이드아웃
+    setShowContent(false)
+    
+    // 이전 스텝으로 이동
+    setTimeout(() => {
+      onStepChange?.(1)
+    }, 400)
   }
 
 
@@ -194,16 +206,7 @@ export default function GratitudeExperienceScreen() {
 
         {/* 뒤로 가기 버튼 */}
         <button
-          onClick={() => {
-            // 전환 시작
-            startTransition()
-            
-            // 페이드아웃 후 페이지 이동
-            setTimeout(() => {
-              setStep(1)
-              router.push('/onboarding/1')
-            }, 400)
-          }}
+          onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
           뒤로
