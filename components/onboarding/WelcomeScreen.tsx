@@ -4,14 +4,19 @@ import { useRouter, useParams } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useLoginModal } from './OnboardingLayoutClient'
+import { resetOnboarding, clearOnboardingData } from '../../utils/onboarding'
+import { useAuth } from '../../contexts/AuthContext'
+import { createClient } from '../../utils/supabase/client'
 
 export default function WelcomeScreen() {
   const router = useRouter()
   const params = useParams()
   const locale = params.locale as string
   const { t } = useTranslation()
-  const { startTransition, setStep } = useOnboarding()
+  const { startTransition, setStep, reset } = useOnboarding()
   const { setIsModalOpen } = useLoginModal()
+  const { signOut } = useAuth()
+  const supabase = createClient()
 
   const handleStart = () => {
     // 전환 시작
@@ -28,7 +33,57 @@ export default function WelcomeScreen() {
     setIsModalOpen(true)
   }
 
-
+  // 로컬스토리지 초기화 (개발용)
+  const handleResetLocalStorage = async () => {
+    console.log('🗑️ Resetting everything...')
+    
+    try {
+      // 1. Supabase 로그아웃 (세션 종료)
+      await signOut()
+      
+      // 2. Supabase 세션 직접 제거
+      await supabase.auth.signOut()
+      
+      // 3. 온보딩 데이터 초기화
+      resetOnboarding()
+      clearOnboardingData()
+      reset()
+      
+      // 4. 로컬스토리지 완전 초기화
+      localStorage.clear()
+      
+      // 5. 세션스토리지 초기화
+      sessionStorage.clear()
+      
+      // 6. 쿠키 삭제 (Supabase 관련 쿠키)
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
+      // 7. IndexedDB 초기화 (Supabase가 사용할 수 있음)
+      if ('indexedDB' in window) {
+        const databases = await indexedDB.databases()
+        databases.forEach(db => {
+          if (db.name) {
+            indexedDB.deleteDatabase(db.name)
+          }
+        })
+      }
+      
+      console.log('✅ Complete reset done!')
+      alert('모든 데이터가 초기화되었습니다!\n페이지를 새로고침합니다.')
+      
+      // 8. 페이지 강제 새로고침 (캐시 무시)
+      window.location.href = `/${locale}/onboarding/1`
+      
+    } catch (error) {
+      console.error('Reset error:', error)
+      // 오류가 발생해도 강제 초기화
+      localStorage.clear()
+      sessionStorage.clear()
+      window.location.reload()
+    }
+  }
 
   return (
     <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
@@ -59,6 +114,10 @@ export default function WelcomeScreen() {
         
         .fade-signin-btn { 
           animation: fadeIn 0.4s ease-out 2.2s forwards; 
+        }
+        
+        .fade-reset-btn { 
+          animation: fadeIn 0.4s ease-out 2.6s forwards; 
         }
         
         .simple-button {
@@ -121,6 +180,18 @@ export default function WelcomeScreen() {
                    fade-start fade-signin-btn simple-button`}
         >
           {t('onboarding.welcome.signInButton')}
+        </button>
+
+        {/* 로컬스토리지 초기화 버튼 (테스트용) */}
+        <button
+          onClick={handleResetLocalStorage}
+          className={`w-full bg-red-100 border-2 border-red-300 text-red-600 
+                   font-semibold py-3 px-4 rounded-xl
+                   font-noto-serif-kr text-sm 
+                   fade-start fade-reset-btn simple-button
+                   hover:bg-red-200 transition-colors`}
+        >
+          🗑️ 로컬스토리지 초기화 (테스트용)
         </button>
       </div>
     </div>

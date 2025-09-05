@@ -59,25 +59,27 @@ export default function SubscriptionScreen() {
   }
 
   const handleExploreFirst = () => {
+    // 스텝 먼저 설정
+    setStep(8)
     // 전환 시작
     startTransition()
     
-    // 페이드아웃 후 페이지 이동
+    // 짧은 지연 후 페이지 이동
     setTimeout(() => {
-      setStep(8)
       router.push(`/${locale}/onboarding/8`)
-    }, 400)
+    }, 100)
   }
 
   const handleBack = () => {
+    // 스텝 먼저 설정
+    setStep(6)
     // 전환 시작
     startTransition()
     
-    // 페이드아웃 후 페이지 이동
+    // 짧은 지연 후 페이지 이동
     setTimeout(() => {
-      setStep(6)
       router.push(`/${locale}/onboarding/6`)
-    }, 400)
+    }, 100)
   }
 
   return (

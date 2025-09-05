@@ -743,18 +743,24 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
           </div>
 
           {/* 가격 표시 */}
-          <div className="text-center mb-2 fade-start fade-price relative">
-            {/* Price.png 이미지 레이어링 */}
-            <div className="absolute top-0 left-8 z-0 rotate-12">
-              <img 
-                src="/Price.png" 
-                alt="Price" 
-                className="w-12 h-12 object-contain"
-              />
-            </div>
-            
+          <div className="text-center mb-2 ml-4 fade-start fade-price">
             <div className="flex items-center justify-center space-x-3">
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-1 relative">
+                {/* Price.png 이미지를 가격 요소에 상대적으로 배치 */}
+                <div 
+                  key={`price-img-${selectedPlan}-${billingCycle}`}
+                  className="absolute -top-1 -left-8 z-0 rotate-12"
+                  style={{
+                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                    animation: 'priceImageChange 0.6s ease-out forwards'
+                  }}
+                >
+                  <img 
+                    src="/Price2.png" 
+                    alt="Price" 
+                    className="w-12 h-12 object-contain"
+                  />
+                </div>
                 <span 
                   key={`price-${selectedPlan}-${billingCycle}`}
                   className="text-[42px] font-extrabold text-gray-800 font-dongle"
@@ -848,6 +854,21 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
           100% { 
             opacity: 1;
             transform: scale(1.02) translateY(0px);
+          }
+        }
+        
+        @keyframes priceImageChange {
+          0% { 
+            opacity: 0;
+            transform: rotate(12deg) scale(0.8) translateX(-10px);
+          }
+          50% {
+            opacity: 0.5;
+            transform: rotate(15deg) scale(1.1);
+          }
+          100% { 
+            opacity: 0.7;
+            transform: rotate(12deg) scale(1) translateX(0);
           }
         }
         

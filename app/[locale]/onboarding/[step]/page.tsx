@@ -1,11 +1,17 @@
-import WelcomeScreen from '../../../../components/onboarding/WelcomeScreen'
-import FirstGratitudeScreen from '../../../../components/onboarding/FirstGratitudeScreen'
-import UsagePurposeScreen from '../../../../components/onboarding/UsagePurposeScreen'
-import GratitudeExperienceScreen from '../../../../components/onboarding/GratitudeExperienceScreen'
-import InterestAreasScreen from '../../../../components/onboarding/InterestAreasScreen'
-import NotificationSettingsScreen from '../../../../components/onboarding/NotificationSettingsScreen'
-import SubscriptionScreen from '../../../../components/onboarding/SubscriptionScreen'
-import OnboardingCompleteClient from '../../../../components/onboarding/OnboardingCompleteClient'
+'use client'
+
+import { use } from 'react'
+import dynamic from 'next/dynamic'
+
+// 온보딩 스크린 컴포넌트들을 동적 임포트
+const WelcomeScreen = dynamic(() => import('../../../../components/onboarding/WelcomeScreen'), { ssr: false })
+const GratitudeExperienceScreen = dynamic(() => import('../../../../components/onboarding/GratitudeExperienceScreen'), { ssr: false })
+const UsagePurposeScreen = dynamic(() => import('../../../../components/onboarding/UsagePurposeScreen'), { ssr: false })
+const InterestAreasScreen = dynamic(() => import('../../../../components/onboarding/InterestAreasScreen'), { ssr: false })
+const NotificationSettingsScreen = dynamic(() => import('../../../../components/onboarding/NotificationSettingsScreen'), { ssr: false })
+const FirstGratitudeScreen = dynamic(() => import('../../../../components/onboarding/FirstGratitudeScreen'), { ssr: false })
+const SubscriptionScreen = dynamic(() => import('../../../../components/onboarding/SubscriptionScreen'), { ssr: false })
+const OnboardingCompleteClient = dynamic(() => import('../../../../components/onboarding/OnboardingCompleteClient'), { ssr: false })
 
 const stepComponents = {
   '1': WelcomeScreen,
@@ -15,7 +21,7 @@ const stepComponents = {
   '5': NotificationSettingsScreen,
   '6': FirstGratitudeScreen,
   '7': SubscriptionScreen,
-  '8': () => <OnboardingCompleteClient locale="ko" />,
+  '8': OnboardingCompleteClient,
 } as const
 
 interface OnboardingStepProps {
@@ -25,8 +31,8 @@ interface OnboardingStepProps {
   }>
 }
 
-export default async function OnboardingStep({ params }: OnboardingStepProps) {
-  const { locale, step } = await params
+export default function OnboardingStep({ params }: OnboardingStepProps) {
+  const { locale, step } = use(params)
   
   const StepComponent = stepComponents[step as keyof typeof stepComponents]
   
@@ -39,6 +45,11 @@ export default async function OnboardingStep({ params }: OnboardingStepProps) {
         </div>
       </div>
     )
+  }
+  
+  // OnboardingCompleteClient에 locale prop 전달
+  if (step === '8') {
+    return <StepComponent locale={locale} />
   }
   
   return <StepComponent />

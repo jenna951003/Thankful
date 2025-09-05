@@ -6,7 +6,7 @@ import { createClient } from '../../../utils/supabase/client'
 import { useTranslation } from '../../../hooks/useTranslation'
 
 interface StreakWidgetProps {
-  user: User
+  user: User | null
 }
 
 interface StreakData {
@@ -23,11 +23,16 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
 
   useEffect(() => {
     const fetchStreaks = async () => {
+      if (!user) {
+        setLoading(false)
+        return
+      }
+      
       try {
         const { data, error } = await supabase
           .from('streaks')
           .select('note_type, current_streak')
-          .eq('user_id', user.id)
+          .eq('user_id', user!.id)
 
         if (error) {
           console.error('스트릭 데이터 로딩 실패:', error)
@@ -51,7 +56,7 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
     }
 
     fetchStreaks()
-  }, [user.id, supabase])
+  }, [user?.id, supabase])
 
   const getStreakIcon = (type: string) => {
     switch (type) {

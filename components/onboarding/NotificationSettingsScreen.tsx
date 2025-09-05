@@ -44,26 +44,27 @@ export default function NotificationSettingsScreen() {
       dailyTime: selectedOption?.time || null,
       weeklyReview
     })
+    setStep(6)
     
     // 전환 시작
     startTransition()
     
-    // 페이드아웃 후 페이지 이동
+    // 짧은 지연 후 페이지 이동
     setTimeout(() => {
-      setStep(6)
       router.push(`/${locale}/onboarding/6`)
-    }, 400)
+    }, 100)
   }
 
   const handleBack = () => {
+    // 스텝 먼저 설정
+    setStep(4)
     // 전환 시작
     startTransition()
     
-    // 페이드아웃 후 페이지 이동
+    // 짧은 지연 후 페이지 이동
     setTimeout(() => {
-      setStep(4)
       router.push(`/${locale}/onboarding/4`)
-    }, 400)
+    }, 100)
   }
 
   return (

@@ -5,6 +5,7 @@ import { User, AuthError } from '@supabase/supabase-js'
 import { createClient } from '../utils/supabase/client'
 import { Profile } from '../utils/supabase/types'
 import { retryAsync, isNetworkError, isRetryableSupabaseError } from '../utils/retry'
+import { getOnboardingData, clearOnboardingData, completeOnboarding as setOnboardingComplete } from '../utils/onboarding'
 
 // Types
 export interface AuthContextType {
@@ -157,7 +158,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  // OAuth 사용자를 위한 프로필 생성/확인 (단순화된 버전)
+  // OAuth 사용자를 위한 프로필 생성/확인 (Account Linking 지원)
   const ensureProfileExists = async (user: User): Promise<Profile | null> => {
     // 중복 처리 방지
     if (processingUserId === user.id) {
@@ -170,7 +171,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       console.log('🔍 Ensuring profile exists for user:', user.id)
       
-      // 기존 프로필 확인
+      // 1단계: 기존 프로필 확인 (UUID 기준)
       let profile = await fetchProfile(user.id)
       
       if (profile) {
@@ -178,12 +179,93 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return profile
       }
       
-      // 프로필이 없으면 새로 생성
-      console.log('⚠️ No profile found, creating new one...')
+      // 2단계: Account Linking - 이메일로 기존 계정 검색
+      const email = user.email?.toLowerCase().trim()
+      if (email) {
+        console.log('🔗 Checking for existing account with email:', email)
+        
+        try {
+          const { data: existingProfiles, error: searchError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('email', email)
+            .limit(1)
+          
+          if (!searchError && existingProfiles && existingProfiles.length > 0) {
+            const existingProfile = existingProfiles[0]
+            const oldUserId = existingProfile.id
+            console.log('🎯 Found existing account with same email, linking accounts...', { oldUserId, newUserId: user.id })
+            
+            try {
+              // 트랜잭션으로 모든 테이블 업데이트
+              console.log('🔄 Updating all related tables...')
+              
+              // 1. 프로필 테이블 업데이트
+              const { data: linkedProfile, error: profileUpdateError } = await supabase
+                .from('profiles')
+                .update({
+                  id: user.id, // 새로운 OAuth user ID로 업데이트
+                  updated_at: new Date().toISOString(),
+                  // OAuth에서 가져온 추가 정보로 보강 (기존 정보 우선)
+                  avatar_url: existingProfile.avatar_url || user.user_metadata?.picture || user.user_metadata?.avatar_url || null,
+                  full_name: existingProfile.full_name || user.user_metadata?.full_name || user.user_metadata?.name || null
+                })
+                .eq('id', oldUserId)
+                .select()
+                .single()
+              
+              if (profileUpdateError) {
+                throw new Error(`Profile update failed: ${profileUpdateError.message}`)
+              }
+              
+              // 2. user_settings 테이블 업데이트
+              const { error: settingsUpdateError } = await supabase
+                .from('user_settings')
+                .update({ user_id: user.id })
+                .eq('user_id', oldUserId)
+              
+              if (settingsUpdateError) {
+                console.warn('⚠️ User settings update failed:', settingsUpdateError)
+              }
+              
+              // 3. streaks 테이블 업데이트
+              const { error: streaksUpdateError } = await supabase
+                .from('streaks')
+                .update({ user_id: user.id })
+                .eq('user_id', oldUserId)
+              
+              if (streaksUpdateError) {
+                console.warn('⚠️ Streaks update failed:', streaksUpdateError)
+              }
+              
+              // 4. notes 테이블 업데이트
+              const { error: notesUpdateError } = await supabase
+                .from('notes')
+                .update({ user_id: user.id })
+                .eq('user_id', oldUserId)
+              
+              if (notesUpdateError) {
+                console.warn('⚠️ Notes update failed:', notesUpdateError)
+              }
+              
+              console.log('✅ Successfully linked OAuth account to existing profile and migrated all data')
+              return linkedProfile as Profile
+              
+            } catch (linkingError) {
+              console.error('❌ Account linking failed:', linkingError)
+              // 연동 실패 시 기존 방식으로 새 계정 생성
+            }
+          }
+        } catch (linkingError) {
+          console.warn('⚠️ Account linking failed, proceeding with new profile:', linkingError)
+        }
+      }
+      
+      // 3단계: 새 프로필 생성 (기존 계정이 없거나 연동 실패 시)
+      console.log('⚠️ No existing account found, creating new profile...')
       
       // 사용자 메타데이터에서 정보 추출
       const metadata = user.user_metadata || {}
-      const email = user.email || ''
       
       const fullName = metadata.full_name || 
                        metadata.name || 
@@ -611,14 +693,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return { success: false, error: errorMessage }
       }
 
+      // 로컬스토리지에서 온보딩 데이터 확인
+      const onboardingData = getOnboardingData()
+      let userData: any = {
+        full_name: fullName.trim(),
+        display_name: fullName.trim()
+      }
+      
+      // 온보딩 데이터가 있으면 회원가입 완료 상태로 설정
+      if (onboardingData) {
+        console.log('📦 Found onboarding data, will mark as completed after signup')
+        // onboarding_data는 user metadata에 저장하지 않음 (DB 스키마에 없음)
+        // 대신 회원가입 후 onboarding_completed만 true로 설정
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
         options: {
-          data: {
-            full_name: fullName.trim(),
-            display_name: fullName.trim()
-          }
+          data: userData
         }
       })
 
@@ -645,9 +738,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // For immediate signup without email confirmation
       if (data.user && data.session) {
+        // 온보딩 완료 처리
+        if (onboardingData) {
+          try {
+            // 온보딩 완료 상태만 업데이트 (onboarding_data 필드는 profiles 테이블에 없음)
+            const { error: updateError } = await supabase
+              .from('profiles')
+              .update({ onboarding_completed: true })
+              .eq('id', data.user.id)
+            
+            if (updateError) {
+              console.error('❌ Failed to update onboarding status:', updateError)
+            } else {
+              console.log('✅ Onboarding completed status updated')
+            }
+            
+            // 로컬스토리지 정리
+            clearOnboardingData()
+            setOnboardingComplete()
+            console.log('🎉 Onboarding data cleared from localStorage')
+          } catch (err) {
+            console.error('❌ Error updating onboarding status:', err)
+          }
+        }
+        
         const userProfile = await fetchProfile(data.user.id)
         setProfile(userProfile)
         return { success: true }
+      }
+
+      // 이메일 인증이 필요한 경우에도 로컬스토리지 정리
+      if (data.user && onboardingData) {
+        clearOnboardingData()
+        setOnboardingComplete()
+        console.log('🎉 Onboarding data will be synced after email confirmation')
       }
 
       return { success: true }
@@ -682,28 +806,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true)
       setError(null)
 
+      console.log('🔄 Sending password reset email to:', email)
+
       const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
         redirectTo: `${window.location.origin}/reset-password`
       })
 
       if (error) {
+        console.error('❌ Reset password error:', error)
         let errorMessage = '비밀번호 재설정에 실패했습니다.'
         
         switch (error.message) {
           case 'Invalid email':
+          case 'Invalid email address':
             errorMessage = '올바른 이메일 형식이 아닙니다.'
             break
+          case 'Unable to validate email address: invalid format':
+            errorMessage = '이메일 형식이 올바르지 않습니다.'
+            break
+          case 'For security purposes, you can only request this once every 60 seconds':
+            errorMessage = '보안상 60초마다 한 번씩만 요청할 수 있습니다.'
+            break
+          case 'Email not confirmed':
+            errorMessage = '이메일 인증이 완료되지 않은 계정입니다.'
+            break
+          case 'User not found':
+          case 'Email address not found':
+            errorMessage = '등록되지 않은 이메일입니다. 가입된 이메일을 확인해주세요.'
+            break
+          case 'Too many requests':
+            errorMessage = '너무 많은 요청입니다. 잠시 후 다시 시도해주세요.'
+            break
           default:
-            errorMessage = error.message || '비밀번호 재설정에 실패했습니다.'
+            // Supabase는 존재하지 않는 이메일에 대해서도 성공을 반환하는 경우가 있음
+            // 하지만 일부 에러 케이스에서는 구체적인 메시지를 제공
+            if (error.message.toLowerCase().includes('not found') || 
+                error.message.toLowerCase().includes('not exist')) {
+              errorMessage = '등록되지 않은 이메일입니다. 가입된 이메일을 확인해주세요.'
+            } else {
+              errorMessage = error.message || '비밀번호 재설정에 실패했습니다.'
+            }
         }
         
         setError(errorMessage)
         return { success: false, error: errorMessage }
       }
 
+      console.log('✅ Password reset email sent successfully')
       return { success: true }
     } catch (err) {
-      const errorMessage = '네트워크 오류가 발생했습니다.'
+      console.error('❌ Reset password exception:', err)
+      const errorMessage = '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.'
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {

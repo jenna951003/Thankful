@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthProvider'
 import { useNotes } from '../../hooks/useNotes'
-import { supabase } from '../../utils/supabase'
+import { createClient } from '../../utils/supabase/client'
 
 interface ProfileSectionProps {
   locale: string
@@ -15,6 +15,7 @@ export default function ProfileSection({ locale }: ProfileSectionProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [displayName, setDisplayName] = useState('')
+  const supabase = createClient()
   
   const [profile, setProfile] = useState({
     displayName: '익명 사용자',

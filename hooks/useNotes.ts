@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '../utils/supabase'
+import { createClient } from '../utils/supabase/client'
 import { useAuth } from '../contexts/AuthProvider'
 import { useOfflineStorage } from './useOfflineStorage'
-import type { Database } from '../utils/supabase'
+import type { Database } from '../utils/supabase/types'
 
 type Note = Database['public']['Tables']['notes']['Row']
 type NoteInsert = Database['public']['Tables']['notes']['Insert']
@@ -16,6 +16,7 @@ export function useNotes() {
   const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const supabase = createClient()
 
   // Fetch user's notes (with offline support)
   const fetchNotes = async () => {

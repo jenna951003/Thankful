@@ -6,12 +6,13 @@ import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 import { useTranslation } from '../../hooks/useTranslation'
 
 interface ProfileHeaderProps {
-  user: User
-  profile: Profile
+  user: User | null
+  profile: Profile | null
+  displayName?: string | null
   onProfileClick: () => void
 }
 
-export default function ProfileHeader({ user, profile, onProfileClick }: ProfileHeaderProps) {
+export default function ProfileHeader({ user, profile, displayName, onProfileClick }: ProfileHeaderProps) {
   const { safeArea } = useDeviceDetection()
   const { t } = useTranslation()
 
@@ -25,7 +26,7 @@ export default function ProfileHeader({ user, profile, onProfileClick }: Profile
 
   // 프로필 이미지 또는 기본 아바타
   const getAvatarContent = () => {
-    if (profile.avatar_url) {
+    if (profile?.avatar_url) {
       return (
         <img 
           src={profile.avatar_url} 
@@ -36,7 +37,8 @@ export default function ProfileHeader({ user, profile, onProfileClick }: Profile
     }
     
     // 이름의 첫 글자 또는 기본 이모지
-    const firstChar = profile.display_name?.charAt(0) || profile.full_name?.charAt(0) || '👤'
+    const userName = profile?.display_name || profile?.full_name || displayName || '익명'
+    const firstChar = userName.charAt(0) || '👤'
     return (
       <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
         {firstChar}
@@ -59,7 +61,7 @@ export default function ProfileHeader({ user, profile, onProfileClick }: Profile
             {getGreeting()}
           </p>
           <h1 className="text-2xl font-bold text-gray-800 font-jua">
-            {profile.display_name || profile.full_name || '사용자'}님
+            {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}님
           </h1>
         </div>
 
@@ -76,17 +78,17 @@ export default function ProfileHeader({ user, profile, onProfileClick }: Profile
       </div>
 
       {/* 구독 상태 표시 (Premium인 경우) */}
-      {profile.subscription_tier !== 'free' && (
+      {profile?.subscription_tier !== 'free' && (
         <div className="mt-3 flex justify-start">
           <div 
             className="px-3 py-1 rounded-full text-xs font-semibold text-white"
             style={{ 
-              background: profile.subscription_tier === 'premium' 
+              background: profile?.subscription_tier === 'premium' 
                 ? 'var(--retro-purple-gradient)' 
                 : 'var(--retro-green-gradient)'
             }}
           >
-            {profile.subscription_tier === 'premium' ? '프리미엄' : '교회'}
+            {profile?.subscription_tier === 'premium' ? '프리미엄' : '교회'}
           </div>
         </div>
       )}

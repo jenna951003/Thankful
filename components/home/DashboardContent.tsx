@@ -10,11 +10,12 @@ import QuickActionsWidget from './widgets/QuickActionsWidget'
 
 interface DashboardContentProps {
   activeTab: string
-  user: User
-  profile: Profile
+  user: User | null
+  profile: Profile | null
+  displayName?: string | null
 }
 
-export default function DashboardContent({ activeTab, user, profile }: DashboardContentProps) {
+export default function DashboardContent({ activeTab, user, profile, displayName }: DashboardContentProps) {
   const { t } = useTranslation()
 
   if (activeTab !== 'home') {

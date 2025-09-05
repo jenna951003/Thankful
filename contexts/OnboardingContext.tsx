@@ -1,6 +1,7 @@
 'use client'
 
-import React, { createContext, useContext, useReducer, ReactNode } from 'react'
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
+import { saveOnboardingData, getOnboardingData } from '../utils/onboarding'
 
 export interface OnboardingData {
   faithBackground: string | null
@@ -15,8 +16,8 @@ export interface OnboardingData {
     photo?: string
     mood?: string
   }
+  usagePurpose?: string | null
 }
-
 interface OnboardingState {
   currentStep: number
   data: OnboardingData
@@ -117,6 +118,20 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(onboardingReducer, initialState)
+
+  // 초기 로드 시 로컬스토리지에서 데이터 복원
+  useEffect(() => {
+    const savedData = getOnboardingData()
+    if (savedData) {
+      console.log('📖 Restoring onboarding data from localStorage')
+      // 저장된 데이터로 state 업데이트
+      if (savedData.faithBackground) dispatch({ type: 'SET_FAITH_BACKGROUND', payload: savedData.faithBackground })
+      if (savedData.gratitudeExperience) dispatch({ type: 'SET_GRATITUDE_EXPERIENCE', payload: savedData.gratitudeExperience })
+      if (savedData.interests?.length > 0) dispatch({ type: 'SET_INTERESTS', payload: savedData.interests })
+      if (savedData.notifications) dispatch({ type: 'SET_NOTIFICATIONS', payload: savedData.notifications })
+      if (savedData.firstGratitude) dispatch({ type: 'SET_FIRST_GRATITUDE', payload: savedData.firstGratitude })
+    }
+  }, [])
 
   const contextValue: OnboardingContextType = {
     state,

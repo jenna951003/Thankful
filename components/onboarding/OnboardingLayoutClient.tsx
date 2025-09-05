@@ -9,6 +9,8 @@ import LoginModal from './LoginModal'
 import SignUpModal from './SignUpModal'
 import ForgotPasswordModal from './ForgotPasswordModal'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
+import { useAuth } from '../../contexts/AuthContext'
+import { saveOnboardingData } from '../../utils/onboarding'
 
 // 구독 모달 컨텍스트
 const SubscriptionModalContext = createContext<{
@@ -69,6 +71,7 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false)
   const { state, startTransition, setStep } = useOnboarding()
+  const { user, updateProfile } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const params = useParams()
@@ -95,6 +98,27 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
   }
 
 
+
+  // 온보딩 데이터 저장 처리
+  useEffect(() => {
+    // 온보딩 데이터가 변경될 때마다 처리
+    if (state.data) {
+      if (!user) {
+        // 로그인하지 않은 경우, 로컬스토리지에 저장
+        saveOnboardingData(state.data)
+        console.log('💾 Saved onboarding data to localStorage')
+      } else {
+        // 로그인한 경우, 온보딩 완료 상태만 DB에 저장
+        if (state.currentStep > 1 && state.currentStep <= 8) {
+          // onboarding_data와 onboarding_step 필드는 profiles 테이블에 없으므로
+          // 온보딩이 진행 중이라는 것만 표시 (완료되면 onboarding_completed: true로 설정됨)
+          console.log(`📝 Onboarding in progress: step ${state.currentStep}`)
+          // 실제 온보딩 데이터는 localStorage에만 저장하고, 
+          // 완료 시점에 onboarding_completed: true로 설정됨
+        }
+      }
+    }
+  }, [state.data, state.currentStep, user, updateProfile])
 
   useEffect(() => {
     // 페이지 변경 시 스크롤을 맨 위로 이동
@@ -335,8 +359,16 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
         }}
         onSignUpSuccess={() => {
           // 회원가입 성공 시 처리
-          console.log('회원가입 성공!')
-          // TODO: 온보딩 완료 처리 또는 메인 페이지로 이동
+          console.log('회원가입 성공! 2페이지로 이동합니다.')
+          
+          // "시작하기" 버튼과 동일한 전환 효과 적용
+          startTransition()
+          
+          // 페이드아웃 후 페이지 이동
+          setTimeout(() => {
+            setStep(2)
+            router.push(`/${locale}/onboarding/2`)
+          }, 400) // 400ms 후 페이지 이동 (페이드아웃 시간과 맞춤)
         }} 
       />
 

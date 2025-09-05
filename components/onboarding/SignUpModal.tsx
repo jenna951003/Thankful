@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLoginModal } from './OnboardingLayoutClient'
+import { getOnboardingData, clearOnboardingData, hasOnboardingData } from '../../utils/onboarding'
 
 interface SignUpModalProps {
   isOpen: boolean
@@ -234,10 +235,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
       const result = await signInWithGoogle()
       
       if (result.success) {
+        // Google 소셜 회원가입 성공 시 콜백 호출
         if (onSignUpSuccess) {
           onSignUpSuccess()
         }
-        // OAuth 로그인은 리다이렉션이므로 모달을 닫지 않음
+        // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
         setErrors({ general: result.error || 'Google 회원가입에 실패했습니다.' })
       }
@@ -258,10 +260,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
       const result = await signInWithFacebook()
       
       if (result.success) {
+        // Facebook 소셜 회원가입 성공 시 콜백 호출
         if (onSignUpSuccess) {
           onSignUpSuccess()
         }
-        // OAuth 로그인은 리다이렉션이므로 모달을 닫지 않음
+        // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
         setErrors({ general: result.error || 'Facebook 회원가입에 실패했습니다.' })
       }
@@ -282,10 +285,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
       const result = await signInWithApple()
       
       if (result.success) {
+        // Apple 소셜 회원가입 성공 시 콜백 호출
         if (onSignUpSuccess) {
           onSignUpSuccess()
         }
-        // OAuth 로그인은 리다이렉션이므로 모달을 닫지 않음
+        // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
         setErrors({ general: result.error || 'Apple 회원가입에 실패했습니다.' })
       }
@@ -298,7 +302,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
 
   // Handle sign up
   const handleSignUp = async () => {
-    // 기존 에러 상태를 우선 보존 (깜빡임 방지)
+    // 기존 에러 상태를 우선 보존 (깜븡임 방지)
     
     // Validate all fields
     const emailError = validateEmail(email)
@@ -319,12 +323,37 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     setIsLoading(true)
     
     try {
+      // 로컬스토리지에 온보딩 데이터가 있는지 확인
+      const onboardingData = getOnboardingData()
+      let signUpOptions: any = {
+        data: {
+          full_name: fullName.trim(),
+          display_name: fullName.trim()
+        }
+      }
+      
+      // 온보딩 데이터가 있으면 회원가입 시 함께 전송
+      if (onboardingData) {
+        console.log('📦 Found onboarding data, will sync with signup')
+        signUpOptions.data.onboarding_data = JSON.stringify(onboardingData)
+        signUpOptions.data.onboarding_completed = true
+      }
+      
       const result = await signUp(email, password, fullName)
       
       if (result.success) {
+        // 회원가입 성공 시 로컬스토리지의 온보딩 데이터 삭제
+        if (onboardingData) {
+          clearOnboardingData()
+          console.log('🧹 Cleared onboarding data from localStorage after signup')
+        }
+        
+        // 먼저 성공 콜백 호출 (페이지 전환 시작)
         if (onSignUpSuccess) {
           onSignUpSuccess()
         }
+        
+        // 페이지 전환이 시작되므로 모달을 즉시 닫음
         handleClose()
       } else {
         setErrors({ general: result.error })

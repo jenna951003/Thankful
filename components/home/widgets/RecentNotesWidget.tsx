@@ -7,7 +7,7 @@ import { Note } from '../../../utils/supabase/types'
 import { useTranslation } from '../../../hooks/useTranslation'
 
 interface RecentNotesWidgetProps {
-  user: User
+  user: User | null
 }
 
 export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
@@ -18,11 +18,16 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
+      if (!user) {
+        setLoading(false)
+        return
+      }
+      
       try {
         const { data, error } = await supabase
           .from('notes')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', user!.id)
           .order('created_at', { ascending: false })
           .limit(3)
 
@@ -40,7 +45,7 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
     }
 
     fetchRecentNotes()
-  }, [user.id, supabase])
+  }, [user?.id, supabase])
 
   const getNoteTypeIcon = (type: string) => {
     switch (type) {

@@ -1,4 +1,52 @@
 {
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/FirstGratitudeScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/FirstGratitudeScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_FirstGratitudeScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/GratitudeExperienceScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/GratitudeExperienceScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_GratitudeExperienceScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/InterestAreasScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/InterestAreasScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_InterestAreasScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/NotificationSettingsScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/NotificationSettingsScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_NotificationSettingsScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/OnboardingCompleteClient": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/OnboardingCompleteClient",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_OnboardingCompleteClient_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/SubscriptionScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/SubscriptionScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_SubscriptionScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/UsagePurposeScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/UsagePurposeScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_UsagePurposeScreen_tsx.js"
+    ]
+  },
+  "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/WelcomeScreen": {
+    "id": "app/[locale]/onboarding/[step]/page.tsx -> ../../../../components/onboarding/WelcomeScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_onboarding_WelcomeScreen_tsx.js"
+    ]
+  },
   "node_modules/@capacitor/device/dist/esm/index.js -> ./web": {
     "id": "node_modules/@capacitor/device/dist/esm/index.js -> ./web",
     "files": [

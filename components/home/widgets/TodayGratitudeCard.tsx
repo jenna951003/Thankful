@@ -5,7 +5,7 @@ import { User } from '@supabase/supabase-js'
 import { useTranslation } from '../../../hooks/useTranslation'
 
 interface TodayGratitudeCardProps {
-  user: User
+  user: User | null
 }
 
 export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {

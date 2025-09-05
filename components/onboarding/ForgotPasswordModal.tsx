@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLoginModal } from './OnboardingLayoutClient'
+import { createClient } from '../../utils/supabase/client'
 
 interface ForgotPasswordModalProps {
   isOpen: boolean
@@ -14,10 +15,15 @@ interface ForgotPasswordModalProps {
 export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: ForgotPasswordModalProps) {
   const { resetPassword } = useAuth()
   const { setIsModalOpen: setLoginModalOpen } = useLoginModal()
+  const supabase = createClient()
   const [isVisible, setIsVisible] = useState(false)
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<{
+    email?: string
+    general?: string
+  }>({})
+  const [delayedErrors, setDelayedErrors] = useState<{
     email?: string
     general?: string
   }>({})
@@ -46,8 +52,58 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
   const initialTouchYRef = useRef(0)
   const isOverscrollingRef = useRef(false)
   const scrollThrottleRef = useRef<number | null>(null)
+  const errorTimeoutRef = useRef<{
+    email?: NodeJS.Timeout
+    general?: NodeJS.Timeout
+  }>({})
 
   // Validation function
+  // 지연된 에러 제거를 위한 로직 (로그인 모달과 동일)
+  useEffect(() => {
+    // 이메일 에러 처리
+    if (errors.email) {
+      setDelayedErrors(prev => ({ ...prev, email: errors.email }))
+      if (errorTimeoutRef.current.email) {
+        clearTimeout(errorTimeoutRef.current.email)
+        delete errorTimeoutRef.current.email
+      }
+    } else {
+      if (delayedErrors.email) {
+        errorTimeoutRef.current.email = setTimeout(() => {
+          setDelayedErrors(prev => ({ ...prev, email: undefined }))
+          delete errorTimeoutRef.current.email
+        }, 700) // ForgotPasswordModal은 duration-700
+      }
+    }
+    
+    // 일반 에러 처리
+    if (errors.general) {
+      setDelayedErrors(prev => ({ ...prev, general: errors.general }))
+      if (errorTimeoutRef.current.general) {
+        clearTimeout(errorTimeoutRef.current.general)
+        delete errorTimeoutRef.current.general
+      }
+    } else {
+      if (delayedErrors.general) {
+        errorTimeoutRef.current.general = setTimeout(() => {
+          setDelayedErrors(prev => ({ ...prev, general: undefined }))
+          delete errorTimeoutRef.current.general
+        }, 700)
+      }
+    }
+    
+    return () => {
+      if (errorTimeoutRef.current.email) {
+        clearTimeout(errorTimeoutRef.current.email)
+        delete errorTimeoutRef.current.email
+      }
+      if (errorTimeoutRef.current.general) {
+        clearTimeout(errorTimeoutRef.current.general)
+        delete errorTimeoutRef.current.general
+      }
+    }
+  }, [errors.email, errors.general, delayedErrors.email, delayedErrors.general])
+
   const validateEmail = (email: string): string | undefined => {
     if (!email) return '이메일을 입력해주세요.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -59,13 +115,18 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
   // Real-time validation
   const handleEmailChange = (value: string) => {
     setEmail(value)
-    // 사용자가 입력을 시작하면 일반 에러 메시지 부드럽게 제거
+    
+    // 실시간 이메일 검증
+    const emailError = validateEmail(value)
+    
+    // 일반 에러가 있으면 제거 (애니메이션으로)
     if (errors.general) {
       setErrors(prev => ({ ...prev, general: undefined }))
     }
-    if (errors.email) {
-      const error = validateEmail(value)
-      setErrors(prev => ({ ...prev, email: error }))
+    
+    // 이메일 에러 상태 업데이트 (애니메이션 적용)
+    if (errors.email !== emailError) {
+      setErrors(prev => ({ ...prev, email: emailError }))
     }
   }
 
@@ -133,31 +194,94 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
     }
   }, [isOpen])
 
+  // 이메일 존재 여부 검증 (추가 유유 검증)
+  const checkEmailExists = async (email: string): Promise<{ exists: boolean; error?: string }> => {
+    try {
+      console.log('🔍 Checking if email exists:', email)
+      
+      // profiles 테이블에서 이메일 검색 (로그인 없이도 가능한 RPC 함수 사용)
+      const { data, error } = await supabase.rpc('check_email_exists' as any, { 
+        check_email: email.trim().toLowerCase() 
+      } as any)
+      
+      if (error) {
+        console.log('⚠️ RPC error, fallback to auth attempt:', error)
+        // RPC 함수가 없다면 기본 체크 스킵
+        return { exists: true }
+      }
+      
+      const exists = data === true
+      console.log(exists ? '✅ Email exists' : '❌ Email not found')
+      return { exists }
+      
+    } catch (err) {
+      console.warn('⚠️ Email check failed, proceeding:', err)
+      // 검증 실패 시 기본적으로 진행
+      return { exists: true }
+    }
+  }
+
   // Handle password reset
   const handleResetPassword = async () => {
-    // 기존 에러 상태를 우선 보존 (깜빡임 방지)
-    
     const emailError = validateEmail(email)
     if (emailError) {
-      setErrors({ email: emailError })
+      // 이미 에러가 있고 같은 에러면 유지, 다른 에러면 텍스트만 변경
+      if (errors.email !== emailError || errors.general) {
+        setErrors({ email: emailError })
+      }
       return
     }
     
     setIsLoading(true)
+    // 이메일 형식 에러가 없으면 에러 초기화
+    if (!errors.general) {
+      setErrors({})
+    }
     
     try {
+      // 1단계: 이메일 존재 여부 체크 (선택적)
+      const emailCheck = await checkEmailExists(email)
+      
+      if (!emailCheck.exists) {
+        console.log('❌ Email not registered, showing error')
+        const newError = '등록되지 않은 이메일입니다. 가입된 이메일을 확인해주세요.'
+        // 이미 에러가 있고 같은 에러면 유지, 다른 에러면 텍스트만 변경
+        if (errors.general !== newError && !errors.email) {
+          setErrors({ general: newError })
+        } else if (errors.general !== newError) {
+          setErrors({ general: newError })
+        }
+        return
+      }
+      
+      // 2단계: Supabase 비밀번호 재설정 요청
+      console.log('📧 Sending reset email...')
       const result = await resetPassword(email)
       
       if (result.success) {
+        console.log('✅ Reset email sent successfully')
         setIsSuccess(true)
         if (onSuccess) {
           onSuccess()
         }
       } else {
-        setErrors({ general: result.error })
+        console.error('❌ Reset email failed:', result.error)
+        // 이미 에러가 있고 같은 에러면 유지, 다른 에러면 텍스트만 변경
+        if (errors.general !== result.error && !errors.email) {
+          setErrors({ general: result.error })
+        } else if (errors.general !== result.error) {
+          setErrors({ general: result.error })
+        }
       }
     } catch (error) {
-      setErrors({ general: '비밀번호 재설정 중 오류가 발생했습니다.' })
+      console.error('❌ Unexpected error during reset:', error)
+      const errorMessage = '비밀번호 재설정 중 오류가 발생했습니다.'
+      // 이미 에러가 있고 같은 에러면 유지, 다른 에러면 텍스트만 변경
+      if (errors.general !== errorMessage && !errors.email) {
+        setErrors({ general: errorMessage })
+      } else if (errors.general !== errorMessage) {
+        setErrors({ general: errorMessage })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -566,7 +690,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               </div>
 
               {/* 이메일 입력 */}
-              <div className="mb-6 fade-start fade-form">
+              <div className="fade-start fade-form mb-2">
                 <label className="block text-sm ml-1 font-bold text-gray-500 mb-2 font-noto-serif-kr text-left">
                   이메일
                 </label>
@@ -579,7 +703,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                     setErrors(prev => ({ ...prev, email: error }))
                   }}
                   placeholder="가입하신 이메일을 입력하세요"
-                  className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400"
+                  className="w-full px-4 py-3 bg-[#eae4d7] mb-4 font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400"
                   style={{
                     textDecoration: 'none',
                     WebkitTextDecorationLine: 'none'
@@ -589,43 +713,38 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                   autoCapitalize="off"
                   disabled={isLoading}
                 />
-                {errors.email && (
-                  <p className="text-[#ea6666] pl-1 pt-0.5 text-sm mt-1 font-bold font-noto-serif-kr">{errors.email}</p>
-                )}
               </div>
 
-              {/* 일반 에러 메시지 */}
-              <div className={`transition-all duration-700 ease-out overflow-hidden ${
-                errors.general ? 'mb-6 opacity-100 max-h-16' : 'mb-0 opacity-0 max-h-0'
+              {/* 에러 메시지 (로그인 모달과 동일한 구조) */}
+              <div className={`transition-all ease-out overflow-hidden -mt-4 relative z-50 ${
+                (errors.email || errors.general) ? 'mb-6 max-h-16 duration-300' : 'mb-0 max-h-0 duration-300 delay-200'
               }`}>
-                {errors.general && (
-                  <div className="error-message-slide">
-                    <p className="text-red-500 text-sm text-center font-bold font-noto-serif-kr transition-all duration-300">{errors.general}</p>
+                {(delayedErrors.email || delayedErrors.general) && (
+                  <div className={`transition-opacity ease-out relative z-50 ${
+                    (errors.email || errors.general) ? 'opacity-100 duration-200' : 'opacity-0 duration-200'
+                  }`}>
+                    <p className="text-[#ea6666] text-sm ml-1.5 text-left font-bold font-noto-serif-kr relative z-50">
+                      {delayedErrors.email || delayedErrors.general}
+                    </p>
                   </div>
                 )}
               </div>
 
               {/* 재설정 링크 보내기 버튼 */}
-              <div className="space-y-3 mb-6 fade-start fade-buttons">
+              <div className="space-y-3 mb-6 mt-2 fade-start fade-buttons">
                 <button
                   onClick={handleResetPassword}
                   disabled={isLoading}
-                  className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg plan-button-clickable ${
+                  className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg simple-button ${
                     isLoading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                   style={{ 
                     backgroundColor: '#db6161',
                     color: 'white',
-                    transform: 'scale(1)',
                     boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1)'
                   }}
                 >
-                  <span 
-                    style={{
-                      display: 'inline-block',
-                      transform: 'scale(1)'
-                    }}
-                  >
+                  <span>
                     {isLoading ? '전송 중...' : '재설정 링크 보내기'}
                   </span>
                 </button>
@@ -634,7 +753,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               {/* 돌아가기 링크 */}
               <div className="text-center pt-4 border-t border-[#ccd2cb] fade-start fade-back">
                 <button
-                  className="text-[#759861] font-extrabold font-noto-serif-kr transition-colors"
+                  className="text-[#759861] font-extrabold font-noto-serif-kr transition-colors simple-button"
                   onClick={() => {
                     handleClose()
                     setTimeout(() => {
@@ -652,13 +771,26 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               <div className="text-center py-8 fade-start fade-success">
                 <div className="text-6xl mb-4">📧</div>
                 <h1 className="text-lg font-black text-gray-800 mb-2 font-noto-serif-kr tracking-wide">
-                  재설정 링크를 보냈습니다!
+                  재설정 링크를 보냈습니다! ✨
                 </h1>
                 <p className="text-sm text-gray-600 font-bold font-noto-serif-kr leading-relaxed mb-6">
                   <span className="text-[#759861] font-black">{email}</span>로<br />
                   비밀번호 재설정 링크를 보냈습니다.<br />
                   이메일을 확인해주세요.
                 </p>
+
+                {/* 안내 사항 */}
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-left">
+                  <h3 className="text-sm font-black text-blue-800 mb-2 font-noto-serif-kr">
+                    📝 확인 사항
+                  </h3>
+                  <ul className="text-xs text-blue-700 font-bold font-noto-serif-kr space-y-1">
+                    <li>• 이메일이 도착하는데 몇 분 소요될 수 있습니다</li>
+                    <li>• 스팸함도 함께 확인해주세요</li>
+                    <li>• 링크는 24시간 동안 유효합니다</li>
+                    <li>• 보안상 60초마다 한 번만 요청 가능합니다</li>
+                  </ul>
+                </div>
                 
                 <div className="space-y-3 mb-4">
                   <button
@@ -679,10 +811,6 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                     로그인으로 돌아가기
                   </button>
                 </div>
-                
-                <p className="text-xs text-gray-500 font-bold font-noto-serif-kr">
-                  이메일이 오지 않았나요? 스팸함도 확인해보세요.
-                </p>
               </div>
             </>
           )}
@@ -757,7 +885,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
         }
         
         .simple-button:active {
-          transform: scale(0.98);
+          transform: scale(0.98) !important;
         }
         
         .simple-button:focus {

@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useAuth } from '../../contexts/AuthContext'
 import { useOnboarding } from '../../contexts/OnboardingContext'
-import { completeOnboarding } from '../../utils/onboarding'
+import { completeOnboarding, saveOnboardingData } from '../../utils/onboarding'
+import { getUserDisplayName, saveUserDisplayName } from '../../utils/device'
 import LoadingOverlay from '../common/LoadingOverlay'
 
 interface OnboardingCompleteClientProps {
@@ -15,56 +16,82 @@ interface OnboardingCompleteClientProps {
 export default function OnboardingCompleteClient({ locale }: OnboardingCompleteClientProps) {
   const router = useRouter()
   const { t } = useTranslation()
-  const { completeOnboarding: completeOnboardingDB, user } = useAuth()
+  const { completeOnboarding: completeOnboardingDB, user, updateProfile } = useAuth()
   const { state } = useOnboarding()
   const [isCompleting, setIsCompleting] = useState(false)
   const [showOverlay, setShowOverlay] = useState(false)
+  const [overlayMessage, setOverlayMessage] = useState('잠시만 기다려주세요...')
+  const [buttonState, setButtonState] = useState<'normal' | 'processing' | 'loading'>('normal')
 
-  useEffect(() => {
-    const handleOnboardingCompletion = async () => {
-      if (!user) return
-
-      try {
-        setIsCompleting(true)
+  // 시작하기 버튼 클릭 핸들러
+  const handleStart = async () => {
+    try {
+      // 1단계: 버튼 상태를 "처리 중..."으로 변경
+      setButtonState('processing')
+      
+      // 2단계: 2초 대기
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // 3단계: 로딩 오버레이 표시
+      setShowOverlay(true)
+      setButtonState('loading')
+      setIsCompleting(true)
+      setOverlayMessage('잠시만 기다려주세요...')
+      
+      if (!user) {
+        // 로그인하지 않은 경우: 로컬스토리지에만 저장
+        console.log('💾 Saving onboarding completion to localStorage (not logged in)')
         
-        // 로컬 스토리지에 온보딩 완료 저장
+        // 디바이스 사용자 이름 가져와서 저장
+        try {
+          const displayName = await getUserDisplayName()
+          console.log('📱 Got display name:', displayName)
+          saveUserDisplayName(displayName)
+        } catch (deviceError) {
+          console.error('❌ Device API error:', deviceError)
+          // Device API 오류 시 기본값 사용
+          saveUserDisplayName('익명 사용자')
+        }
+        
         completeOnboarding()
+        saveOnboardingData(state.data)
+      } else {
+        // 로그인한 경우: DB에 온보딩 완료 상태 업데이트
+        console.log('💾 Saving onboarding completion to DB (logged in)')
+        completeOnboarding() // 로컬스토리지에도 표시
         
-        // DB에 온보딩 완료 상태 업데이트
         const result = await completeOnboardingDB()
         
         if (result.success) {
           console.log('✅ 온보딩 완료 처리 성공')
-          // 온보딩 데이터를 DB에 저장하는 로직은 나중에 구현
-          // TODO: user_settings에 온보딩 데이터 저장
         } else {
-          console.error('❌ 온보딩 완료 처리 실패:', result.error)
+          console.error('❌ 온보딩 완룼 처리 실패:', result.error)
         }
-      } catch (error) {
-        console.error('❌ 온보딩 완료 처리 중 오류:', error)
-      } finally {
-        setIsCompleting(false)
       }
+      
+      // 완료 후 메시지 변경 및 이동
+      setOverlayMessage('홈페이지로 이동 중입니다...')
+      
+      // 1.5초 후 홈페이지로 이동
+      setTimeout(() => {
+        router.replace(`/${locale}`)
+      }, 1500)
+      
+    } catch (error) {
+      console.error('❌ 온보딩 완료 처리 중 오류:', error)
+      setIsCompleting(false)
+      setShowOverlay(false)
+      setButtonState('normal')
     }
-
-    handleOnboardingCompletion()
-  }, [user, completeOnboardingDB])
-
-  const handleStart = () => {
-    setShowOverlay(true)
-    
-    // 로딩 오버레이와 함께 홈페이지로 이동
-    setTimeout(() => {
-      router.replace(`/${locale}`)
-    }, 800)
   }
+
 
   return (
     <>
       {/* 로딩 오버레이 */}
       <LoadingOverlay 
         isVisible={showOverlay} 
-        message="홈페이지로 이동 중입니다..." 
+        message={overlayMessage} 
       />
       
       <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
@@ -133,12 +160,17 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       <div className="w-full max-w-sm px-4 pb-24 fade-start fade-loading">
         <button
           onClick={handleStart}
-          className="w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg simple-button"
+          disabled={buttonState !== 'normal'}
+          className={`w-full retro-button button-screen-texture tracking-wider font-semibold py-4 px-6 text-white font-jua text-lg simple-button ${
+            buttonState !== 'normal' ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           style={{ 
             background: '#4f8750'
           }}
         >
-          시작하기
+          {buttonState === 'normal' ? '시작하기' : 
+           buttonState === 'processing' ? '처리 중...' : 
+           '로딩 중...'}
         </button>
       </div>
     </div>

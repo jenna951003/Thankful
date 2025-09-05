@@ -12,8 +12,8 @@ import LoadingOverlay from '../common/LoadingOverlay'
 interface ProfileModalProps {
   isOpen: boolean
   onClose: () => void
-  user: User
-  profile: Profile
+  user: User | null
+  profile: Profile | null
   locale: string
 }
 
@@ -93,6 +93,7 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
   }
 
   const getJoinDate = () => {
+    if (!user) return '정보 없음'
     const date = new Date(user.created_at)
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
@@ -179,7 +180,7 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
                 className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
                 style={{ background: 'var(--retro-blue-gradient)' }}
               >
-                {profile.avatar_url ? (
+                {profile?.avatar_url ? (
                   <img 
                     src={profile.avatar_url} 
                     alt="Profile" 
@@ -187,7 +188,7 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
                   />
                 ) : (
                   <div className="text-white font-bold text-xl">
-                    {profile.display_name?.charAt(0) || profile.full_name?.charAt(0) || '👤'}
+                    {profile?.display_name?.charAt(0) || profile?.full_name?.charAt(0) || '👤'}
                   </div>
                 )}
               </div>
@@ -195,10 +196,10 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
               {/* 프로필 정보 */}
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-gray-800 font-jua">
-                  {profile.display_name || profile.full_name || '사용자'}
+                  {profile?.display_name || profile?.full_name || '사용자'}
                 </h2>
                 <p className="text-sm text-gray-600 font-noto-serif-kr">
-                  {user.email}
+                  {user?.email || '정보 없음'}
                 </p>
                 <p className="text-xs text-gray-500 font-noto-serif-kr">
                   {getJoinDate()} 가입
@@ -206,16 +207,16 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
               </div>
 
               {/* 구독 배지 */}
-              {profile.subscription_tier !== 'free' && (
+              {profile?.subscription_tier !== 'free' && (
                 <div 
                   className="px-2 py-1 rounded-full text-xs font-bold text-white"
                   style={{ 
-                    background: profile.subscription_tier === 'premium' 
+                    background: profile?.subscription_tier === 'premium' 
                       ? 'var(--retro-purple-gradient)' 
                       : 'var(--retro-green-gradient)'
                   }}
                 >
-                  {profile.subscription_tier === 'premium' ? 'Premium' : 'Church'}
+                  {profile?.subscription_tier === 'premium' ? 'Premium' : 'Church'}
                 </div>
               )}
             </div>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 import { useTranslation } from '../../hooks/useTranslation'
+import { getSavedDisplayName } from '../../utils/device'
 import ProfileHeader from './ProfileHeader'
 import DashboardContent from './DashboardContent'
 import BottomNavigation from './BottomNavigation'
@@ -20,6 +21,10 @@ export default function HomePage({ locale }: HomePageProps) {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('home')
   const [fadeIn, setFadeIn] = useState(false)
+  
+  // 비로그인 사용자도 홈페이지 사용 가능하도록 처리
+  const savedDisplayName = getSavedDisplayName()
+  const canShowHomePage = user ? !!profile : !!savedDisplayName
 
   useEffect(() => {
     // 페이지 로드 애니메이션
@@ -47,7 +52,8 @@ export default function HomePage({ locale }: HomePageProps) {
     )
   }
 
-  if (!user || !profile) {
+  // 진짜 오류 상황에만 오류 메시지 표시
+  if (!canShowHomePage) {
     return (
       <div 
         className="min-h-screen flex items-center justify-center"
@@ -60,6 +66,7 @@ export default function HomePage({ locale }: HomePageProps) {
         <div className="text-center">
           <div className="text-4xl mb-4">🚫</div>
           <p className="text-gray-600 font-noto-serif-kr">사용자 정보를 불러올 수 없습니다.</p>
+          <p className="text-sm text-gray-400 mt-2 font-noto-serif-kr">온보딩을 다시 진행해주세요.</p>
         </div>
       </div>
     )
@@ -77,6 +84,7 @@ export default function HomePage({ locale }: HomePageProps) {
       <ProfileHeader 
         user={user}
         profile={profile}
+        displayName={savedDisplayName}
         onProfileClick={() => setIsProfileModalOpen(true)}
       />
 
@@ -85,6 +93,7 @@ export default function HomePage({ locale }: HomePageProps) {
         activeTab={activeTab}
         user={user}
         profile={profile}
+        displayName={savedDisplayName}
       />
 
       {/* 하단 네비게이션 */}
