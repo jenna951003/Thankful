@@ -2,37 +2,41 @@
 
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
 interface GratitudeExperienceScreenProps {
   onStepChange?: (step: number) => void
   currentStep?: number
 }
 
-const experienceOptions = [
+const getExperienceOptions = (t: any) => [
   { 
     id: 'frequent', 
-    label: '자주 써요', 
+    label: t('onboarding.experience.options.frequent.label'), 
     icon: '/Forest.png',
-    description: '고급 기능을 추천해드릴게요'
+    description: t('onboarding.experience.options.frequent.description')
   },
   { 
     id: 'sometimes', 
-    label: '가끔 써봤어요', 
+    label: t('onboarding.experience.options.sometimes.label'), 
     icon: '/Tree.png',
-    description: '중급 가이드로 안내해드릴게요'
+    description: t('onboarding.experience.options.sometimes.description')
   },
   { 
     id: 'beginner', 
-    label: '처음이에요', 
+    label: t('onboarding.experience.options.beginner.label'), 
     icon: '/Gross.png',
-    description: '기초부터 차근차근 알려드릴게요'
+    description: t('onboarding.experience.options.beginner.description')
   }
 ]
 
 export default function GratitudeExperienceScreen({ onStepChange }: GratitudeExperienceScreenProps) {
   const { setGratitudeExperience, setStep } = useOnboarding()
+  const { t } = useTranslationContext()
   const [selectedExperience, setSelectedExperience] = useState<string | null>(null)
   const [showContent, setShowContent] = useState(false)
+  
+  const experienceOptions = getExperienceOptions(t)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -135,12 +139,12 @@ export default function GratitudeExperienceScreen({ onStepChange }: GratitudeExp
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
         <h1 className="text-xl font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr fade-start fade-title">
-          감사 일기 써본 적 있어요?
+          {t('onboarding.experience.title')}
         </h1>
 
         {/* 부제목 */}
         <p className="text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          당신에게 맞는 시작점을 찾아드릴게요
+          {t('onboarding.experience.subtitle')}
         </p>
 
         {/* 선택 옵션들 */}
@@ -201,7 +205,7 @@ export default function GratitudeExperienceScreen({ onStepChange }: GratitudeExp
             background: '#4f8750'
           }}
         >
-          다음
+          {t('onboarding.experience.nextButton')}
         </button>
 
         {/* 뒤로 가기 버튼 */}
@@ -209,7 +213,7 @@ export default function GratitudeExperienceScreen({ onStepChange }: GratitudeExp
           onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
-          뒤로
+          {t('onboarding.usagePurpose.backButton')}
         </button>
       </div>
     </div>

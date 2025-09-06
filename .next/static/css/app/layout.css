@@ -12437,6 +12437,9 @@
   .border-gray-400 {
     border-color: var(--color-gray-400);
   }
+  .border-gray-600 {
+    border-color: var(--color-gray-600);
+  }
   .border-green-100 {
     border-color: var(--color-green-100);
   }

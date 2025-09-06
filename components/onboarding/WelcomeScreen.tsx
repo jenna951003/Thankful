@@ -18,7 +18,7 @@ interface WelcomeScreenProps {
 export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { t } = useTranslationContext()
+  const { t, isLoading } = useTranslationContext()
   const { startTransition, setStep, reset } = useOnboarding()
   const { setIsModalOpen } = useLoginModal()
   const { signOut } = useAuth()
@@ -99,6 +99,16 @@ export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
       sessionStorage.clear()
       window.location.reload()
     }
+  }
+
+  // 번역 데이터 로딩 중일 때 로딩 화면 표시
+  if (isLoading) {
+    return (
+      <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative justify-center`}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-600"></div>
+        <p className="mt-4 text-gray-600 font-noto-serif-kr">번역 데이터를 로딩하는 중...</p>
+      </div>
+    )
   }
 
   return (

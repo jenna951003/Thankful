@@ -52,13 +52,14 @@
       "subtitle": "Prepararemos indicaciones personalizadas para ti",
       "note": "Se permiten múltiples selecciones",
       "options": {
-        "daily": "Pequeñas cosas diarias",
-        "family": "Familia y relaciones", 
-        "guidance": "La guía de Dios",
-        "health": "Salud y vida",
-        "dreams": "Sueños y visión",
-        "prayers": "Respuestas a oraciones",
-        "community": "Comunidad de la iglesia"
+        "daily": "Diario",
+        "family": "Familia", 
+        "guidance": "Guía",
+        "health": "Salud",
+        "dreams": "Sueños y Visión",
+        "prayers": "Respuestas a Oraciones",
+        "community": "Comunidad",
+        "work": "Trabajo/Carrera"
       },
       "selectedCount": " seleccionado",
       "nextButton": "Continuar",
@@ -70,7 +71,7 @@
       "timeOptions": {
         "morning": {
           "label": "8 AM",
-          "description": "Después de la oración matutina"
+          "description": "Empezando el día"
         },
         "evening": {
           "label": "6 PM",
@@ -85,9 +86,13 @@
           "description": "Lo configuraré más tarde"
         }
       },
+      "dailyNotification": {
+        "title": "Notificaciones diarias",
+        "description": "Recibir recordatorios diarios de gratitud"
+      },
       "weeklyReview": {
-        "title": "Recordatorio de revisión semanal",
-        "description": "Domingo por la noche (reflexión semanal)"
+        "title": "Revisión semanal de gratitud",
+        "description": "Organizaremos tu gratitud de la semana"
       },
       "nextButton": "Continuar"
     },
@@ -271,7 +276,18 @@
         "personal": "Plan Personal",
         "church": "Plan Iglesia"
       }
+    },
+    "complete": {
+      "title": "¡Todo está listo!",
+      "subtitle": "Encuentra y registra pequeñas\ngratitudes diarias",
+      "startButton": "Comenzar"
     }
+  },
+  "loading": {
+    "pleaseWait": "Por favor espere...",
+    "processing": "Procesando...",
+    "loading": "Cargando...",
+    "redirectingHome": "Redirigiendo a la página principal..."
   },
   "home": {
     "greeting": {

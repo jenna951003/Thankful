@@ -9,46 +9,47 @@ import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
-const interestOptions = [
+const getInterestOptions = (t: any) => [
   { 
     id: 'daily', 
-    label: '일상', 
+    label: t('onboarding.interests.options.daily'), 
     icon: '/1.png'
   },
   { 
     id: 'family', 
-    label: '가족', 
+    label: t('onboarding.interests.options.family'), 
     icon: '/2.png'
   },
   { 
     id: 'guidance', 
-    label: '인도하심', 
+    label: t('onboarding.interests.options.guidance'), 
     icon: '/3.png'
   },
   { 
     id: 'health', 
-    label: '건강', 
+    label: t('onboarding.interests.options.health'), 
     icon: '/4.png'
   },
   { 
     id: 'dreams', 
-    label: '꿈과 비전', 
+    label: t('onboarding.interests.options.dreams'), 
     icon: '/5.png'
   },
   { 
     id: 'prayers', 
-    label: '기도 응답', 
+    label: t('onboarding.interests.options.prayers'), 
     icon: '/6.png'
   },
   { 
     id: 'community', 
-    label: '공동체', 
+    label: t('onboarding.interests.options.community'), 
     icon: '/7.png'
   },
   { 
     id: 'work', 
-    label: '일/직장', 
+    label: t('onboarding.interests.options.work'), 
     icon: '/8.png'
   }
 ]
@@ -58,8 +59,11 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
   const locale = params.locale as string
   const { setInterests, setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
+  const { t } = useTranslationContext()
   const [selectedInterests, setSelectedInterests] = useState<string[]>([])
   const [showContent, setShowContent] = useState(false)
+  
+  const interestOptions = getInterestOptions(t)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -166,12 +170,12 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
         <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
-          어떤 것에 감사를 더 표현하고 싶나요?
+          {t('onboarding.interests.title')}
         </h1>
 
         {/* 부제목 */}
         <p className="text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          맞춤 프롬프트를 준비해드릴게요
+          {t('onboarding.interests.subtitle')}
         </p>
 
         {/* 관심 영역 선택 */}
@@ -224,7 +228,7 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
             background: '#4f8750'
           }}
         >
-          다음
+          {t('onboarding.interests.nextButton')}
         </button>
 
         {/* 뒤로 가기 버튼 */}
@@ -232,7 +236,7 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
           onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
-          뒤로
+          {t('onboarding.usagePurpose.backButton')}
         </button>
       </div>
     </div>

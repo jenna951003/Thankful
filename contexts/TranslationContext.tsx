@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { getTranslationFallback } from '../utils/translationFallbacks'
 
 interface TranslationContextType {
   locale: string
@@ -55,19 +56,36 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   }, [locale])
 
   const t = (key: string): string => {
+    // 번역 데이터가 아직 로딩 중이면 fallback 사용
+    if (isLoading || !translations || Object.keys(translations).length === 0) {
+      console.warn(`⏳ [Translation] Data not ready, using fallback: ${key} (locale: ${locale}, isLoading: ${isLoading})`)
+      return getTranslationFallback(key, locale)
+    }
+
     const keys = key.split('.')
     let value = translations
     
-    for (const k of keys) {
+    console.debug(`🔍 [Translation] Looking for key: ${key} in locale: ${locale}`)
+    
+    for (let i = 0; i < keys.length; i++) {
+      const k = keys[i]
       if (value && typeof value === 'object' && k in value) {
         value = value[k]
+        console.debug(`  ✓ Found part ${i + 1}/${keys.length}: ${keys.slice(0, i + 1).join('.')}`)
       } else {
         console.warn(`🔍 [Translation] Key not found: ${key} (locale: ${locale})`)
-        return key
+        console.warn(`  ❌ Failed at part ${i + 1}/${keys.length}: '${k}' not found in:`, Object.keys(value || {}))
+        console.warn(`  📊 Available translations:`, translations)
+        
+        // fallback 값 시도
+        const fallback = getTranslationFallback(key, locale)
+        console.warn(`  🔄 Using fallback: ${fallback}`)
+        return fallback
       }
     }
     
     const result = typeof value === 'string' ? value : key
+    console.debug(`  ✅ Final result for '${key}': ${result}`)
     return result
   }
 

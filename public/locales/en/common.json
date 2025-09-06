@@ -52,13 +52,14 @@
       "subtitle": "We'll prepare customized prompts for you",
       "note": "Multiple selections allowed",
       "options": {
-        "daily": "Daily little things",
-        "family": "Family and relationships", 
-        "guidance": "God's guidance",
-        "health": "Health and life",
-        "dreams": "Dreams and vision",
-        "prayers": "Prayer answers",
-        "community": "Church community"
+        "daily": "Daily",
+        "family": "Family", 
+        "guidance": "Guidance",
+        "health": "Health",
+        "dreams": "Dreams and Vision",
+        "prayers": "Prayer Answers",
+        "community": "Community",
+        "work": "Work/Career"
       },
       "selectedCount": " selected",
       "nextButton": "Continue",
@@ -70,7 +71,7 @@
       "timeOptions": {
         "morning": {
           "label": "8 AM",
-          "description": "After morning prayer"
+          "description": "Starting the day"
         },
         "evening": {
           "label": "6 PM",
@@ -85,9 +86,13 @@
           "description": "I'll set it up later"
         }
       },
+      "dailyNotification": {
+        "title": "Daily notifications",
+        "description": "Receive daily gratitude reminders"
+      },
       "weeklyReview": {
-        "title": "Weekly review reminder",
-        "description": "Sunday evening (weekly reflection)"
+        "title": "Weekly gratitude review",
+        "description": "We'll organize your week's gratitude"
       },
       "nextButton": "Continue"
     },
@@ -111,6 +116,11 @@
       },
       "saveButton": "Save and Continue",
       "skipButton": "Skip"
+    },
+    "complete": {
+      "title": "Everything is ready!",
+      "subtitle": "Find and record small daily\ngratitudes",
+      "startButton": "Get Started"
     },
     "subscription": {
       "title": "Start a deeper journey\nof gratitude",
@@ -237,11 +247,13 @@
         "resetFailed": "Password reset failed.",
         "resetError": "An error occurred during password reset."
       }
-    },
-    "complete": {
-      "title": "Onboarding completed! 🎉",
-      "subtitle": "You're ready to start your gratitude journey.\nRedirecting to the main screen soon..."
     }
+  },
+  "loading": {
+    "pleaseWait": "Please wait...",
+    "processing": "Processing...",
+    "loading": "Loading...",
+    "redirectingHome": "Redirecting to homepage..."
   },
   "modals": {
     "subscription": {
@@ -271,6 +283,11 @@
         "personal": "Personal Plan",
         "church": "Church Plan"
       }
+    },
+    "complete": {
+      "title": "Everything is ready!",
+      "subtitle": "Find and record small daily\ngratitudes",
+      "startButton": "Get Started"
     }
   },
   "home": {

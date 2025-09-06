@@ -52,13 +52,14 @@
       "subtitle": "맞춤 프롬프트를 준비해드릴게요",
       "note": "복수 선택 가능해요",
       "options": {
-        "daily": "일상의 작은 것들",
-        "family": "가족과 관계", 
-        "guidance": "하나님의 인도하심",
-        "health": "건강과 생명",
+        "daily": "일상",
+        "family": "가족", 
+        "guidance": "인도하심",
+        "health": "건강",
         "dreams": "꿈과 비전",
         "prayers": "기도 응답",
-        "community": "교회 공동체"
+        "community": "공동체",
+        "work": "일/직장"
       },
       "selectedCount": "개 선택됨",
       "nextButton": "다음으로",
@@ -70,7 +71,7 @@
       "timeOptions": {
         "morning": {
           "label": "오전 8시",
-          "description": "새벽 기도 후"
+          "description": "하루를 시작하며"
         },
         "evening": {
           "label": "오후 6시",
@@ -85,9 +86,13 @@
           "description": "나중에 설정할게요"
         }
       },
+      "dailyNotification": {
+        "title": "일일 알림",
+        "description": "매일 감사 리마인더 받기"
+      },
       "weeklyReview": {
-        "title": "주간 리뷰 알림",
-        "description": "일요일 저녁 (한 주 돌아보기)"
+        "title": "주간 감사 리뷰",
+        "description": "일주일 감사를 정리해드릴게요"
       },
       "nextButton": "다음으로"
     },
@@ -239,9 +244,16 @@
       }
     },
     "complete": {
-      "title": "온보딩이 완료되었습니다! 🎉",
-      "subtitle": "감사의 여정을 시작할 준비가 되었어요.\n곧 메인 화면으로 이동합니다..."
+      "title": "모든 준비가 완료되었어요!",
+      "subtitle": "매일 작은 감사를 찾아\n기록해보세요",
+      "startButton": "시작하기"
     }
+  },
+  "loading": {
+    "pleaseWait": "잠시만 기다려주세요...",
+    "processing": "처리 중...",
+    "loading": "로딩 중...",
+    "redirectingHome": "홈페이지로 이동 중입니다..."
   },
   "modals": {
     "subscription": {
@@ -271,6 +283,11 @@
         "personal": "개인 플랜",
         "church": "교회 플랜"
       }
+    },
+    "complete": {
+      "title": "모든 준비가 완료되었어요!",
+      "subtitle": "매일 작은 감사를 찾아\n기록해보세요",
+      "startButton": "시작하기"
     }
   },
   "home": {

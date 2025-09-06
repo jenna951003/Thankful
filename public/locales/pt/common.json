@@ -52,13 +52,14 @@
       "subtitle": "Prepararemos prompts personalizados para você",
       "note": "Múltiplas seleções são permitidas",
       "options": {
-        "daily": "Pequenas coisas do dia a dia",
-        "family": "Família e relacionamentos", 
-        "guidance": "A orientação de Deus",
-        "health": "Saúde e vida",
-        "dreams": "Sonhos e visão",
-        "prayers": "Respostas a orações",
-        "community": "Comunidade da igreja"
+        "daily": "Diário",
+        "family": "Família", 
+        "guidance": "Orientação",
+        "health": "Saúde",
+        "dreams": "Sonhos e Visão",
+        "prayers": "Respostas a Orações",
+        "community": "Comunidade",
+        "work": "Trabalho/Carreira"
       },
       "selectedCount": " selecionado",
       "nextButton": "Continuar",
@@ -70,7 +71,7 @@
       "timeOptions": {
         "morning": {
           "label": "8h",
-          "description": "Após a oração matinal"
+          "description": "Começando o dia"
         },
         "evening": {
           "label": "18h",
@@ -85,9 +86,13 @@
           "description": "Configurarei mais tarde"
         }
       },
+      "dailyNotification": {
+        "title": "Notificações diárias",
+        "description": "Receber lembretes diários de gratidão"
+      },
       "weeklyReview": {
-        "title": "Lembrete de revisão semanal",
-        "description": "Domingo à noite (reflexão semanal)"
+        "title": "Revisão semanal de gratidão",
+        "description": "Organizaremos sua gratidão da semana"
       },
       "nextButton": "Continuar"
     },
@@ -271,7 +276,18 @@
         "personal": "Plano Pessoal",
         "church": "Plano Igreja"
       }
+    },
+    "complete": {
+      "title": "Tudo está pronto!",
+      "subtitle": "Encontre e registre pequenas\ngratidões diárias",
+      "startButton": "Começar"
     }
+  },
+  "loading": {
+    "pleaseWait": "Aguarde por favor...",
+    "processing": "Processando...",
+    "loading": "Carregando...",
+    "redirectingHome": "Redirecionando para a página inicial..."
   },
   "home": {
     "greeting": {

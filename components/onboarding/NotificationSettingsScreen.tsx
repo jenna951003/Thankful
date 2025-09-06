@@ -8,20 +8,21 @@ interface NotificationSettingsScreenProps {
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
-const timeOptions = [
+const getTimeOptions = (t: any) => [
   { 
     id: 'morning', 
     time: '8:00', 
-    label: '오전 8시', 
-    description: '하루를 시작하며',
+    label: t('onboarding.notifications.timeOptions.morning.label'), 
+    description: t('onboarding.notifications.timeOptions.morning.description'),
     icon: '🌅'
   },
   { 
     id: 'night', 
     time: '21:00', 
-    label: '오후 9시', 
-    description: '잠들기 전',
+    label: t('onboarding.notifications.timeOptions.night.label'), 
+    description: t('onboarding.notifications.timeOptions.night.description'),
     icon: '🌙'
   }
 ]
@@ -30,9 +31,12 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
   const params = useParams()
   const locale = params.locale as string
   const { setNotifications, setStep } = useOnboarding()
+  const { t } = useTranslationContext()
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [weeklyReview, setWeeklyReview] = useState(true)
   const [showContent, setShowContent] = useState(false)
+  
+  const timeOptions = getTimeOptions(t)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -202,12 +206,12 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
         <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
-          감사 습관을 만들어볼까요?
+          {t('onboarding.notifications.title')}
         </h1>
 
         {/* 부제목 */}
         <p className="text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          매일 감사 리마인더
+          {t('onboarding.notifications.subtitle')}
         </p>
 
         {/* 시간 선택 옵션들 */}
@@ -260,8 +264,8 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
         <div className="fade-start fade-weekly mb-3">
           <div className="flex h-16 items-center justify-between p-3 px-4 bg-white font-noto-serif-kr rounded-lg">
             <div className="text-left">
-              <div className="font-extrabold text-[14px] text-gray-800">일일 알림</div>
-              <div className="text-[11px] font-bold text-gray-500">매일 감사 리마인더 받기</div>
+              <div className="font-extrabold text-[14px] text-gray-800">{t('onboarding.notifications.dailyNotification.title')}</div>
+              <div className="text-[11px] font-bold text-gray-500">{t('onboarding.notifications.dailyNotification.description')}</div>
             </div>
             <button
               onClick={() => setSelectedTime(selectedTime ? null : 'morning')}
@@ -280,8 +284,8 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
         <div className="fade-start fade-weekly mb-8">
           <div className="flex items-center justify-between p-3 px-4 bg-white font-noto-serif-kr rounded-lg">
             <div className="text-left">
-              <div className="font-extrabold text-[14px] text-gray-800">주간 감사 리뷰</div>
-              <div className="text-[11px] font-bold text-gray-500">일주일 감사를 정리해드릴게요</div>
+              <div className="font-extrabold text-[14px] text-gray-800">{t('onboarding.notifications.weeklyReview.title')}</div>
+              <div className="text-[11px] font-bold text-gray-500">{t('onboarding.notifications.weeklyReview.description')}</div>
             </div>
             <button
               onClick={() => setWeeklyReview(!weeklyReview)}
@@ -307,7 +311,7 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
             background: '#4f8750'
           }}
         >
-          다음
+          {t('onboarding.notifications.nextButton')}
         </button>
 
         {/* 뒤로 가기 버튼 */}
@@ -315,7 +319,7 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
           onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
-          뒤로
+          {t('onboarding.usagePurpose.backButton')}
         </button>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useTranslation } from '../../hooks/useTranslation'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 import { useAuth } from '../../contexts/AuthContext'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { completeOnboarding, saveOnboardingData } from '../../utils/onboarding'
@@ -17,12 +17,12 @@ interface OnboardingCompleteClientProps {
 
 export default function OnboardingCompleteClient({ locale }: OnboardingCompleteClientProps) {
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t } = useTranslationContext()
   const { completeOnboarding: completeOnboardingDB, user, updateProfile } = useAuth()
   const { state } = useOnboarding()
   const [isCompleting, setIsCompleting] = useState(false)
   const [showOverlay, setShowOverlay] = useState(false)
-  const [overlayMessage, setOverlayMessage] = useState('잠시만 기다려주세요...')
+  const [overlayMessage, setOverlayMessage] = useState(t('loading.pleaseWait') || '잠시만 기다려주세요...')
   const [buttonState, setButtonState] = useState<'normal' | 'processing' | 'loading'>('normal')
   const [showContent, setShowContent] = useState(false)
 
@@ -47,7 +47,7 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       setShowOverlay(true)
       setButtonState('loading')
       setIsCompleting(true)
-      setOverlayMessage('잠시만 기다려주세요...')
+      setOverlayMessage(t('loading.pleaseWait') || '잠시만 기다려주세요...')
       
       if (!user) {
         // 로그인하지 않은 경우: 로컬스토리지에만 저장
@@ -81,7 +81,7 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       }
       
       // 완료 후 메시지 변경 및 이동
-      setOverlayMessage('홈페이지로 이동 중입니다...')
+      setOverlayMessage(t('loading.redirectingHome') || '홈페이지로 이동 중입니다...')
       
       // 1.5초 후 홈페이지로 이동
       setTimeout(() => {
@@ -164,12 +164,12 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
 
         {/* 타이틀 */}
         <h1 className="text-xl -mx-2 font-extrabold text-gray-800 mb-4 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
-          모든 준비가 완료되었어요!
+          {t('onboarding.complete.title')}
         </h1>
 
         {/* 부제목 */}
         <p className="text-base text-gray-500 mb-6 font-bold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          매일 작은 감사를 찾아<br />기록해보세요
+          {t('onboarding.complete.subtitle')}
         </p>
       </div>
 
@@ -185,9 +185,11 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
             background: '#4f8750'
           }}
         >
-          {buttonState === 'normal' ? '시작하기' : 
-           buttonState === 'processing' ? '처리 중...' : 
-           '로딩 중...'}
+          {buttonState === 'normal' 
+            ? (t('onboarding.complete.startButton') || '시작하기') 
+            : buttonState === 'processing' 
+            ? (t('loading.processing') || '처리 중...') 
+            : (t('loading.loading') || '로딩 중...')}
         </button>
       </div>
     </div>

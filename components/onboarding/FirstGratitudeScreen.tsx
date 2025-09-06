@@ -9,13 +9,14 @@ import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
-const moodOptions = [
-  { id: 'joyful', image: 'Smile.png', label: '기쁨' },
-  { id: 'peaceful', image: 'Comfortable.png', label: '평안' },
-  { id: 'grateful', image: 'Thanks.png', label: '감사' },
-  { id: 'hopeful', image: 'Hope.png', label: '소망' },
-  { id: 'blessed', image: 'Blessing.png', label: '축복' }
+const getMoodOptions = (t: any) => [
+  { id: 'joyful', image: 'Smile.png', label: t('onboarding.firstGratitude.mood.options.joyful') },
+  { id: 'peaceful', image: 'Comfortable.png', label: t('onboarding.firstGratitude.mood.options.peaceful') },
+  { id: 'grateful', image: 'Thanks.png', label: t('onboarding.firstGratitude.mood.options.grateful') },
+  { id: 'hopeful', image: 'Hope.png', label: t('onboarding.firstGratitude.mood.options.hopeful') },
+  { id: 'blessed', image: 'Blessing.png', label: t('onboarding.firstGratitude.mood.options.blessed') }
 ]
 
 export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScreenProps) {
@@ -23,13 +24,16 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
   const locale = params.locale as string
   const { setFirstGratitude, setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
+  const { t } = useTranslationContext()
   const [gratitudeItems, setGratitudeItems] = useState([''])
   const [selectedMood, setSelectedMood] = useState<string | null>(null)
   const [showContent, setShowContent] = useState(false)
   const [checkIconVisible, setCheckIconVisible] = useState(false)
   const [checkIconAnimating, setCheckIconAnimating] = useState(false)
-  const [buttonText, setButtonText] = useState('건너뛰기')
+  const [buttonText, setButtonText] = useState(t('onboarding.firstGratitude.skipButton'))
   const [buttonTextAnimating, setButtonTextAnimating] = useState(false)
+  
+  const moodOptions = getMoodOptions(t)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -58,10 +62,10 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
       }, 400)
       
       // 버튼 텍스트 애니메이션 - 건너뛰기 → 저장하고 계속
-      if (buttonText === '건너뛰기') {
+      if (buttonText === t('onboarding.firstGratitude.skipButton')) {
         setButtonTextAnimating(true)
         setTimeout(() => {
-          setButtonText('저장하고 계속')
+          setButtonText(t('onboarding.firstGratitude.saveButton'))
           setTimeout(() => {
             setButtonTextAnimating(false)
           }, 50)
@@ -76,10 +80,10 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
       }, 300)
       
       // 버튼 텍스트 애니메이션 - 저장하고 계속 → 건너뛰기
-      if (buttonText === '저장하고 계속') {
+      if (buttonText === t('onboarding.firstGratitude.saveButton')) {
         setButtonTextAnimating(true)
         setTimeout(() => {
-          setButtonText('건너뛰기')
+          setButtonText(t('onboarding.firstGratitude.skipButton'))
           setTimeout(() => {
             setButtonTextAnimating(false)
           }, 50)
@@ -242,12 +246,12 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
         <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
-          첫 번째 감사를 기록해보세요!
+          {t('onboarding.firstGratitude.title')}
         </h1>
 
         {/* 부제목 */}
         <p className="text-sm text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          오늘 하나님께 감사한 일이 있다면?
+          {t('onboarding.firstGratitude.subtitle')}
         </p>
 
         {/* 감사 입력 필드 */}
@@ -256,7 +260,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
                           <textarea
                 value={gratitudeItems[0]}
                 onChange={(e) => handleItemChange(0, e.target.value)}
-                placeholder="감사한 일을 적어보세요."
+                placeholder={t('onboarding.firstGratitude.placeholder')}
                 className="w-full px-4 py-3 bg-white/80 text-base rounded-2xl focus:outline-none font-semibold font-noto-serif-kr placeholder-gray-400 resize-none placeholder-fade auto-resize"
                 data-index="0"
                 style={{ minHeight: '80px', height: 'auto' }}
@@ -291,7 +295,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
             </div>
             <div className="text-left">
               <div className="font-extrabold text-[14px] text-gray-800">
-                팁 &nbsp;<span className="text-[12px] font-bold text-gray-500">"오늘 주신 건강", "가족의 평안", "말씀으로 주신 위로" 등</span>
+                {t('onboarding.firstGratitude.tip.title')} &nbsp;<span className="text-[12px] font-bold text-gray-500">{t('onboarding.firstGratitude.tip.description')}</span>
               </div>
             </div>
           </div>
@@ -300,7 +304,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
         {/* 기분 선택 */}
         <div className="fade-start fade-mood">
           <div className="text-center mb-2">
-            <h3 className="font-semibold text-gray-700 tracking-wide font-jua mb-4">지금 기분은 어떤가요?</h3>
+            <h3 className="font-semibold text-gray-700 tracking-wide font-jua mb-4">{t('onboarding.firstGratitude.mood.title')}</h3>
           </div>
           
           <div className="flex justify-between w-full gap-2 mb-8">
@@ -362,7 +366,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
           onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
-          뒤로
+          {t('onboarding.usagePurpose.backButton')}
         </button>
       </div>
     </div>
