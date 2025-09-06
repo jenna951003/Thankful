@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import { useTranslation } from '../../hooks/useTranslation'
 
 interface TabItem {
   id: string
@@ -15,39 +16,7 @@ interface BottomTabsProps {
   locale: string
 }
 
-const tabs: TabItem[] = [
-  {
-    id: 'home',
-    icon: 'home',
-    label: '홈',
-    path: '/home'
-  },
-  {
-    id: 'saved',
-    icon: 'bookmark',
-    label: '저장됨',
-    path: '/saved'
-  },
-  {
-    id: 'create',
-    icon: 'plus',
-    label: '작성',
-    path: '/create',
-    isMainAction: true
-  },
-  {
-    id: 'community',
-    icon: 'users',
-    label: '커뮤니티',
-    path: '/community'
-  },
-  {
-    id: 'settings',
-    icon: 'settings',
-    label: '설정',
-    path: '/settings'
-  }
-]
+// tabs는 이제 컴포넌트 내부에서 생성됩니다
 
 const getIconSvg = (iconName: string, isActive: boolean) => {
   const color = isActive ? '#3b82f6' : '#9ca3af'
@@ -95,9 +64,44 @@ const getIconSvg = (iconName: string, isActive: boolean) => {
 }
 
 export default function BottomTabs({ locale }: BottomTabsProps) {
+  const { t } = useTranslation()
   const router = useRouter()
   const pathname = usePathname()
   const [showCreateModal, setShowCreateModal] = useState(false)
+
+  const tabs: TabItem[] = [
+    {
+      id: 'home',
+      icon: 'home',
+      label: t('navigation.home'),
+      path: '/home'
+    },
+    {
+      id: 'saved',
+      icon: 'bookmark',
+      label: t('navigation.saved'),
+      path: '/saved'
+    },
+    {
+      id: 'create',
+      icon: 'plus',
+      label: t('navigation.create'),
+      path: '/create',
+      isMainAction: true
+    },
+    {
+      id: 'community',
+      icon: 'users',
+      label: t('navigation.community'),
+      path: '/community'
+    },
+    {
+      id: 'settings',
+      icon: 'settings',
+      label: t('navigation.settings'),
+      path: '/settings'
+    }
+  ]
 
   const currentTab = tabs.find(tab => pathname.includes(tab.path))?.id || 'home'
 

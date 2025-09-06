@@ -16,9 +16,190 @@
       "startButton": "Comenzar",
       "signInButton": "Ya tengo una cuenta"
     },
+    "usagePurpose": {
+      "title": " ¿cómo te gustaría usarlo?",
+      "subtitle": "El panel de inicio se configurará según el propósito seleccionado, y puedes cambiarlo en cualquier momento en la configuración",
+      "options": {
+        "personal": "Registros personales de gratitud",
+        "family": "Compartir con la familia",
+        "church": "Conectar con la comunidad de la iglesia",
+        "sermon": "Organizar sermones/oraciones"
+      },
+      "backButton": "Atrás",
+      "nextButton": "Siguiente"
+    },
+    "experience": {
+      "title": "¿Has escrito un diario de gratitud antes?",
+      "subtitle": "Te ayudaremos a encontrar el punto de partida adecuado",
+      "options": {
+        "frequent": {
+          "label": "Escribo a menudo",
+          "description": "Te recomendaremos funciones avanzadas"
+        },
+        "sometimes": {
+          "label": "A veces", 
+          "description": "Te proporcionaremos una guía intermedia"
+        },
+        "beginner": {
+          "label": "Es mi primera vez",
+          "description": "Te guiaremos paso a paso desde lo básico"
+        }
+      },
+      "nextButton": "Continuar"
+    },
+    "interests": {
+      "title": "¿Por qué te gustaría expresar más gratitud?",
+      "subtitle": "Prepararemos indicaciones personalizadas para ti",
+      "note": "Se permiten múltiples selecciones",
+      "options": {
+        "daily": "Pequeñas cosas diarias",
+        "family": "Familia y relaciones", 
+        "guidance": "La guía de Dios",
+        "health": "Salud y vida",
+        "dreams": "Sueños y visión",
+        "prayers": "Respuestas a oraciones",
+        "community": "Comunidad de la iglesia"
+      },
+      "selectedCount": " seleccionado",
+      "nextButton": "Continuar",
+      "skipButton": "Saltar"
+    },
+    "notifications": {
+      "title": "¿Construimos un hábito de gratitud?",
+      "subtitle": "Recordatorios diarios de gratitud",
+      "timeOptions": {
+        "morning": {
+          "label": "8 AM",
+          "description": "Después de la oración matutina"
+        },
+        "evening": {
+          "label": "6 PM",
+          "description": "Camino a casa"
+        },
+        "night": {
+          "label": "9 PM", 
+          "description": "Antes de dormir"
+        },
+        "none": {
+          "label": "No configurar",
+          "description": "Lo configuraré más tarde"
+        }
+      },
+      "weeklyReview": {
+        "title": "Recordatorio de revisión semanal",
+        "description": "Domingo por la noche (reflexión semanal)"
+      },
+      "nextButton": "Continuar"
+    },
+    "firstGratitude": {
+      "title": "Registra tu primera gratitud",
+      "subtitle": "¿Hay algo por lo que te sientes agradecido a Dios hoy?",
+      "placeholder": ". Escribe algo por lo que estés agradecido...",
+      "tip": {
+        "title": "Consejo",
+        "description": "¡Incluso las cosas pequeñas son geniales! \"Una taza de café caliente\", \"Un día seguro\", etc."
+      },
+      "mood": {
+        "title": "¿Cómo te sientes ahora?",
+        "options": {
+          "joyful": "Alegre",
+          "peaceful": "Pacífico", 
+          "grateful": "Agradecido",
+          "hopeful": "Esperanzado",
+          "blessed": "Bendecido"
+        }
+      },
+      "saveButton": "Guardar y continuar",
+      "skipButton": "Saltar"
+    },
+    "subscription": {
+      "title": "Comienza un viaje más profundo de gratitud",
+      "subtitle": "Enriquece tu vida de gratitud con Premium",
+      "features": {
+        "prompts": {
+          "title": "1000+ Indicaciones de Gratitud",
+          "description": "Preguntas personalizadas para diversas situaciones"
+        },
+        "ai": {
+          "title": "Análisis Personal con IA",
+          "description": "Análisis de patrones de gratitud e insights"
+        },
+        "reports": {
+          "title": "Informes de Crecimiento de Gratitud", 
+          "description": "Informes mensuales/anuales del viaje de gratitud"
+        },
+        "notes": {
+          "title": "Notas de Sermón y Oración",
+          "description": "Gestión integrada de registros de Palabra y oración"
+        },
+        "community": {
+          "title": "Comunidad de Fe",
+          "description": "Comparte gratitud juntos"
+        }
+      },
+      "pricing": {
+        "trial": "Prueba gratuita de 7 días",
+        "price": "Luego $4.99/mes",
+        "cancel": "Cancela en cualquier momento"
+      },
+      "startTrialButton": "Comenzar Prueba Gratuita ✨",
+      "exploreButton": "Exploraré más tarde",
+      "terms": "Puedes cancelar en cualquier momento antes de que termine el período de prueba gratuita.\nAl suscribirte, aceptas los Términos de Servicio y la Política de Privacidad."
+    },
+    "signUp": {
+      "title": "Comencemos tu diario de gratitud",
+      "subtitle": "Registra hermosamente la gracia de Dios",
+      "googleButton": "Comenzar con Google",
+      "facebookButton": "Comenzar con Facebook",
+      "appleButton": "Comenzar con Apple",
+      "emailDivider": "o con correo electrónico",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ingresa tu nombre completo",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Ingresa nuevamente tu contraseña",
+      "signUpButton": "Registrarse",
+      "signingUp": "Registrando...",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Iniciar sesión",
+      "agreements": {
+        "terms": "Términos de Servicio",
+        "privacy": "Política de Privacidad",
+        "agree": ".",
+        "required": "*"
+      },
+      "errors": {
+        "emailRequired": "Por favor ingresa tu correo electrónico.",
+        "emailInvalid": "Formato de correo electrónico no válido.",
+        "passwordRequired": "Por favor ingresa tu contraseña.",
+        "passwordMinLength": "La contraseña debe tener al menos 6 caracteres.",
+        "passwordFormat": "La contraseña debe contener letras y números.",
+        "confirmPasswordRequired": "Por favor confirma tu contraseña.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "fullNameRequired": "Por favor ingresa tu nombre.",
+        "fullNameMinLength": "El nombre debe tener al menos 2 caracteres.",
+        "fullNameMaxLength": "El nombre debe tener máximo 20 caracteres.",
+        "fullNameFormat": "El nombre solo puede contener letras, números y guiones bajos.",
+        "agreementRequired": "Debes aceptar los Términos de Servicio y la Política de Privacidad para registrarte.",
+        "signUpFailed": "Error durante el registro.",
+        "googleSignUpFailed": "Registro con Google fallido.",
+        "facebookSignUpFailed": "Registro con Facebook fallido.",
+        "appleSignUpFailed": "Registro con Apple fallido.",
+        "googleSignUpError": "Error durante el registro con Google.",
+        "facebookSignUpError": "Error durante el registro con Facebook.",
+        "appleSignUpError": "Error durante el registro con Apple."
+      }
+    },
     "login": {
       "title": "¡Qué bueno verte de nuevo!",
       "subtitle": "Inicia sesión en tu cuenta para continuar tu viaje de gratitud",
+      "googleButton": "Iniciar con Google",
+      "facebookButton": "Iniciar con Facebook",
+      "appleButton": "Iniciar con Apple",
+      "emailDivider": "o con correo electrónico",
       "email": "Correo electrónico",
       "emailPlaceholder": "Ingresa tu correo electrónico",
       "password": "Contraseña",
@@ -28,7 +209,96 @@
       "loggingIn": "Iniciando sesión...",
       "cancelButton": "Cancelar",
       "noAccount": "¿Aún no tienes una cuenta?",
-      "signUpButton": "Registrarse"
+      "signUpButton": "Registrarse",
+      "errors": {
+        "loginFailed": "Inicio de sesión fallido.",
+        "googleLoginFailed": "Inicio de sesión con Google fallido.",
+        "facebookLoginFailed": "Inicio de sesión con Facebook fallido.",
+        "appleLoginFailed": "Inicio de sesión con Apple fallido.",
+        "googleLoginError": "Error durante el inicio de sesión con Google.",
+        "facebookLoginError": "Error durante el inicio de sesión con Facebook.",
+        "appleLoginError": "Error durante el inicio de sesión con Apple."
+      }
+    },
+    "forgotPassword": {
+      "title": "Restablecer contraseña",
+      "subtitle": "Ingresa la dirección de correo con la que te registraste",
+      "description": "Te enviaremos un enlace para restablecer tu contraseña",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingresa tu correo de registro",
+      "sendButton": "Enviar enlace de restablecimiento",
+      "sending": "Enviando...",
+      "backToLogin": "Volver al inicio de sesión",
+      "success": "¡Correo de restablecimiento enviado!",
+      "successDescription": "Revisa tu correo para restablecer tu contraseña",
+      "errors": {
+        "emailRequired": "Por favor ingresa tu correo electrónico.",
+        "emailInvalid": "Formato de correo electrónico no válido.",
+        "resetFailed": "Error al restablecer la contraseña.",
+        "resetError": "Error durante el restablecimiento de contraseña."
+      }
+    },
+    "complete": {
+      "title": "¡Incorporación completada! 🎉",
+      "subtitle": "Estás listo para comenzar tu viaje de gratitud.\nRedirigiendo a la pantalla principal pronto..."
+    }
+  },
+  "modals": {
+    "subscription": {
+      "features": {
+        "prompts": {
+          "title": "1000+ Indicaciones de Gratitud",
+          "description": "Preguntas personalizadas para diversas situaciones"
+        },
+        "ai": {
+          "title": "Análisis Personal con IA",
+          "description": "Análisis de patrones de gratitud e insights"
+        },
+        "reports": {
+          "title": "Informes de Crecimiento de Gratitud",
+          "description": "Informes mensuales/anuales del viaje de gratitud"
+        },
+        "palette": {
+          "title": "Decoración de Notas de Gratitud/Sermón/Oración",
+          "description": "Haz tus registros especiales con plantillas hermosas"
+        },
+        "community": {
+          "title": "Comunidad de Fe",
+          "description": "Compartir gratitud juntos"
+        }
+      },
+      "pricing": {
+        "personal": "Plan Personal",
+        "church": "Plan Iglesia"
+      }
+    }
+  },
+  "home": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    }
+  },
+  "navigation": {
+    "home": "Inicio",
+    "write": "Escribir",
+    "saved": "Guardado",
+    "stats": "Estadísticas",
+    "settings": "Configuración"
+  },
+  "main": {
+    "welcome": {
+      "title": "¡Bienvenido!",
+      "subtitle": "Tu viaje de gratitud ha comenzado.\nDescubre y registra\npequeñas bendiciones todos los días.",
+      "startButton": "Comenzar Diario de Gratitud",
+      "onboardingButton": "Ver Incorporación de Nuevo"
+    },
+    "development": {
+      "title": "En Desarrollo",
+      "subtitle": "Las funciones principales del diario de gratitud\n¡estarán disponibles pronto!",
+      "backButton": "Volver a la Pantalla de Bienvenida", 
+      "retryButton": "Experimentar Incorporación de Nuevo"
     }
   }
 }

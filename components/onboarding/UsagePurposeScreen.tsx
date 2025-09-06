@@ -6,7 +6,7 @@ interface UsagePurposeScreenProps {
 'use client'
 
 import { useParams } from 'next/navigation'
-import { useTranslation } from '../../hooks/useTranslation'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 import { useState, useEffect } from 'react'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
@@ -14,7 +14,7 @@ import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { t } = useTranslation()
+  const { t } = useTranslationContext()
   const { setStep } = useOnboarding()
   const { isHomeButtonDevice } = useDeviceDetection()
   const [selectedPurpose, setSelectedPurpose] = useState<string>('')
@@ -28,10 +28,10 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
   }, [])
 
   const purposes = [
-    { id: 'personal', label: '개인적인 감사 기록', icon: '/Note.png' },
-    { id: 'family', label: '가족과 함께 나누기', icon: '/Family.png' },
-    { id: 'church', label: '교회 공동체와 연결', icon: '/Church.png' },
-    { id: 'sermon', label: '설교/기도 정리', icon: '/Sermon.png' }
+    { id: 'personal', label: t('onboarding.usagePurpose.options.personal'), icon: '/Note.png' },
+    { id: 'family', label: t('onboarding.usagePurpose.options.family'), icon: '/Family.png' },
+    { id: 'church', label: t('onboarding.usagePurpose.options.church'), icon: '/Church.png' },
+    { id: 'sermon', label: t('onboarding.usagePurpose.options.sermon'), icon: '/Sermon.png' }
   ]
 
   const handlePurposeSelect = (purposeId: string) => {
@@ -128,12 +128,12 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
         {/* 타이틀 */}
         <h1 className="text-[18px] -mx-2 font-bold text-gray-800 mb-1 mt-6 tracking-wide fade-start fade-title">
           <span className="font-sour-gummy">Thankful </span>
-          <span className="font-noto-serif-kr">을 어떻게 사용하고 싶나요?</span>
+          <span className="font-noto-serif-kr">{t('onboarding.usagePurpose.title')}</span>
         </h1>
 
         {/* 부제목 */}
         <p className="text-sm text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
-          선택하신 목적에 맞게 홈 대시보드가 구성되며, 설정에서 언제든 변경 가능합니다
+          {t('onboarding.usagePurpose.subtitle')}
         </p>
 
         {/* 옵션들 */}
@@ -193,7 +193,7 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
             background: '#4f8750'
           }}
         >
-          다음
+          {t('onboarding.usagePurpose.nextButton')}
         </button>
 
         {/* 뒤로 가기 버튼 */}
@@ -201,7 +201,7 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
           onClick={handleBack}
           className="w-full retro-card text-gray-700 font-semibold py-4 px-6 font-jua simple-button"
         >
-          뒤로
+          {t('onboarding.usagePurpose.backButton')}
         </button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLoginModal } from './OnboardingFlow'
 import { createClient } from '../../utils/supabase/client'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
 interface ForgotPasswordModalProps {
   isOpen: boolean
@@ -15,6 +16,7 @@ interface ForgotPasswordModalProps {
 export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: ForgotPasswordModalProps) {
   const { resetPassword } = useAuth()
   const { setIsModalOpen: setLoginModalOpen } = useLoginModal()
+  const { t } = useTranslationContext()
   const supabase = createClient()
   const [isVisible, setIsVisible] = useState(false)
   const [email, setEmail] = useState('')
@@ -105,9 +107,9 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
   }, [errors.email, errors.general, delayedErrors.email, delayedErrors.general])
 
   const validateEmail = (email: string): string | undefined => {
-    if (!email) return '이메일을 입력해주세요.'
+    if (!email) return t('onboarding.forgotPassword.errors.emailRequired')
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return '올바른 이메일 형식이 아닙니다.'
+      return t('onboarding.forgotPassword.errors.emailInvalid')
     }
     return undefined
   }
@@ -682,17 +684,17 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               {/* 헤더 */}
               <div className="text-center mb-8 pt-4 fade-start fade-title">
                 <h1 className="text-lg -mx-2 font-black text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
-                  비밀번호를 잊으셨나요? 🔐
+                  {t('onboarding.forgotPassword.title')}
                 </h1>
                 <p className="text-sm text-gray-600 font-bold font-noto-serif-kr leading-relaxed">
-                  등록된 이메일로 재설정 링크를 보내드립니다
+                  {t('onboarding.forgotPassword.description')}
                 </p>
               </div>
 
               {/* 이메일 입력 */}
               <div className="fade-start fade-form mb-2">
                 <label className="block text-sm ml-1 font-bold text-gray-500 mb-2 font-noto-serif-kr text-left">
-                  이메일
+                  {t('onboarding.forgotPassword.email')}
                 </label>
                 <input
                   type="email"
@@ -702,7 +704,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                     const error = validateEmail(email)
                     setErrors(prev => ({ ...prev, email: error }))
                   }}
-                  placeholder="가입하신 이메일을 입력하세요"
+                  placeholder={t('onboarding.forgotPassword.emailPlaceholder')}
                   className="w-full px-4 py-3 bg-[#eae4d7] mb-4 font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400"
                   style={{
                     textDecoration: 'none',
@@ -745,7 +747,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                   }}
                 >
                   <span>
-                    {isLoading ? '전송 중...' : '재설정 링크 보내기'}
+                    {isLoading ? t('onboarding.forgotPassword.sending') : t('onboarding.forgotPassword.sendButton')}
                   </span>
                 </button>
               </div>
@@ -761,7 +763,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
                     }, 300)
                   }}
                 >
-                  로그인으로 돌아가기
+                  {t('onboarding.forgotPassword.backToLogin')}
                 </button>
               </div>
             </>
@@ -771,12 +773,10 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               <div className="text-center py-8 fade-start fade-success">
                 <div className="text-6xl mb-4">📧</div>
                 <h1 className="text-lg font-black text-gray-800 mb-2 font-noto-serif-kr tracking-wide">
-                  재설정 링크를 보냈습니다! ✨
+                  {t('onboarding.forgotPassword.success')}
                 </h1>
                 <p className="text-sm text-gray-600 font-bold font-noto-serif-kr leading-relaxed mb-6">
-                  <span className="text-[#759861] font-black">{email}</span>로<br />
-                  비밀번호 재설정 링크를 보냈습니다.<br />
-                  이메일을 확인해주세요.
+                  {t('onboarding.forgotPassword.successDescription')}
                 </p>
 
                 {/* 안내 사항 */}

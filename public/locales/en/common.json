@@ -16,17 +16,16 @@
       "startButton": "Get Started",
       "signInButton": "I already have an account"
     },
-    "faith": {
-      "title": "What kind of Christian are you?",
-      "subtitle": "Let us know for a more personalized experience",
+    "usagePurpose": {
+      "title": " how would you like to use it?",
+      "subtitle": "The home dashboard will be configured based on your selected purpose, and you can change it anytime in settings",
       "options": {
-        "protestant": "Protestant",
-        "catholic": "Catholic", 
-        "orthodox": "Orthodox",
-        "other": "Other",
-        "exploring": "I'm exploring"
+        "personal": "Personal gratitude records",
+        "family": "Share with family",
+        "church": "Connect with church community",
+        "sermon": "Organize sermons/prayers"
       },
-      "laterButton": "Later",
+      "backButton": "Back",
       "nextButton": "Next"
     },
     "experience": {
@@ -147,9 +146,60 @@
       "exploreButton": "I'll explore later",
       "terms": "You can cancel anytime before the free trial period ends.\nBy subscribing, you agree to the Terms of Service and Privacy Policy."
     },
+    "signUp": {
+      "title": "Let's start your gratitude journal",
+      "subtitle": "Beautifully record God's grace",
+      "googleButton": "Start with Google",
+      "facebookButton": "Start with Facebook",
+      "appleButton": "Start with Apple",
+      "emailDivider": "Or with email",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Enter your password again",
+      "signUpButton": "Sign Up",
+      "signingUp": "Signing up...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign In",
+      "agreements": {
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "agree": " I agree to the ",
+        "required": "*"
+      },
+      "errors": {
+        "emailRequired": "Please enter your email.",
+        "emailInvalid": "Please enter a valid email format.",
+        "passwordRequired": "Please enter your password.",
+        "passwordMinLength": "Password must be at least 6 characters long.",
+        "passwordFormat": "Password must contain both letters and numbers.",
+        "confirmPasswordRequired": "Please confirm your password.",
+        "passwordMismatch": "Passwords do not match.",
+        "fullNameRequired": "Please enter your name.",
+        "fullNameMinLength": "Name must be at least 2 characters long.",
+        "fullNameMaxLength": "Name must be 20 characters or less.",
+        "fullNameFormat": "Name can only contain letters, numbers, and underscores (_).",
+        "agreementRequired": "You must agree to the Terms of Service and Privacy Policy to sign up.",
+        "signUpFailed": "An error occurred during sign up.",
+        "googleSignUpFailed": "Google sign up failed.",
+        "facebookSignUpFailed": "Facebook sign up failed.",
+        "appleSignUpFailed": "Apple sign up failed.",
+        "googleSignUpError": "An error occurred during Google sign up.",
+        "facebookSignUpError": "An error occurred during Facebook sign up.",
+        "appleSignUpError": "An error occurred during Apple sign up."
+      }
+    },
     "login": {
       "title": "Great to see you again!",
       "subtitle": "Sign in to your account to continue your gratitude journey",
+      "googleButton": "Sign in with Google",
+      "facebookButton": "Sign in with Facebook",
+      "appleButton": "Sign in with Apple",
+      "emailDivider": "Or with email",
       "email": "Email",
       "emailPlaceholder": "Enter your email",
       "password": "Password",
@@ -159,12 +209,83 @@
       "loggingIn": "Signing in...",
       "cancelButton": "Cancel",
       "noAccount": "Don't have an account yet?",
-      "signUpButton": "Sign Up"
+      "signUpButton": "Sign Up",
+      "errors": {
+        "loginFailed": "Login failed.",
+        "googleLoginFailed": "Google login failed.",
+        "facebookLoginFailed": "Facebook login failed.",
+        "appleLoginFailed": "Apple login failed.",
+        "googleLoginError": "An error occurred during Google login.",
+        "facebookLoginError": "An error occurred during Facebook login.",
+        "appleLoginError": "An error occurred during Apple login."
+      }
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "Enter your registered email address",
+      "description": "We'll send you a password reset link",
+      "email": "Email",
+      "emailPlaceholder": "Enter your registered email",
+      "sendButton": "Send Reset Link",
+      "sending": "Sending...",
+      "backToLogin": "Back to Login",
+      "success": "Password reset email has been sent!",
+      "successDescription": "Please check your email to reset your password",
+      "errors": {
+        "emailRequired": "Please enter your email.",
+        "emailInvalid": "Please enter a valid email format.",
+        "resetFailed": "Password reset failed.",
+        "resetError": "An error occurred during password reset."
+      }
     },
     "complete": {
       "title": "Onboarding completed! 🎉",
       "subtitle": "You're ready to start your gratitude journey.\nRedirecting to the main screen soon..."
     }
+  },
+  "modals": {
+    "subscription": {
+      "features": {
+        "prompts": {
+          "title": "1000+ Gratitude Prompts",
+          "description": "Customized questions for various situations"
+        },
+        "ai": {
+          "title": "AI Personal Analysis",
+          "description": "Gratitude pattern analysis and insights"
+        },
+        "reports": {
+          "title": "Gratitude Growth Reports",
+          "description": "Monthly/annual gratitude journey reports"
+        },
+        "palette": {
+          "title": "Gratitude/Sermon/Prayer Note Decoration",
+          "description": "Make your records special with beautiful templates"
+        },
+        "community": {
+          "title": "Faith Community",
+          "description": "Share gratitude together"
+        }
+      },
+      "pricing": {
+        "personal": "Personal Plan",
+        "church": "Church Plan"
+      }
+    }
+  },
+  "home": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "write": "Write",
+    "saved": "Saved",
+    "stats": "Stats",
+    "settings": "Settings"
   },
   "main": {
     "welcome": {

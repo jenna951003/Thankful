@@ -1,5 +1,6 @@
-import { TranslationProvider } from '../../contexts/TranslationProvider'
+import { TranslationProvider } from '../../contexts/TranslationContext'
 import { AuthProvider } from '../../contexts/AuthProvider'
+import HtmlLangSetter from '../../components/common/HtmlLangSetter'
 
 export async function generateStaticParams() {
   return [
@@ -24,6 +25,7 @@ export default async function LocaleLayout({
   return (
     <AuthProvider>
       <TranslationProvider locale={locale}>
+        <HtmlLangSetter locale={locale} />
         <div className="locale-wrapper">
           {children}
         </div>

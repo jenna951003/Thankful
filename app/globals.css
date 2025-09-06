@@ -71,6 +71,154 @@ body {
   font-family: var(--font-nanum-brush-script), 'Nanum Brush Script', cursive;
 }
 
+.font-sofadi-one {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+}
+
+.font-mitr {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+}
+
+/* 폰트 굵기 변형 클래스들 */
+
+/* Jua 폰트 굵기 변형 */
+.font-jua-light {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 300;
+}
+
+.font-jua-normal {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 400;
+}
+
+.font-jua-bold {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 700;
+}
+
+.font-jua-black {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 900;
+}
+
+/* Mitr 폰트 굵기 변형 */
+.font-mitr-light {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 300;
+}
+
+.font-mitr-normal {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 400;
+}
+
+.font-mitr-bold {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 700;
+}
+
+.font-mitr-black {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 900;
+}
+
+/* Hubballi 폰트 굵기 변형 */
+.font-hubballi-light {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.font-hubballi-normal {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.font-hubballi-bold {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Noto Serif KR 폰트 굵기 변형 */
+.font-noto-serif-kr-light {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 300;
+}
+
+.font-noto-serif-kr-normal {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 400;
+}
+
+.font-noto-serif-kr-bold {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 700;
+}
+
+.font-noto-serif-kr-black {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 900;
+}
+
+/* Dongle 폰트 굵기 변형 */
+.font-dongle-light {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 300;
+}
+
+.font-dongle-normal {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 400;
+}
+
+.font-dongle-bold {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 700;
+}
+
+/* Sour Gummy 폰트 굵기 변형 */
+.font-sour-gummy-light {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.font-sour-gummy-normal {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.font-sour-gummy-bold {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* Fascinate 폰트 굵기 변형 */
+.font-fascinate-normal {
+  font-family: var(--font-fascinate), 'Fascinate', cursive;
+  font-weight: 400;
+}
+
+/* Nanum Brush Script 폰트 굵기 변형 */
+.font-nanum-brush-script-normal {
+  font-family: var(--font-nanum-brush-script), 'Nanum Brush Script', cursive;
+  font-weight: 400;
+}
+
+/* Sofadi One 폰트 굵기 변형 */
+.font-sofadi-one-normal {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+  font-weight: 400;
+}
+
+.font-sofadi-one-bold {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+  font-weight: 700;
+}
+
+
 /* Safe Area - JavaScript로 동적 처리됨 */
 
 /* 레트로 파스텔 색상 시스템 */
@@ -150,7 +298,6 @@ body {
   border: none;
   border-radius: 24px;
   padding: 16px 24px;
-  font-weight: 600;
   box-shadow: var(--soft-shadow);
 }
 
@@ -479,6 +626,163 @@ body {
 /* 터치 디바이스에서 터치 하이라이트 제거 */
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* fo:text 클래스 - 외국어(non-Korean) 언어에서만 적용되는 텍스트 크기 */
+[data-locale="en"] .fo\:text-base,
+[data-locale="es"] .fo\:text-base,
+[data-locale="pt"] .fo\:text-base {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+}
+
+[data-locale="en"] .fo\:text-lg,
+[data-locale="es"] .fo\:text-lg,
+[data-locale="pt"] .fo\:text-lg {
+  font-size: 1.125rem !important;
+  line-height: 1.75rem !important;
+}
+
+[data-locale="en"] .fo\:text-xl,
+[data-locale="es"] .fo\:text-xl,
+[data-locale="pt"] .fo\:text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
+[data-locale="en"] .fo\:text-2xl,
+[data-locale="es"] .fo\:text-2xl,
+[data-locale="pt"] .fo\:text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+[data-locale="en"] .fo\:text-3xl,
+[data-locale="es"] .fo\:text-3xl,
+[data-locale="pt"] .fo\:text-3xl {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+}
+
+[data-locale="en"] .fo\:text-4xl,
+[data-locale="es"] .fo\:text-4xl,
+[data-locale="pt"] .fo\:text-4xl {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+}
+
+[data-locale="en"] .fo\:text-5xl,
+[data-locale="es"] .fo\:text-5xl,
+[data-locale="pt"] .fo\:text-5xl {
+  font-size: 3rem !important;
+  line-height: 1 !important;
+}
+
+/* 반응형 버전들 */
+@media (min-width: 768px) {
+  [data-locale="en"] .fo\:md\:text-base,
+  [data-locale="es"] .fo\:md\:text-base,
+  [data-locale="pt"] .fo\:md\:text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-lg,
+  [data-locale="es"] .fo\:md\:text-lg,
+  [data-locale="pt"] .fo\:md\:text-lg {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-xl,
+  [data-locale="es"] .fo\:md\:text-xl,
+  [data-locale="pt"] .fo\:md\:text-xl {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-2xl,
+  [data-locale="es"] .fo\:md\:text-2xl,
+  [data-locale="pt"] .fo\:md\:text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-3xl,
+  [data-locale="es"] .fo\:md\:text-3xl,
+  [data-locale="pt"] .fo\:md\:text-3xl {
+    font-size: 1.875rem !important;
+    line-height: 2.25rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-4xl,
+  [data-locale="es"] .fo\:md\:text-4xl,
+  [data-locale="pt"] .fo\:md\:text-4xl {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+
+  [data-locale="en"] .fo\:md\:text-5xl,
+  [data-locale="es"] .fo\:md\:text-5xl,
+  [data-locale="pt"] .fo\:md\:text-5xl {
+    font-size: 3rem !important;
+    line-height: 1 !important;
+  }
+}
+
+/* fo:font 클래스 - 외국어(non-Korean) 언어에서만 적용되는 폰트 굵기 */
+[data-locale="en"] .fo\:font-thin,
+[data-locale="es"] .fo\:font-thin,
+[data-locale="pt"] .fo\:font-thin {
+  font-weight: 100 !important;
+}
+
+[data-locale="en"] .fo\:font-extralight,
+[data-locale="es"] .fo\:font-extralight,
+[data-locale="pt"] .fo\:font-extralight {
+  font-weight: 200 !important;
+}
+
+[data-locale="en"] .fo\:font-light,
+[data-locale="es"] .fo\:font-light,
+[data-locale="pt"] .fo\:font-light {
+  font-weight: 300 !important;
+}
+
+[data-locale="en"] .fo\:font-normal,
+[data-locale="es"] .fo\:font-normal,
+[data-locale="pt"] .fo\:font-normal {
+  font-weight: 400 !important;
+}
+
+[data-locale="en"] .fo\:font-medium,
+[data-locale="es"] .fo\:font-medium,
+[data-locale="pt"] .fo\:font-medium {
+  font-weight: 500 !important;
+}
+
+[data-locale="en"] .fo\:font-semibold,
+[data-locale="es"] .fo\:font-semibold,
+[data-locale="pt"] .fo\:font-semibold {
+  font-weight: 600 !important;
+}
+
+[data-locale="en"] .fo\:font-bold,
+[data-locale="es"] .fo\:font-bold,
+[data-locale="pt"] .fo\:font-bold {
+  font-weight: 700 !important;
+}
+
+[data-locale="en"] .fo\:font-extrabold,
+[data-locale="es"] .fo\:font-extrabold,
+[data-locale="pt"] .fo\:font-extrabold {
+  font-weight: 800 !important;
+}
+
+[data-locale="en"] .fo\:font-black,
+[data-locale="es"] .fo\:font-black,
+[data-locale="pt"] .fo\:font-black {
+  font-weight: 900 !important;
 }
 
 /* 트랜지션 최적화 - 충돌 방지를 위해 제거 */

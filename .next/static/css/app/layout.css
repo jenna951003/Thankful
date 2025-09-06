@@ -11045,6 +11045,245 @@
 }.__variable_327471 {--font-nanum-brush-script: 'Nanum Brush Script', 'Nanum Brush Script Fallback'
 }
 
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Sofadi_One","arguments":[{"subsets":["latin"],"weight":"400","variable":"--font-sofadi-one","display":"swap"}],"variableName":"sofadiOne"} ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* latin */
+@font-face {
+  font-family: 'Sofadi One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/_next/static/media/d2b0c6b6bbc0a40b-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}@font-face {font-family: 'Sofadi One Fallback';src: local("Arial");ascent-override: 77.72%;descent-override: 28.15%;line-gap-override: 0.00%;size-adjust: 110.14%
+}.__className_006022 {font-family: 'Sofadi One', 'Sofadi One Fallback';font-weight: 400;font-style: normal
+}.__variable_006022 {--font-sofadi-one: 'Sofadi One', 'Sofadi One Fallback'
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"app/layout.tsx","import":"Mitr","arguments":[{"subsets":["latin"],"weight":["200","300","400","500","600","700"],"variable":"--font-mitr","display":"swap"}],"variableName":"mitr"} ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(/_next/static/media/a32a35d41f0456c3-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(/_next/static/media/11eaee88d6052e5c-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(/_next/static/media/461abff4c28fc4a9-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(/_next/static/media/9c2871f59293e324-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/_next/static/media/35784d48f2a2843a-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/_next/static/media/386ca2a5da784f58-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/_next/static/media/1f5f9c423f98fe52-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(/_next/static/media/72dbbb0ecdeaf97f-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/_next/static/media/2d07845c033ca1d5-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/_next/static/media/4c13d1fbac9aca79-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/_next/static/media/ff400540610f9b2a-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/_next/static/media/67ada335d3ad82d6-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/_next/static/media/01277ef3a7244ee8-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/_next/static/media/e23fa824cf1ab1ff-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/_next/static/media/6bb88cb0bbe8bd52-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/_next/static/media/e57321d00e3cc140-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/_next/static/media/6c95ac971ee58d16-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/_next/static/media/336a0ade8be726b0-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/_next/static/media/6576b35d0ede074a-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/_next/static/media/9f5b3cf6567c77df-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* thai */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/_next/static/media/43837fdd8a8de38e-s.woff2) format('woff2');
+  unicode-range: U+02D7, U+0303, U+0331, U+0E01-0E5B, U+200C-200D, U+25CC;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/_next/static/media/c482b5f1f1cb2cd9-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/_next/static/media/4f0e0d07bbaf3b6c-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Mitr';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(/_next/static/media/5b418db7594c03af-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}@font-face {font-family: 'Mitr Fallback';src: local("Arial");ascent-override: 100.52%;descent-override: 36.71%;line-gap-override: 0.00%;size-adjust: 114.40%
+}.__className_87c53d {font-family: 'Mitr', 'Mitr Fallback';font-style: normal
+}.__variable_87c53d {--font-mitr: 'Mitr', 'Mitr Fallback'
+}
+
 /*!*************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./app/globals.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************/
@@ -13062,11 +13301,11 @@
   .text-\[\#4f4f4f\] {
     color: #4f4f4f;
   }
+  .text-\[\#56874f\] {
+    color: #56874f;
+  }
   .text-\[\#759861\] {
     color: #759861;
-  }
-  .text-\[\#a86e48\] {
-    color: #a86e48;
   }
   .text-\[\#ea6666\] {
     color: #ea6666;
@@ -13175,6 +13414,9 @@
   }
   .line-through {
     text-decoration-line: line-through;
+  }
+  .underline {
+    text-decoration-line: underline;
   }
   .placeholder-gray-400 {
     &::-moz-placeholder {
@@ -13735,6 +13977,13 @@
       }
     }
   }
+  .hover\:text-\[\#4a7545\] {
+    &:hover {
+      @media (hover: hover) {
+        color: #4a7545;
+      }
+    }
+  }
   .hover\:text-blue-600 {
     &:hover {
       @media (hover: hover) {
@@ -13857,6 +14106,11 @@
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
+  .focus\:ring-\[\#56874f\] {
+    &:focus {
+      --tw-ring-color: #56874f;
+    }
+  }
   .focus\:ring-blue-300 {
     &:focus {
       --tw-ring-color: var(--color-blue-300);
@@ -13971,6 +14225,115 @@ body {
 .font-nanum-brush-script {
   font-family: var(--font-nanum-brush-script), 'Nanum Brush Script', cursive;
 }
+.font-sofadi-one {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+}
+.font-mitr {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+}
+.font-jua-light {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 300;
+}
+.font-jua-normal {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 400;
+}
+.font-jua-bold {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 700;
+}
+.font-jua-black {
+  font-family: var(--font-jua), 'Jua', sans-serif;
+  font-weight: 900;
+}
+.font-mitr-light {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 300;
+}
+.font-mitr-normal {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 400;
+}
+.font-mitr-bold {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 700;
+}
+.font-mitr-black {
+  font-family: var(--font-mitr), 'Mitr', sans-serif;
+  font-weight: 900;
+}
+.font-hubballi-light {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+.font-hubballi-normal {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+.font-hubballi-bold {
+  font-family: var(--font-hubballi), 'Hubballi', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.font-noto-serif-kr-light {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 300;
+}
+.font-noto-serif-kr-normal {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 400;
+}
+.font-noto-serif-kr-bold {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 700;
+}
+.font-noto-serif-kr-black {
+  font-family: var(--font-noto-serif-kr), 'Noto Serif KR', serif;
+  font-weight: 900;
+}
+.font-dongle-light {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 300;
+}
+.font-dongle-normal {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 400;
+}
+.font-dongle-bold {
+  font-family: var(--font-dongle), 'Dongle', sans-serif;
+  font-weight: 700;
+}
+.font-sour-gummy-light {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 300;
+}
+.font-sour-gummy-normal {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 400;
+}
+.font-sour-gummy-bold {
+  font-family: var(--font-sour-gummy), 'Sour Gummy', cursive, system-ui, sans-serif;
+  font-weight: 700;
+}
+.font-fascinate-normal {
+  font-family: var(--font-fascinate), 'Fascinate', cursive;
+  font-weight: 400;
+}
+.font-nanum-brush-script-normal {
+  font-family: var(--font-nanum-brush-script), 'Nanum Brush Script', cursive;
+  font-weight: 400;
+}
+.font-sofadi-one-normal {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+  font-weight: 400;
+}
+.font-sofadi-one-bold {
+  font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
+  font-weight: 700;
+}
 :root {
   --bg-base: rgb(238, 234, 217);
   --retro-orange: #D4744A;
@@ -14060,7 +14423,6 @@ body {
   border: none;
   border-radius: 24px;
   padding: 16px 24px;
-  font-weight: 600;
   box-shadow: var(--soft-shadow);
 }
 .retro-button-warm {
@@ -14363,6 +14725,137 @@ body {
 }
 * {
   -webkit-tap-highlight-color: transparent;
+}
+[data-locale="en"] .fo\:text-base,
+[data-locale="es"] .fo\:text-base,
+[data-locale="pt"] .fo\:text-base {
+  font-size: 1rem !important;
+  line-height: 1.5rem !important;
+}
+[data-locale="en"] .fo\:text-lg,
+[data-locale="es"] .fo\:text-lg,
+[data-locale="pt"] .fo\:text-lg {
+  font-size: 1.125rem !important;
+  line-height: 1.75rem !important;
+}
+[data-locale="en"] .fo\:text-xl,
+[data-locale="es"] .fo\:text-xl,
+[data-locale="pt"] .fo\:text-xl {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+[data-locale="en"] .fo\:text-2xl,
+[data-locale="es"] .fo\:text-2xl,
+[data-locale="pt"] .fo\:text-2xl {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+[data-locale="en"] .fo\:text-3xl,
+[data-locale="es"] .fo\:text-3xl,
+[data-locale="pt"] .fo\:text-3xl {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+}
+[data-locale="en"] .fo\:text-4xl,
+[data-locale="es"] .fo\:text-4xl,
+[data-locale="pt"] .fo\:text-4xl {
+  font-size: 2.25rem !important;
+  line-height: 2.5rem !important;
+}
+[data-locale="en"] .fo\:text-5xl,
+[data-locale="es"] .fo\:text-5xl,
+[data-locale="pt"] .fo\:text-5xl {
+  font-size: 3rem !important;
+  line-height: 1 !important;
+}
+@media (min-width: 768px) {
+  [data-locale="en"] .fo\:md\:text-base,
+  [data-locale="es"] .fo\:md\:text-base,
+  [data-locale="pt"] .fo\:md\:text-base {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-lg,
+  [data-locale="es"] .fo\:md\:text-lg,
+  [data-locale="pt"] .fo\:md\:text-lg {
+    font-size: 1.125rem !important;
+    line-height: 1.75rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-xl,
+  [data-locale="es"] .fo\:md\:text-xl,
+  [data-locale="pt"] .fo\:md\:text-xl {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-2xl,
+  [data-locale="es"] .fo\:md\:text-2xl,
+  [data-locale="pt"] .fo\:md\:text-2xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-3xl,
+  [data-locale="es"] .fo\:md\:text-3xl,
+  [data-locale="pt"] .fo\:md\:text-3xl {
+    font-size: 1.875rem !important;
+    line-height: 2.25rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-4xl,
+  [data-locale="es"] .fo\:md\:text-4xl,
+  [data-locale="pt"] .fo\:md\:text-4xl {
+    font-size: 2.25rem !important;
+    line-height: 2.5rem !important;
+  }
+  [data-locale="en"] .fo\:md\:text-5xl,
+  [data-locale="es"] .fo\:md\:text-5xl,
+  [data-locale="pt"] .fo\:md\:text-5xl {
+    font-size: 3rem !important;
+    line-height: 1 !important;
+  }
+}
+[data-locale="en"] .fo\:font-thin,
+[data-locale="es"] .fo\:font-thin,
+[data-locale="pt"] .fo\:font-thin {
+  font-weight: 100 !important;
+}
+[data-locale="en"] .fo\:font-extralight,
+[data-locale="es"] .fo\:font-extralight,
+[data-locale="pt"] .fo\:font-extralight {
+  font-weight: 200 !important;
+}
+[data-locale="en"] .fo\:font-light,
+[data-locale="es"] .fo\:font-light,
+[data-locale="pt"] .fo\:font-light {
+  font-weight: 300 !important;
+}
+[data-locale="en"] .fo\:font-normal,
+[data-locale="es"] .fo\:font-normal,
+[data-locale="pt"] .fo\:font-normal {
+  font-weight: 400 !important;
+}
+[data-locale="en"] .fo\:font-medium,
+[data-locale="es"] .fo\:font-medium,
+[data-locale="pt"] .fo\:font-medium {
+  font-weight: 500 !important;
+}
+[data-locale="en"] .fo\:font-semibold,
+[data-locale="es"] .fo\:font-semibold,
+[data-locale="pt"] .fo\:font-semibold {
+  font-weight: 600 !important;
+}
+[data-locale="en"] .fo\:font-bold,
+[data-locale="es"] .fo\:font-bold,
+[data-locale="pt"] .fo\:font-bold {
+  font-weight: 700 !important;
+}
+[data-locale="en"] .fo\:font-extrabold,
+[data-locale="es"] .fo\:font-extrabold,
+[data-locale="pt"] .fo\:font-extrabold {
+  font-weight: 800 !important;
+}
+[data-locale="en"] .fo\:font-black,
+[data-locale="es"] .fo\:font-black,
+[data-locale="pt"] .fo\:font-black {
+  font-weight: 900 !important;
 }
 @property --tw-translate-x {
   syntax: "*";

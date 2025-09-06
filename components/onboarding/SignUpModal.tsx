@@ -5,6 +5,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLoginModal } from './OnboardingFlow'
 import { getOnboardingData, clearOnboardingData, hasOnboardingData } from '../../utils/onboarding'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
 interface SignUpModalProps {
   isOpen: boolean
@@ -15,6 +16,7 @@ interface SignUpModalProps {
 export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUpModalProps) {
   const { signUp, signInWithGoogle, signInWithFacebook, signInWithApple } = useAuth()
   const { setIsModalOpen: setLoginModalOpen } = useLoginModal()
+  const { t } = useTranslationContext()
   const [isVisible, setIsVisible] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -37,6 +39,9 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     fullName?: string
     general?: string
   }>({})
+
+  // 약관 동의 상태
+  const [agreeToTerms, setAgreeToTerms] = useState(false)
   
   // Drag states (same as login modal)
   const [dragStart, setDragStart] = useState<{ y: number; time: number } | null>(null)
@@ -96,33 +101,33 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
 
   // Validation functions
   const validateEmail = (email: string): string | undefined => {
-    if (!email) return '이메일을 입력해주세요.'
+    if (!email) return t('onboarding.signUp.errors.emailRequired')
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return '올바른 이메일 형식이 아닙니다.'
+      return t('onboarding.signUp.errors.emailInvalid')
     }
     return undefined
   }
 
   const validatePassword = (password: string): string | undefined => {
-    if (!password) return '비밀번호를 입력해주세요.'
-    if (password.length < 6) return '비밀번호는 최소 6자 이상이어야 합니다.'
+    if (!password) return t('onboarding.signUp.errors.passwordRequired')
+    if (password.length < 6) return t('onboarding.signUp.errors.passwordMinLength')
     if (!/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
-      return '비밀번호는 영문과 숫자를 포함해야 합니다.'
+      return t('onboarding.signUp.errors.passwordFormat')
     }
     return undefined
   }
 
   const validateConfirmPassword = (password: string, confirmPassword: string): string | undefined => {
-    if (!confirmPassword) return '비밀번호 확인을 입력해주세요.'
-    if (password !== confirmPassword) return '비밀번호가 일치하지 않습니다.'
+    if (!confirmPassword) return t('onboarding.signUp.errors.confirmPasswordRequired')
+    if (password !== confirmPassword) return t('onboarding.signUp.errors.passwordMismatch')
     return undefined
   }
 
   const validateFullName = (fullName: string): string | undefined => {
-    if (!fullName) return '이름을 입력해주세요.'
-    if (fullName.length < 2) return '이름은 최소 2자 이상이어야 합니다.'
-    if (fullName.length > 20) return '이름은 20자 이하로 입력해주세요.'
-    if (!/^[가-힣a-zA-Z_]+$/.test(fullName)) return '이름은 한글, 영문, 언더스코어(_)만 사용 가능합니다.'
+    if (!fullName) return t('onboarding.signUp.errors.fullNameRequired')
+    if (fullName.length < 2) return t('onboarding.signUp.errors.fullNameMinLength')
+    if (fullName.length > 20) return t('onboarding.signUp.errors.fullNameMaxLength')
+    if (!/^[가-힣a-zA-Z_]+$/.test(fullName)) return t('onboarding.signUp.errors.fullNameFormat')
     return undefined
   }
 
@@ -241,11 +246,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         }
         // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
-        setErrors({ general: result.error || 'Google 회원가입에 실패했습니다.' })
+        setErrors({ general: result.error || t('onboarding.signUp.errors.googleSignUpFailed') })
       }
     } catch (error) {
       console.error('Google 회원가입 실패:', error)
-      setErrors({ general: 'Google 회원가입 중 오류가 발생했습니다.' })
+      setErrors({ general: t('onboarding.signUp.errors.googleSignUpError') })
     }
     // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
@@ -266,11 +271,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         }
         // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
-        setErrors({ general: result.error || 'Facebook 회원가입에 실패했습니다.' })
+        setErrors({ general: result.error || t('onboarding.signUp.errors.facebookSignUpFailed') })
       }
     } catch (error) {
       console.error('Facebook 회원가입 실패:', error)
-      setErrors({ general: 'Facebook 회원가입 중 오류가 발생했습니다.' })
+      setErrors({ general: t('onboarding.signUp.errors.facebookSignUpError') })
     }
     // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
@@ -291,11 +296,11 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         }
         // OAuth는 페이지를 떠나므로 모달 닫기 처리는 필요 없음
       } else {
-        setErrors({ general: result.error || 'Apple 회원가입에 실패했습니다.' })
+        setErrors({ general: result.error || t('onboarding.signUp.errors.appleSignUpFailed') })
       }
     } catch (error) {
       console.error('Apple 회원가입 실패:', error)
-      setErrors({ general: 'Apple 회원가입 중 오류가 발생했습니다.' })
+      setErrors({ general: t('onboarding.signUp.errors.appleSignUpError') })
     }
     // OAuth는 페이지를 떠나므로 finally 블록 불필요
   }
@@ -309,6 +314,12 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     const passwordError = validatePassword(password)
     const confirmPasswordError = validateConfirmPassword(password, confirmPassword)
     const fullNameError = validateFullName(fullName)
+    
+    // 약관 동의 검증
+    if (!agreeToTerms) {
+      setErrors({ general: t('onboarding.signUp.errors.agreementRequired') })
+      return
+    }
     
     if (emailError || passwordError || confirmPasswordError || fullNameError) {
       setErrors({
@@ -359,7 +370,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         setErrors({ general: result.error })
       }
     } catch (error) {
-      setErrors({ general: '회원가입 중 오류가 발생했습니다.' })
+      setErrors({ general: t('onboarding.signUp.errors.signUpFailed') })
     } finally {
       setIsLoading(false)
     }
@@ -716,10 +727,10 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
             <h1 className="text-lg -mx-2 font-black text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
-              감사 노트를 시작해요
+              {t('onboarding.signUp.title')}
             </h1>
             <p className="text-sm text-gray-600 font-bold font-noto-serif-kr leading-relaxed">
-              하나님의 은혜를 아름답게 기록해보세요
+              {t('onboarding.signUp.subtitle')}
             </p>
           </div>
 
@@ -739,7 +750,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Google로 시작하기
+              {t('onboarding.signUp.googleButton')}
             </button>
 
             {/* Facebook 회원가입 */}
@@ -757,7 +768,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
               <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              Facebook으로 시작하기
+              {t('onboarding.signUp.facebookButton')}
             </button>
 
             {/* Apple 회원가입 */}
@@ -775,7 +786,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/>
               </svg>
-              Apple로 시작하기
+              {t('onboarding.signUp.appleButton')}
             </button>
           </div>
           
@@ -784,7 +795,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
           {/* 구분선 */}
           <div className="flex items-center mb-6 fade-start fade-divider">
             <div className="flex-1 h-px bg-[#ccd2cb]"></div>
-            <span className="px-4 text-sm text-gray-500 bg-[rgb(235,240,230)] font-noto-serif-kr font-extrabold">또는 이메일로</span>
+            <span className="px-4 text-sm text-gray-500 bg-[rgb(235,240,230)] font-noto-serif-kr font-extrabold">{t('onboarding.signUp.emailDivider')}</span>
             <div className="flex-1 h-px bg-[#ccd2cb]"></div>
           </div>
 
@@ -793,13 +804,13 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             {/* 이름 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-600 mb-2 font-noto-serif-kr text-left">
-                이름
+                {t('onboarding.signUp.fullName')}
               </label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => handleFullNameChange(e.target.value)}
-                placeholder="이름을 입력하세요"
+                placeholder={t('onboarding.signUp.fullNamePlaceholder')}
                 className={`w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400 ${
                   errors.fullName ? '' : ''
                 }`}
@@ -829,13 +840,13 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             {/* 이메일 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-600 mb-2 font-noto-serif-kr text-left">
-                이메일
+                {t('onboarding.signUp.email')}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => handleEmailChange(e.target.value)}
-                placeholder="이메일을 입력하세요"
+                placeholder={t('onboarding.signUp.emailPlaceholder')}
                 className={`w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400 ${
                   errors.email ? '' : ''
                 }`}
@@ -865,13 +876,13 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             {/* 비밀번호 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-600 mb-2 font-noto-serif-kr text-left">
-                비밀번호
+                {t('onboarding.signUp.password')}
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => handlePasswordChange(e.target.value)}
-                placeholder="비밀번호를 입력하세요"
+                placeholder={t('onboarding.signUp.passwordPlaceholder')}
                 className={`w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400 ${
                   errors.password ? '' : ''
                 }`}
@@ -901,13 +912,13 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             {/* 비밀번호 확인 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-600 mb-2 font-noto-serif-kr text-left">
-                비밀번호 확인
+                {t('onboarding.signUp.confirmPassword')}
               </label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => handleConfirmPasswordChange(e.target.value)}
-                placeholder="비밀번호를 다시 입력하세요"
+                placeholder={t('onboarding.signUp.confirmPasswordPlaceholder')}
                 className={`w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400 ${
                   errors.confirmPassword ? '' : ''
                 }`}
@@ -948,6 +959,38 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             )}
           </div>
 
+          {/* 약관 동의 체크박스 */}
+          <div className="mb-4 fade-start fade-agreement">
+            <label className="flex items-start space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                className="mt-1 w-4 h-4 text-[#56874f] bg-gray-100 border-gray-300 rounded focus:ring-[#56874f] focus:ring-2"
+              />
+              <span className="text-sm text-gray-600 font-noto-serif-kr leading-relaxed">
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => {/* 이용약관 페이지로 이동 */}}
+                    className="text-[#56874f] underline font-semibold hover:text-[#4a7545] transition-colors duration-200"
+                  >
+                    {t('onboarding.signUp.agreements.terms')}
+                  </button>
+                  {' 및 '}
+                  <button
+                    type="button"
+                    onClick={() => {/* 개인정보처리방침 페이지로 이동 */}}
+                    className="text-[#56874f] underline font-semibold hover:text-[#4a7545] transition-colors duration-200"
+                  >
+                    {t('onboarding.signUp.agreements.privacy')}
+                  </button>
+                  {t('onboarding.signUp.agreements.agree')}<span className="text-[#56874f]">{t('onboarding.signUp.agreements.required')}</span>
+                </span>
+              </span>
+            </label>
+          </div>
+
           {/* 회원가입 버튼 */}
           <div className="space-y-3 fade-start fade-buttons mb-6 mt-6">
             <button
@@ -969,7 +1012,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
                   transform: 'scale(1)'
                 }}
               >
-                {isLoading ? '가입 중...' : '회원가입'}
+                {isLoading ? t('onboarding.signUp.signingUp') : t('onboarding.signUp.signUpButton')}
               </span>
             </button>
           </div>
@@ -977,7 +1020,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
           {/* 로그인 링크 */}
           <div className="text-center pt-4 border-t border-[#ccd2cb] fade-start fade-signup">
             <p className="text-sm text-gray-500 font-bold font-noto-serif-kr">
-              이미 계정이 있으신가요?{' '}
+              {t('onboarding.signUp.hasAccount')}{' '}
               <button
                 className="text-[#759861] font-bold transition-colors"
                 onClick={() => {
@@ -987,7 +1030,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
                   }, 300)
                 }}
               >
-                로그인
+                {t('onboarding.signUp.loginLink')}
               </button>
             </p>
           </div>
@@ -1025,6 +1068,10 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
         
         .fade-error { 
           animation: fadeIn 0.8s ease-out 2.2s forwards; 
+        }
+        
+        .fade-agreement { 
+          animation: fadeIn 0.8s ease-out 2.3s forwards; 
         }
         
         /* 에러 메시지 부드러운 슬라이드 */

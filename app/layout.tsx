@@ -7,7 +7,9 @@ import {
   Hubballi,
   Dongle,
   Noto_Serif_KR,
-  Nanum_Brush_Script
+  Nanum_Brush_Script,
+  Sofadi_One,
+  Mitr
 } from 'next/font/google'
 import './globals.css'
 import OfflineIndicator from '../components/common/OfflineIndicator'
@@ -69,6 +71,20 @@ const nanumBrushScript = Nanum_Brush_Script({
   display: 'swap'
 })
 
+const sofadiOne = Sofadi_One({ 
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-sofadi-one',
+  display: 'swap'
+})
+
+const mitr = Mitr({ 
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700'],
+  variable: '--font-mitr',
+  display: 'swap'
+})
+
 export const metadata: Metadata = {
   title: 'Thankful - 감사 일기',
   description: '감사함을 기록하고 나누는 앱',
@@ -103,6 +119,8 @@ export default function RootLayout({
           ${dongle.variable}
           ${notoSerifKR.variable}
           ${nanumBrushScript.variable}
+          ${sofadiOne.variable}
+          ${mitr.variable}
         `}
         style={{ backgroundColor: 'rgb(238, 234, 217)' }}
       >

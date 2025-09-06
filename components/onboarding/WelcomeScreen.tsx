@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { useTranslation } from '../../hooks/useTranslation'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useLoginModal } from './OnboardingFlow'
 import { resetOnboarding, clearOnboardingData } from '../../utils/onboarding'
@@ -18,7 +18,7 @@ interface WelcomeScreenProps {
 export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
   const params = useParams()
   const locale = params.locale as string
-  const { t } = useTranslation()
+  const { t } = useTranslationContext()
   const { startTransition, setStep, reset } = useOnboarding()
   const { setIsModalOpen } = useLoginModal()
   const { signOut } = useAuth()

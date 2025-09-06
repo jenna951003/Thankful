@@ -665,10 +665,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
             <h1 className="text-lg -mx-2 font-black text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
-              다시 만나서 반가워요!
+              {t('onboarding.login.title')}
             </h1>
             <p className="text-sm text-gray-600 font-bold font-noto-serif-kr leading-relaxed">
-              계속해서 감사의 마음을 기록해보세요
+              {t('onboarding.login.subtitle')}
             </p>
           </div>
 
@@ -688,7 +688,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Google로 계속하기
+              {t('onboarding.login.googleButton')}
             </button>
 
             {/* Facebook 로그인 */}
@@ -706,7 +706,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <svg className="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
               </svg>
-              Facebook으로 계속하기
+              {t('onboarding.login.facebookButton')}
             </button>
 
             {/* Apple 로그인 */}
@@ -724,7 +724,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/>
               </svg>
-              Apple로 계속하기
+              {t('onboarding.login.appleButton')}
             </button>
           </div>
           <div className="w-24 h-1 rounded-full mx-auto mb-6 retro-forest fade-start fade-retro-bar"></div>
@@ -732,7 +732,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           {/* 구분선 */}
           <div className="flex items-center mb-6 fade-start fade-divider">
             <div className="flex-1 h-px bg-[#ccd2cb]"></div>
-            <span className="px-4 text-sm text-gray-500 bg-[rgb(235,240,230)] font-noto-serif-kr font-extrabold">또는 이메일로</span>
+            <span className="px-4 text-sm text-gray-500 bg-[rgb(235,240,230)] font-noto-serif-kr font-extrabold">{t('onboarding.login.emailDivider')}</span>
             <div className="flex-1 h-px bg-[#ccd2cb]"></div>
           </div>
 
@@ -741,7 +741,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             {/* 이메일 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-500 mb-2 font-noto-serif-kr text-left">
-                이메일
+                {t('onboarding.login.email')}
               </label>
               <input
                 type="email"
@@ -753,7 +753,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     setError(null)
                   }
                 }}
-                placeholder="이메일을 입력하세요"
+                placeholder={t('onboarding.login.emailPlaceholder')}
                 className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-500"
                 style={{
                   borderColor: email ? '#56874f' : undefined,
@@ -770,7 +770,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             {/* 비밀번호 입력 */}
             <div className="relative">
               <label className="block text-sm ml-1 font-bold text-gray-500 mb-2 font-noto-serif-kr text-left">
-                비밀번호
+                {t('onboarding.login.password')}
               </label>
               <input
                 type="password"
@@ -782,7 +782,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     setError(null)
                   }
                 }}
-                placeholder="비밀번호를 입력하세요"
+                placeholder={t('onboarding.login.passwordPlaceholder')}
                 className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-500"
                 style={{
                   borderColor: password ? '#56874f' : undefined,
@@ -816,8 +816,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               className="text-sm font-bold font-noto-serif-kr duration-200"
               onClick={handleShowForgotPassword}
             >
-              <span className="text-gray-500">비밀번호를</span>{' '}
-              <span className="text-[#a86e48]">잊으셨나요?</span>
+              {t('onboarding.login.forgotPassword')}
             </button>
           </div>
 
@@ -842,7 +841,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   transform: 'scale(1)'
                 }}
               >
-                {isLoading ? '로그인 중...' : '로그인'}
+                {isLoading ? t('onboarding.login.loggingIn') : t('onboarding.login.loginButton')}
               </span>
             </button>
           </div>
@@ -850,12 +849,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           {/* 회원가입 링크 */}
           <div className="text-center mt-6 pt-4 border-t border-[#ccd2cb] fade-start fade-signup">
             <p className="text-sm text-gray-500 font-bold font-noto-serif-kr">
-              아직 계정이 없으신가요?{' '}
+              {t('onboarding.login.noAccount')}{' '}
               <button
                 className="text-[#759861] font-bold transition-colors"
                 onClick={handleShowSignUp}
               >
-                회원가입
+                {t('onboarding.login.signUpButton')}
               </button>
             </p>
           </div>
