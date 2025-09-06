@@ -1,5 +1,4 @@
 {
   "/page": "app/page.js",
-  "/[locale]/onboarding/page": "app/[locale]/onboarding/page.js",
   "/[locale]/onboarding/[step]/page": "app/[locale]/onboarding/[step]/page.js"
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useAuth } from '../../contexts/AuthContext'
-import { useLoginModal } from './OnboardingLayoutClient'
+import { useLoginModal } from './OnboardingFlow'
 import { createClient } from '../../utils/supabase/client'
 
 interface ForgotPasswordModalProps {

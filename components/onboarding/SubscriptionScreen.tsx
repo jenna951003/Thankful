@@ -144,7 +144,7 @@ export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenP
         {/* 프리미엄 박스 이미지 */}
         <div className="mb-8 fade-start fade-features flex justify-center">
           <img 
-            src="/PremiumBox2.png" 
+            src="/PremiumBox3.png" 
             alt="Premium Features"
             className="w-full max-w-[212px] object-contain premium-box cursor-pointer"
           />

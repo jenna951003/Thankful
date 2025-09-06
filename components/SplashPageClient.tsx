@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDeviceDetection } from '../hooks/useDeviceDetection'
 import { isOnboardingCompleted } from '../utils/onboarding'
+import { preloadImages, ONBOARDING_IMAGES } from '../utils/imagePreloader'
 
 interface SplashPageClientProps {
   locale: string
@@ -16,6 +17,7 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
   const [showText, setShowText] = useState(false)
   const [colorRevealProgress, setColorRevealProgress] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
+  const [isPreloadingComplete, setIsPreloadingComplete] = useState(false)
 
   // 로케일별 감사 메시지
   const getMessage = () => {
@@ -35,7 +37,18 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
     // 배경 이미지 페이드인
     const backgroundTimer = setTimeout(() => {
       setShowBackground(true)
-    }, 0)
+    }, 500)
+
+    // 이미지 프리로딩 시작
+    preloadImages(ONBOARDING_IMAGES)
+      .then(() => {
+        console.log('🎯 All onboarding images preloaded successfully!')
+        setIsPreloadingComplete(true)
+      })
+      .catch((error) => {
+        console.warn('⚠️ Image preloading encountered errors:', error)
+        setIsPreloadingComplete(true) // 실패해도 계속 진행
+      })
 
     // 1.2초 후 컬러 로딩 애니메이션 시작
     const colorAnimationTimer = setTimeout(() => {
@@ -63,7 +76,7 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
               // 페이드아웃 완료 후 라우팅 (0.8초)
               setTimeout(() => {
                 const completed = isOnboardingCompleted()
-                console.log('🚀 SplashClient routing:', { locale, completed })
+                console.log('🚀 SplashClient routing:', { locale, completed, imagesPreloaded: isPreloadingComplete })
                 
                 if (completed) {
                   console.log('➡️ Navigating to main page:', `/${locale}`)
@@ -97,8 +110,8 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
           left: 0,
           right: 0,
           height: `${safeArea.top}px`,
-          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-          opacity: '0.8',
+          backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+          opacity: isWebEnvironment ? '0.8' : '0',
           zIndex: 2000
         }}
       />
@@ -116,29 +129,37 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
             {/* 배경 이미지 레이어 */}
             {/* 흑백 베이스 이미지 (Splash3.png) */}
             <div 
-              className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out"
+              className="absolute rounded-xl transition-opacity duration-1500 ease-in-out"
               style={{
-                backgroundImage: 'url(/Splash3.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center top',
+                backgroundImage: 'url(/Splash13.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 opacity: showBackground ? 1 : 0,
-                transform: 'translateY(-5%)',
-                zIndex: 1
+                zIndex: 1,
+                width: '50%',
+                height: '40%',
+                top: '45%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
               }}
             />
             
             {/* 컬러 오버레이 이미지 (Splash2.png) - 위에서 아래로 점진적 공개 */}
             <div 
-              className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out"
+              className="absolute rounded-xl transition-opacity duration-1500 ease-in-out"
               style={{
-                backgroundImage: 'url(/Splash2.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center top',
+                backgroundImage: 'url(/Splash12.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 opacity: showBackground ? 1 : 0,
-                transform: 'translateY(-5%)',
                 zIndex: 2,
+                width: '50%',
+                height: '40%',
+                top: '45%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
                 maskImage: `linear-gradient(to bottom, 
                   rgba(0,0,0,1) 0%, 
                   rgba(0,0,0,1) ${Math.max(0, colorRevealProgress * 100 - 5)}%, 
@@ -168,11 +189,11 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
               }}
             >
               <p 
-                className={`text-3xl font-bold text-[#4f4f4f] drop-shadow-lg ${
+                className={`text-4xl font-bold text-[#4f4f4f] drop-shadow-lg ${
                   locale === 'ko' ? 'font-nanum-brush-script' : 'font-fascinate'
                 }`}
                 style={{
-                  textShadow: '2px 2px 2px rgba(255, 255, 255, 0.5)'
+                  textShadow: '2px 2px 2px rgba(255, 255, 255, 0.91)'
                 }}
               >
                 {getMessage()}
@@ -189,8 +210,8 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
           left: 0,
           right: 0,
           height: `${safeArea.bottom}px`,
-          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-          opacity: '0.8',
+          backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+          opacity: isWebEnvironment ? '0.8' : '0',
           zIndex: 2000
         }}
       />

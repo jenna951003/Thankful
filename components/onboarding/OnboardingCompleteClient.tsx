@@ -11,6 +11,8 @@ import LoadingOverlay from '../common/LoadingOverlay'
 
 interface OnboardingCompleteClientProps {
   locale: string
+  onStepChange?: (step: number) => void
+  currentStep?: number
 }
 
 export default function OnboardingCompleteClient({ locale }: OnboardingCompleteClientProps) {

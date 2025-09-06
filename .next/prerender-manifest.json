@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/ko/onboarding":{},"/en/onboarding":{},"/es/onboarding":{},"/pt/onboarding":{},"/ko":{},"/en":{},"/es":{},"/pt":{}},"dynamicRoutes":{"/[locale]/onboarding":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/[locale]/onboarding","routeRegex":"^\\/([^/]+?)\\/onboarding(?:\\/)?$","allowHeader":[]},"/[locale]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/[locale]","routeRegex":"^\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"9bbdc3eb4c887ac161683bc87f148edb","previewModeSigningKey":"7231f1db77c308b271b14aaf7e002dc6bdf68612c0166025bd321a6295c3f863","previewModeEncryptionKey":"a6cd5cac7fc76b840e331be428e8f98a7a30dd11ecf0474abcf9e810ad521f20"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "0a9862f5d0ff1081258d2593e2c29e52",
+    "previewModeSigningKey": "807f1aebcbb68543d603c36377992c7d737999dabcefe865adf58fb19b39d55f",
+    "previewModeEncryptionKey": "5e97f08fce4cac3716fe647778a9d015d6f85a5897a675e07d75807b00986b08"
+  }
+}

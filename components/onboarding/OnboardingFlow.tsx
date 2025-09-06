@@ -67,16 +67,6 @@ const ForgotPasswordModalContext = createContext<{
 
 export const useForgotPasswordModal = () => useContext(ForgotPasswordModalContext)
 
-const stepComponents = {
-  1: WelcomeScreen,
-  2: GratitudeExperienceScreen,
-  3: UsagePurposeScreen,
-  4: InterestAreasScreen,
-  5: NotificationSettingsScreen,
-  6: FirstGratitudeScreen,
-  7: SubscriptionScreen,
-  8: OnboardingCompleteClient,
-} as const
 
 interface OnboardingFlowProps {
   locale: string
@@ -109,7 +99,7 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
   }, [state.currentStep])
 
   // 스텝 변경 함수
-  const changeStep = (newStep: number) => {
+  const changeStep: (step: number) => void = (newStep: number) => {
     if (newStep < 1 || newStep > 8) return
     
     // 전환 시작
@@ -205,19 +195,6 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
     }
   }, [state.isTransitioning, currentStep])
 
-  // 현재 스텝에 해당하는 컴포넌트
-  const CurrentStepComponent = stepComponents[currentStep as keyof typeof stepComponents]
-
-  if (!CurrentStepComponent) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">잘못된 단계입니다</h1>
-          <p className="text-gray-600">유효한 온보딩 단계를 선택해주세요.</p>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <SubscriptionModalContext.Provider value={{ isModalOpen, setIsModalOpen }}>
@@ -242,8 +219,8 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                   left: 0,
                   right: 0,
                   height: 'var(--actual-safe-top)',
-                  backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-                  opacity: '0.8',
+                  backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+                  opacity: isWebEnvironment ? '0.8' : '0',
                   zIndex: 1000
                 }}
               />
@@ -281,30 +258,67 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                 }}
               >
                 {/* 현재 스텝 컴포넌트를 props와 함께 렌더링 */}
-                {currentStep === 8 ? (
-                  <CurrentStepComponent 
-                    locale={locale}
+                {currentStep === 1 && (
+                  <WelcomeScreen 
                     onStepChange={changeStep}
                     currentStep={currentStep}
                   />
-                ) : (
-                  <CurrentStepComponent 
+                )}
+                {currentStep === 2 && (
+                  <GratitudeExperienceScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 3 && (
+                  <UsagePurposeScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 4 && (
+                  <InterestAreasScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 5 && (
+                  <NotificationSettingsScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 6 && (
+                  <FirstGratitudeScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 7 && (
+                  <SubscriptionScreen 
+                    onStepChange={changeStep}
+                    currentStep={currentStep}
+                  />
+                )}
+                {currentStep === 8 && (
+                  <OnboardingCompleteClient 
+                    locale={locale}
                     onStepChange={changeStep}
                     currentStep={currentStep}
                   />
                 )}
               </div>
 
-              {/* 하단 세이프존 - 고정 표시 */}
+              {/* 하단 세이프존 - 여백 차지하지 않음 */}
               <div 
                 style={{ 
-                  position: 'fixed',
+                  position: 'absolute',
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: 'var(--actual-safe-bottom)',
-                  backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-                  opacity: '0.8',
+                  height: 0,
+                  backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+                  opacity: isWebEnvironment ? '0.8' : '0',
                   zIndex: 1000
                 }}
               />
@@ -323,7 +337,7 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                 }}
                 style={{ 
                   position: 'absolute',
-                  bottom: 'var(--actual-safe-bottom)',
+                  bottom: 0,
                   left: 0,
                   right: 0,
                   zIndex: 1,
@@ -341,20 +355,20 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                     ease: "easeOut"
                   }}
                   src={
-                    displayStep === 2 ? "/Grow5.png" :
-                    displayStep === 3 ? "/Grow6.png" :
-                    displayStep === 4 ? "/Grow7.png" :
-                    displayStep === 5 ? "/Grow8.png" :
-                    displayStep === 6 ? "/Grow9.png" :
-                    displayStep === 7 ? "/Grow10.png" :
-                    displayStep === 8 ? "/Grow11.png" :
-                    "/Grow4.png"
+                    displayStep === 2 ? "/Grow2.webp" :
+                    displayStep === 3 ? "/Grow3.webp" :
+                    displayStep === 4 ? "/Grow4.webp" :
+                    displayStep === 5 ? "/Grow5.webp" :
+                    displayStep === 6 ? "/Grow6.webp" :
+                    displayStep === 7 ? "/Grow7.webp" :
+                    displayStep === 8 ? "/Grow8.webp" :
+                    "/Grow1.webp"
                   } 
                   alt="Grow" 
                   style={{ 
                     width: '100%', 
                     height: 'auto',
-                    maxHeight: '25vh',
+                    maxHeight: '30vh',
                     objectFit: 'contain'
                   }}
                 />

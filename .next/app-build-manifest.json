@@ -16,25 +16,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/[locale]/onboarding/layout.js"
     ],
-    "/[locale]/onboarding/page": [
+    "/[locale]/onboarding/[step]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/[locale]/onboarding/page.js"
-    ],
-    "/[locale]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[locale]/page.js"
+      "static/chunks/app/[locale]/onboarding/[step]/page.js"
     ],
     "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
-    ],
-    "/[locale]/onboarding/[step]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/[locale]/onboarding/[step]/page.js"
     ]
   }
 }

@@ -281,7 +281,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
 
         {/* 팁 */}
         <div className="fade-start fade-tip mb-6">
-          <div className="relative py-2 px-5 bg-[#e5d4cd] font-noto-serif-kr rounded-2xl">
+          <div className="relative py-3 px-5 bg-[#e5d4cd] font-noto-serif-kr rounded-2xl">
             <div className="absolute -top-5 -left-5 w-12 h-12 -rotate-12">
               <img 
                 src="/Tip2.png" 

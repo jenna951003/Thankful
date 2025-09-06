@@ -218,7 +218,7 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
               <button
                 key={option.id}
                 onClick={() => setSelectedTime(option.id)}
-                className={`h-14 py-3 pr-3 pl-1 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+                className={`h-15 py-3 pr-3 pl-1 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                            ${isSelected
                              ? 'bg-[#dad8c8] text-[#3f5a4d]'
                              : 'bg-white text-gray-700'
@@ -258,7 +258,7 @@ export default function NotificationSettingsScreen({ onStepChange }: Notificatio
 
         {/* 일일 알림 설정 */}
         <div className="fade-start fade-weekly mb-3">
-          <div className="flex items-center justify-between p-3 px-4 bg-white font-noto-serif-kr rounded-lg">
+          <div className="flex h-16 items-center justify-between p-3 px-4 bg-white font-noto-serif-kr rounded-lg">
             <div className="text-left">
               <div className="font-extrabold text-[14px] text-gray-800">일일 알림</div>
               <div className="text-[11px] font-bold text-gray-500">매일 감사 리마인더 받기</div>

@@ -181,8 +181,8 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
           left: 0,
           right: 0,
           height: 'var(--actual-safe-top)',
-          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-          opacity: '0.8',
+          backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+          opacity: isWebEnvironment ? '0.8' : '0',
           zIndex: 1000
         }}
       />
@@ -222,16 +222,16 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
         {children}
       </div>
 
-      {/* 하단 세이프존 - 고정 표시 */}
+      {/* 하단 세이프존 - 여백 차지하지 않음 */}
       <div 
         style={{ 
-          position: 'fixed',
+          position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          height: 'var(--actual-safe-bottom)',
-          backgroundColor: isWebEnvironment ? 'blue' : 'red', 
-          opacity: '0.8',
+          height: 0,
+          backgroundColor: isWebEnvironment ? 'blue' : 'transparent', 
+          opacity: isWebEnvironment ? '0.8' : '0',
           zIndex: 1000
         }}
       />
@@ -242,7 +242,7 @@ function OnboardingContent({ children, locale }: OnboardingLayoutClientProps) {
       <div 
         style={{ 
           position: 'absolute',
-          bottom: 'var(--actual-safe-bottom)',
+          bottom: 0,
           left: 0,
           right: 0,
           zIndex: 1,

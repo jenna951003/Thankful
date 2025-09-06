@@ -73,7 +73,7 @@ export default function ProgressIndicator() {
               className={`h-full transition-all duration-300 ease-out relative ${barClass}`}
               style={{
                 background: hasBackground 
-                  ? 'linear-gradient(90deg,rgb(109, 157, 104))' 
+                  ? 'linear-gradient(90deg,rgb(129, 170, 126))' 
                   : 'transparent',
                 animation: barAnimation || undefined
               }}

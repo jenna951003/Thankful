@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useTranslation } from '../../hooks/useTranslation'
 import { useAuth } from '../../contexts/AuthContext'
-import { useSignUpModal, useForgotPasswordModal } from './OnboardingLayoutClient'
+import { useSignUpModal, useForgotPasswordModal } from './OnboardingFlow'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -817,7 +817,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
               onClick={handleShowForgotPassword}
             >
               <span className="text-gray-500">비밀번호를</span>{' '}
-              <span className="text-[#db6161]">잊으셨나요?</span>
+              <span className="text-[#a86e48]">잊으셨나요?</span>
             </button>
           </div>
 
