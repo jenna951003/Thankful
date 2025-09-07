@@ -311,6 +311,12 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
     setCanDragFromScroll(false)
     
     setTimeout(() => {
+      // 모달 내용 초기화
+      setEmail('')
+      setErrors({})
+      setIsSuccess(false)
+      setIsLoading(false)
+      
       onClose()
       
       requestAnimationFrame(() => {
@@ -671,7 +677,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
 
         <div 
           ref={scrollContainerRef}
-          className="px-6 overflow-y-auto max-h-[calc(85vh-2rem)]"
+          className="overflow-y-auto max-h-[calc(85vh-2rem)]"
           style={{
             touchAction: scrollPhase === 'drag' ? 'none' : 'pan-y',
             overscrollBehavior: 'contain',
@@ -679,6 +685,8 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
             paddingBottom: 'calc(2rem + var(--actual-safe-bottom, 0px))'
           }}
         >
+          {/* 태블릿 반응형 컨테이너 */}
+          <div className="px-6 md:max-w-md md:mx-auto">
           {!isSuccess ? (
             <>
               {/* 헤더 */}
@@ -814,6 +822,7 @@ export default function ForgotPasswordModal({ isOpen, onClose, onSuccess }: Forg
               </div>
             </>
           )}
+          </div>
         </div>
       </div>
 

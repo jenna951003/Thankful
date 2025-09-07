@@ -99,7 +99,7 @@
     "firstGratitude": {
       "title": "첫 번째 감사를\n기록해보세요",
       "subtitle": "오늘 하나님께 감사한 일이 있다면?",
-      "placeholder": ". 감사한 일을 적어보세요...",
+      "placeholder": "감사한 일을 적어보세요...",
       "tip": {
         "title": "팁",
         "description": "아주 작은 것도 좋아요! \"따뜻한 커피 한 잔\", \"안전한 하루\" 등"
@@ -253,10 +253,15 @@
     "pleaseWait": "잠시만 기다려주세요...",
     "processing": "처리 중...",
     "loading": "로딩 중...",
-    "redirectingHome": "홈페이지로 이동 중입니다..."
+    "redirectingHome": "홈페이지로 이동 중입니다...",
+    "signingIn": "로그인 중입니다...",
+    "signingOut": "로그아웃 중입니다...",
+    "signupComplete": "회원가입이 완료되었습니다!"
   },
   "modals": {
     "subscription": {
+      "title": "감사가 더 특별해져요!",
+      "subtitle": "더 많은 기능으로 감사를 기록해보세요",
       "features": {
         "prompts": {
           "title": "1000+ 감사 프롬프트",

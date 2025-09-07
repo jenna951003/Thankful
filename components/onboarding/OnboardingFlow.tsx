@@ -121,6 +121,8 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
       changeStep(2)
     } else {
       // 온보딩 완료 시 홈페이지로 이동
+      // 로그인 후 리다이렉트임을 표시
+      sessionStorage.setItem('justLoggedIn', 'true')
       router.replace(`/${locale}`)
     }
   }
@@ -455,6 +457,9 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                 onSignUpSuccess={() => {
                   // 회원가입 성공 시 처리
                   console.log('회원가입 성공! 2페이지로 이동합니다.')
+                  
+                  // 회원가입 완료 플래그 설정
+                  sessionStorage.setItem('justSignedUp', 'true')
                   
                   // "시작하기" 버튼과 동일한 전환 효과 적용
                   changeStep(2)

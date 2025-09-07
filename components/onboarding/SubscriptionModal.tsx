@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useParams } from 'next/navigation'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
+import { useTranslationContext } from '../../contexts/TranslationContext'
 
 interface SubscriptionModalProps {
   isOpen: boolean
@@ -67,6 +69,9 @@ const subscriptionPlans: Record<'personal' | 'church', Plan> = {
 }
 
 export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModalProps) {
+  const params = useParams()
+  const locale = params.locale as string
+  const { t, fontClass } = useTranslationContext()
   const [isVisible, setIsVisible] = useState(false)
   const [billingCycle, setBillingCycle] = useState<'weekly' | 'monthly' | 'yearly'>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<'personal' | 'church'>('personal')
@@ -598,7 +603,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
 
         <div 
           ref={scrollContainerRef}
-          className="px-6 overflow-y-auto max-h-[calc(85vh-2rem)]"
+          className="overflow-y-auto max-h-[calc(85vh-2rem)]"
           style={{
             touchAction: scrollPhase === 'drag' ? 'none' : 'pan-y',
             overscrollBehavior: 'contain',
@@ -606,13 +611,15 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
             paddingBottom: 'calc(2rem + var(--actual-safe-bottom, 0px))'
           }}
         >
+          {/* 태블릿 반응형 컨테이너 */}
+          <div className="px-6 md:max-w-md md:mx-auto">
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
-            <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
-              프리미엄으로 더 깊이!
+            <h1 className={`text-lg -mx-2 font-bold text-gray-800 mb-1 ${fontClass} tracking-wide`}>
+              {t('modals.subscription.title')}
             </h1>
-            <p className="text-sm text-gray-600 font-semibold font-noto-serif-kr leading-relaxed">
-              특별한 기능으로 감사 기록을 시작하세요
+            <p className={`text-sm text-gray-600 font-semibold ${fontClass} leading-relaxed`}>
+              {t('modals.subscription.subtitle')}
             </p>
           </div>
 
@@ -832,6 +839,7 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
             >
               나중에
             </button>
+          </div>
           </div>
         </div>
       </div>

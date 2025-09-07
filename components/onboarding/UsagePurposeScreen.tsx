@@ -61,7 +61,9 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
   }
 
   return (
-    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh] md:mb-[25vh]' : 'mb-[20vh] md:mb-[25vh]'} items-center w-full h-full text-center relative`}>
+      {/* 태블릿 반응형 컨테이너 */}
+      <div className="w-full md:max-w-2xl flex flex-col h-full">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -123,16 +125,16 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
         }
       `}</style>
 
-      {/* 메인 콘텐츠 */}
-      <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
+        {/* 메인 콘텐츠 */}
+        <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4 md:max-w-md mx-auto">
         {/* 타이틀 */}
-        <h1 className="text-[18px] -mx-2 font-bold text-gray-800 mb-1 mt-6 tracking-wide fade-start fade-title">
+        <h1 className="text-[18px] md:text-[20px] -mx-2 font-bold text-gray-800 mb-1 md:mb-2 mt-6 tracking-wide fade-start fade-title">
           <span className="font-sour-gummy">Thankful </span>
           <span className="font-noto-serif-kr">{t('onboarding.usagePurpose.title')}</span>
         </h1>
 
         {/* 부제목 */}
-        <p className="text-sm text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-sm md:text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           {t('onboarding.usagePurpose.subtitle')}
         </p>
 
@@ -142,14 +144,14 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
             <button
               key={purpose.id}
               onClick={() => handlePurposeSelect(purpose.id)}
-              className={`w-full h-15 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+              className={`w-full h-15 md:h-18 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                          ${selectedPurpose === purpose.id 
                            ? 'bg-[#dad8c8] text-[#4d6f5e] ' 
                            : 'bg-white text-gray-700 '
                          }`}
             >
               <div className="flex items-center space-x-1 w-full">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
+                <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
                   <img 
                     src={purpose.icon} 
                     alt={purpose.label}
@@ -157,7 +159,7 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
                   />
                 </div>
                 <div className="text-left flex-1 space-y-0.5">
-                  <div className="font-extrabold text-gray-600 text-[14px]">{purpose.label}</div>
+                  <div className="font-extrabold text-gray-600 text-[14px] md:text-[16px]">{purpose.label}</div>
                 </div>
               </div>
               
@@ -174,10 +176,10 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
             </button>
           ))}
         </div>
-      </div>
+        </div>
 
-      {/* 버튼들 */}
-      <div className="w-full max-w-sm space-y-3 px-4 pb-4 fade-start fade-buttons">
+        {/* 버튼들 */}
+        <div className="w-full max-w-sm space-y-3 px-4 pb-4 fade-start fade-buttons md:max-w-md mx-auto">
         {/* 다음 버튼 */}
         <button
           onClick={handleNext}
@@ -203,6 +205,7 @@ export default function UsagePurposeScreen({ onStepChange }: UsagePurposeScreenP
         >
           {t('onboarding.usagePurpose.backButton')}
         </button>
+        </div>
       </div>
     </div>
   )

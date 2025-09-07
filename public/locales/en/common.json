@@ -99,7 +99,7 @@
     "firstGratitude": {
       "title": "Record your first\ngratitude",
       "subtitle": "Is there something you're grateful to God for today?",
-      "placeholder": ". Write something you're grateful for...",
+      "placeholder": "Write something you're grateful for...",
       "tip": {
         "title": "Tip",
         "description": "Even small things are great! \"A warm cup of coffee\", \"A safe day\", etc."
@@ -253,10 +253,15 @@
     "pleaseWait": "Please wait...",
     "processing": "Processing...",
     "loading": "Loading...",
-    "redirectingHome": "Redirecting to homepage..."
+    "redirectingHome": "Redirecting to homepage...",
+    "signingIn": "Signing in...",
+    "signingOut": "Signing out...",
+    "signupComplete": "Registration completed!"
   },
   "modals": {
     "subscription": {
+      "title": "Make gratitude more special!",
+      "subtitle": "Record gratitude with more features",
       "features": {
         "prompts": {
           "title": "1000+ Gratitude Prompts",

@@ -25,6 +25,7 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
   const [overlayMessage, setOverlayMessage] = useState(t('loading.pleaseWait') || '잠시만 기다려주세요...')
   const [buttonState, setButtonState] = useState<'normal' | 'processing' | 'loading'>('normal')
   const [showContent, setShowContent] = useState(false)
+  const [isSignupComplete, setIsSignupComplete] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,6 +33,12 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
     }, 300)
     
     return () => clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    // 회원가입 완료 플래그 확인
+    const justSignedUp = sessionStorage.getItem('justSignedUp') === 'true'
+    setIsSignupComplete(justSignedUp)
   }, [])
 
   // 시작하기 버튼 클릭 핸들러
@@ -47,7 +54,15 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       setShowOverlay(true)
       setButtonState('loading')
       setIsCompleting(true)
-      setOverlayMessage(t('loading.pleaseWait') || '잠시만 기다려주세요...')
+      
+      // 회원가입 완료 시 특별 메시지, 아니면 기본 메시지
+      if (isSignupComplete) {
+        setOverlayMessage(t('loading.signupComplete') || '회원가입이 완료되었습니다!')
+        // 플래그 제거
+        sessionStorage.removeItem('justSignedUp')
+      } else {
+        setOverlayMessage(t('loading.pleaseWait') || '잠시만 기다려주세요...')
+      }
       
       if (!user) {
         // 로그인하지 않은 경우: 로컬스토리지에만 저장
@@ -102,10 +117,12 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
       {/* 로딩 오버레이 */}
       <LoadingOverlay 
         isVisible={showOverlay} 
-        message={overlayMessage} 
+        message={overlayMessage}
+        imageType={isSignupComplete ? 'signup' : 'default'}
+        minDuration={2000} // 2초 최소 보장
       />
       
-      <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+      <div className="flex flex-col mb-[20vh] md:mb-[25vh] items-center w-full h-full text-center relative">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -151,11 +168,11 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
         {/* 완료 아이콘 */}
         <div className="mb-8 relative fade-start fade-icon">
           <div className="flex justify-center mb-4">
-            <div className="w-36 h-36 flex items-center justify-center">
+            <div className="w-36 h-36 md:w-48 md:h-48 md:mt-12 flex items-center justify-center">
               <img 
                 src="/Complete.png" 
                 alt="완료"
-                className="w-36 h-36 object-contain"
+                className="w-36 h-36 md:w-48 md:h-48 object-contain"
               />
             </div>
           </div>
@@ -163,18 +180,18 @@ export default function OnboardingCompleteClient({ locale }: OnboardingCompleteC
         </div>
 
         {/* 타이틀 */}
-        <h1 className="text-xl -mx-2 font-extrabold text-gray-800 mb-4 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
+        <h1 className="text-xl md:text-2xl -mx-2 font-extrabold text-gray-700 mb-4 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
           {t('onboarding.complete.title')}
         </h1>
 
         {/* 부제목 */}
-        <p className="text-base text-gray-500 mb-6 font-bold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-base md:text-lg text-gray-500 mb-6 font-bold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           {t('onboarding.complete.subtitle')}
         </p>
       </div>
 
       {/* 시작하기 버튼 */}
-      <div className="w-full max-w-sm px-4 pb-24 fade-start fade-loading">
+      <div className="w-full max-w-sm md:max-w-md px-4 pb-24 fade-start fade-loading">
         <button
           onClick={handleStart}
           disabled={buttonState !== 'normal'}

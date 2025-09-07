@@ -104,7 +104,7 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
   }
 
   return (
-    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh] md:mb-[25vh]' : 'mb-[20vh] md:mb-[25vh]'} items-center w-full h-full text-center relative`}>
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -169,12 +169,12 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
       {/* 메인 콘텐츠 */}
       <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
         {/* 타이틀 */}
-        <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
+        <h1 className="text-lg md:text-xl -mx-2 font-bold text-gray-800 mb-1 md:mb-2 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
           {t('onboarding.interests.title')}
         </h1>
 
         {/* 부제목 */}
-        <p className="text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-base md:text-lg text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           {t('onboarding.interests.subtitle')}
         </p>
 
@@ -184,22 +184,22 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
             <button
               key={interest.id}
               onClick={() => handleToggleInterest(interest.id)}
-              className={`h-14 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
+              className={`h-14 md:h-18 p-3 rounded-lg font-noto-serif-kr option-card simple-button2 flex items-center relative
                          ${selectedInterests.includes(interest.id)
                            ? 'bg-[#dad8c8] text-[#4d6f5e]'
                            : 'bg-white text-gray-700'
                          }`}
             >
               <div className="flex items-center space-x-1 w-full">
-                <div className="flex-shrink-0 w-15 h-15 flex items-center justify-center">
+                <div className="flex-shrink-0 w-15 h-15 md:w-18 md:h-18 flex items-center justify-center">
                   <img 
                     src={interest.icon} 
                     alt={interest.label}
-                    className="w-15 h-15 object-contain"
+                    className="w-15 h-15 md:w-18 md:h-18 object-contain"
                   />
                 </div>
                 <div className="text-left flex-1">
-                  <div className="font-extrabold text-[13px]">{interest.label}</div>
+                  <div className="font-extrabold text-[13px] md:text-[15px]">{interest.label}</div>
                 </div>
               </div>
               
@@ -219,7 +219,7 @@ export default function InterestAreasScreen({ onStepChange }: InterestAreasScree
       </div>
 
       {/* 버튼들 */}
-      <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-buttons">
+      <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-buttons md:max-w-md mx-auto">
         {/* 다음 버튼 */}
         <button
           onClick={handleNext}

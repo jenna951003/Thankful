@@ -113,6 +113,8 @@ export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
 
   return (
     <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
+      {/* 태블릿 반응형 컨테이너 */}
+      <div className="w-full md:max-w-2xl md:mx-auto">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -155,8 +157,8 @@ export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
         }
       `}</style>
 
-      {/* 메인 콘텐츠 */}
-      <div className="flex-1 flex flex-col justify-start items-center px-4">
+        {/* 메인 콘텐츠 */}
+        <div className="flex-1 flex flex-col justify-start items-center px-4">
         {/* 웰컴 이미지 */}
         <div className="mb-12  relative fade-start fade-icon w-full max-w-sm">
           <div className="px-4">
@@ -170,18 +172,18 @@ export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
         </div>
 
         {/* 타이틀 */}
-        <h1 className="text-2xl font-bold text-gray-800 mb-3 font-sour-gummy tracking-wide fade-start fade-title">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3 md:mb-5 font-fascinate tracking-wide fade-start fade-title">
           {t('onboarding.welcome.title')}
         </h1>
 
         {/* 부제목 */}
-        <p className="text-lg text-gray-600 mb-8 font-semibold font-noto-serif-kr leading-relaxed max-w-sm mx-auto fade-start fade-subtitle">
+        <p className="text-lg md:text-xl text-gray-600 mb-8 font-semibold font-noto-serif-kr leading-relaxed max-w-sm mx-auto fade-start fade-subtitle">
           {t('onboarding.welcome.subtitle')}
         </p>
-      </div>
+        </div>
 
-      {/* 버튼들 */}
-      <div className="w-full max-w-sm space-y-3 px-4 pb-4">
+        {/* 버튼들 */}
+        <div className="w-full max-w-sm space-y-3 px-4 pb-4 md:max-w-md mx-auto">
         {/* Welcome4.png - 시작하기 버튼 왼쪽 */}
 
 
@@ -219,6 +221,7 @@ export default function WelcomeScreen({ onStepChange }: WelcomeScreenProps) {
         >
           🗑️ 로컬스토리지 초기화 (테스트용)
         </button>
+        </div>
       </div>
     </div>
   )

@@ -67,7 +67,9 @@ export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenP
   }
 
   return (
-    <div className="flex flex-col mb-[20vh] items-center w-full h-full text-center relative">
+    <div className="flex flex-col mb-[20vh] md:mb-[25vh] items-center w-full h-full text-center relative">
+      {/* 태블릿 반응형 컨테이너 */}
+      <div className="w-full md:max-w-2xl md:mx-auto flex flex-col h-full">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -129,15 +131,15 @@ export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenP
         }
       `}</style>
 
-      {/* 메인 콘텐츠 */}
-      <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
+        {/* 메인 콘텐츠 */}
+        <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4 md:max-w-lg mx-auto">
         {/* 타이틀 */}
-        <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
+        <h1 className="text-lg md:text-xl -mx-2 font-bold text-gray-800 mb-1 md:mb-2 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
           더 풍성한 감사의 삶을 경험하세요!
         </h1>
 
         {/* 부제목 */}
-        <p className="text-sm text-gray-600 mb-12 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-sm md:text-base text-gray-600 mb-12 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           더 많은 도구로 감사를 깊이 기록해보세요
         </p>
 
@@ -146,13 +148,13 @@ export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenP
           <img 
             src="/PremiumBox3.png" 
             alt="Premium Features"
-            className="w-full max-w-[212px] object-contain premium-box cursor-pointer"
+            className="w-full max-w-[212px] md:max-w-[250px] object-contain premium-box cursor-pointer"
           />
         </div>
-      </div>
+        </div>
 
-      {/* 버튼들 */}
-      <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-buttons">
+        {/* 버튼들 */}
+        <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-buttons md:max-w-md mx-auto">
         {/* 무료 체험 시작 버튼 */}
         <div className="relative">
                   <button
@@ -189,6 +191,7 @@ export default function SubscriptionScreen({ onStepChange }: SubscriptionScreenP
           >
             나중에
           </button>
+        </div>
         </div>
       </div>
     </div>

@@ -128,7 +128,9 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
   const hasAnyContent = gratitudeItems.some(item => item.trim() !== '')
 
   return (
-    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh]' : 'mb-[20vh]'} items-center w-full h-full text-center relative`}>
+    <div className={`flex flex-col ${isHomeButtonDevice ? 'mb-[10vh] md:mb-[25vh]' : 'mb-[20vh] md:mb-[25vh]'} items-center w-full h-full text-center relative`}>
+      {/* 태블릿 반응형 컨테이너 */}
+      <div className="w-full md:max-w-2xl md:mx-auto flex flex-col h-full">
       {/* CSS 애니메이션 스타일 */}
       <style jsx>{`
         @keyframes fadeIn {
@@ -242,15 +244,15 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
         }
       `}</style>
 
-      {/* 메인 콘텐츠 */}
-      <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4">
+        {/* 메인 콘텐츠 */}
+        <div className="flex-1 flex flex-col justify-start w-full max-w-md px-4 md:max-w-md mx-auto">
         {/* 타이틀 */}
-        <h1 className="text-lg -mx-2 font-bold text-gray-800 mb-1 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
+        <h1 className="text-lg md:text-xl -mx-2 font-bold text-gray-800 mb-1 md:mb-2 mt-6 font-noto-serif-kr tracking-wide fade-start fade-title">
           {t('onboarding.firstGratitude.title')}
         </h1>
 
         {/* 부제목 */}
-        <p className="text-sm text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
+        <p className="text-sm md:text-base text-gray-600 mb-6 font-semibold font-noto-serif-kr leading-relaxed fade-start fade-subtitle">
           {t('onboarding.firstGratitude.subtitle')}
         </p>
 
@@ -284,7 +286,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
         </div>
 
         {/* 팁 */}
-        <div className="fade-start fade-tip mb-6">
+        <div className="fade-start fade-tip mb-6 md:mb-12">
           <div className="relative py-3 px-5 bg-[#e5d4cd] font-noto-serif-kr rounded-2xl">
             <div className="absolute -top-5 -left-5 w-12 h-12 -rotate-12">
               <img 
@@ -294,8 +296,8 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
               />
             </div>
             <div className="text-left">
-              <div className="font-extrabold text-[14px] text-gray-800">
-                {t('onboarding.firstGratitude.tip.title')} &nbsp;<span className="text-[12px] font-bold text-gray-500">{t('onboarding.firstGratitude.tip.description')}</span>
+              <div className="font-extrabold text-[14px] md:text-[16px] text-gray-800">
+                {t('onboarding.firstGratitude.tip.title')} &nbsp;<span className="text-[12px] md:text-[14px] font-bold text-gray-500">{t('onboarding.firstGratitude.tip.description')}</span>
               </div>
             </div>
           </div>
@@ -304,7 +306,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
         {/* 기분 선택 */}
         <div className="fade-start fade-mood">
           <div className="text-center mb-2">
-            <h3 className="font-semibold text-gray-700 tracking-wide font-jua mb-4">{t('onboarding.firstGratitude.mood.title')}</h3>
+            <h3 className="font-semibold md:text-lg text-gray-700 tracking-wide font-jua mb-4">{t('onboarding.firstGratitude.mood.title')}</h3>
           </div>
           
           <div className="flex justify-between w-full gap-2 mb-8">
@@ -312,27 +314,27 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
               <button
                 key={mood.id}
                 onClick={() => setSelectedMood(mood.id)}
-                className={`flex-1 relative flex flex-col items-center py-1.5 px-1 rounded-lg simple-button2
+                className={`flex-1 relative flex flex-col items-center py-1.5 md:py-2 px-1 rounded-lg simple-button2
                            ${selectedMood === mood.id
                              ? 'bg-[#dad8c8] text-[#4d6f5e] -translate-y-1.5'
                              : 'bg-white text-gray-700'
                            }`}
               >
-                <div className="w-10 h-10 -my-2">
+                <div className="w-10 h-10 md:w-12 md:h-12 -my-2">
                   <img 
                     src={`/${mood.image}`} 
                     alt={mood.label}
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className={`text-xs font-noto-serif-kr font-bold
+                <div className={`text-xs md:text-sm font-noto-serif-kr font-bold
                                ${selectedMood === mood.id ? 'text-[#4d6f5e]' : 'text-gray-600'}`}>
                   {mood.label}
                 </div>
                 
                 {/* 체크 이미지 - 선택된 경우에만 표시 */}
                 {selectedMood === mood.id && (
-                  <div className="absolute -top-3 -right-3 w-8 h-8 mood-check-icon">
+                  <div className="absolute -top-3 -right-3 md:-top-4 md:-right-4 w-8 h-8 md:w-10 md:h-10 mood-check-icon">
                     <img 
                       src="/Check3.png" 
                       alt="Selected"
@@ -344,10 +346,10 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
             ))}
           </div>
         </div>
-      </div>
+        </div>
 
-      {/* 하단 저장 버튼 */}
-      <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-button">
+        {/* 하단 저장 버튼 */}
+        <div className="w-full max-w-sm px-4 space-y-3 pb-4 fade-start fade-button md:max-w-md mx-auto">
         <button
           onClick={handleNext}
           className={`w-full retro-button button-screen-texture tracking-wider
@@ -368,6 +370,7 @@ export default function FirstGratitudeScreen({ onStepChange }: FirstGratitudeScr
         >
           {t('onboarding.usagePurpose.backButton')}
         </button>
+        </div>
       </div>
     </div>
   )

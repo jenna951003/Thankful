@@ -99,7 +99,7 @@
     "firstGratitude": {
       "title": "Registra tu primera gratitud",
       "subtitle": "¿Hay algo por lo que te sientes agradecido a Dios hoy?",
-      "placeholder": ". Escribe algo por lo que estés agradecido...",
+      "placeholder": "Escribe algo por lo que estés agradecido...",
       "tip": {
         "title": "Consejo",
         "description": "¡Incluso las cosas pequeñas son geniales! \"Una taza de café caliente\", \"Un día seguro\", etc."
@@ -250,6 +250,8 @@
   },
   "modals": {
     "subscription": {
+      "title": "¡Haz la gratitud más especial!",
+      "subtitle": "Registra gratitud con más funciones",
       "features": {
         "prompts": {
           "title": "1000+ Indicaciones de Gratitud",
@@ -287,7 +289,10 @@
     "pleaseWait": "Por favor espere...",
     "processing": "Procesando...",
     "loading": "Cargando...",
-    "redirectingHome": "Redirigiendo a la página principal..."
+    "redirectingHome": "Redirigiendo a la página principal...",
+    "signingIn": "Iniciando sesión...",
+    "signingOut": "Cerrando sesión...",
+    "signupComplete": "¡Registro completado!"
   },
   "home": {
     "greeting": {

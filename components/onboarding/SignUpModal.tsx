@@ -398,6 +398,15 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
     setCanDragFromScroll(false)
     
     setTimeout(() => {
+      // 모달 내용 초기화
+      setEmail('')
+      setPassword('')
+      setConfirmPassword('')
+      setFullName('')
+      setErrors({})
+      setAgreeToTerms(false)
+      setIsLoading(false)
+      
       onClose()
       
       requestAnimationFrame(() => {
@@ -716,7 +725,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
 
         <div 
           ref={scrollContainerRef}
-          className="px-6 overflow-y-auto max-h-[calc(90vh-2rem)]"
+          className="overflow-y-auto max-h-[calc(90vh-2rem)]"
           style={{
             touchAction: scrollPhase === 'drag' ? 'none' : 'pan-y',
             overscrollBehavior: 'contain',
@@ -724,6 +733,8 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
             paddingBottom: 'calc(2rem + var(--actual-safe-bottom, 0px))'
           }}
         >
+          {/* 태블릿 반응형 컨테이너 */}
+          <div className="px-6 md:max-w-md md:mx-auto">
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
             <h1 className="text-lg -mx-2 font-black text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
@@ -954,26 +965,49 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
               <div className={`transition-opacity ease-out ${
                 errors.general ? 'opacity-100 duration-200' : 'opacity-0 duration-200'
               }`}>
-                <p className="text-[#ea6666] text-sm text-center font-bold font-noto-serif-kr">{delayedErrors.general}</p>
+                <p className="text-[#ea6666] text-sm pl-1 text-left font-bold font-noto-serif-kr">{delayedErrors.general}</p>
               </div>
             )}
           </div>
 
           {/* 약관 동의 체크박스 */}
           <div className="mb-4 fade-start fade-agreement">
-            <label className="flex items-start space-x-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
-                className="mt-1 w-4 h-4 text-[#56874f] bg-gray-100 border-gray-300 rounded focus:ring-[#56874f] focus:ring-2"
-              />
+            <label className="flex items-start mt-4 space-x-2 cursor-pointer">
+              <div className="relative mt-1">
+                <input
+                  type="checkbox"
+                  checked={agreeToTerms}
+                  onChange={(e) => setAgreeToTerms(e.target.checked)}
+                  className="sr-only"
+                />
+                <div className={`w-5 h-5 -mt-0.5 ml-1 rounded-md transition-all duration-200 flex items-center justify-center ${
+                  agreeToTerms 
+                    ? 'bg-[#bacd9d] shadow-sm' 
+                    : 'bg-[#bacd9d]'
+                }`}>
+                  {agreeToTerms && (
+                    <svg 
+                      className="w-4 h-4 text-white transition-all duration-200" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={4} 
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+              </div>
               <span className="text-sm text-gray-600 font-noto-serif-kr leading-relaxed">
                 <span>
                   <button
                     type="button"
                     onClick={() => {/* 이용약관 페이지로 이동 */}}
-                    className="text-[#56874f] underline font-semibold hover:text-[#4a7545] transition-colors duration-200"
+                    className="text-[#859272] font-semibold transition-colors duration-200"
                   >
                     {t('onboarding.signUp.agreements.terms')}
                   </button>
@@ -981,7 +1015,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
                   <button
                     type="button"
                     onClick={() => {/* 개인정보처리방침 페이지로 이동 */}}
-                    className="text-[#56874f] underline font-semibold hover:text-[#4a7545] transition-colors duration-200"
+                    className="text-[#859272] font-semibold transition-colors duration-200"
                   >
                     {t('onboarding.signUp.agreements.privacy')}
                   </button>
@@ -1033,6 +1067,7 @@ export default function SignUpModal({ isOpen, onClose, onSignUpSuccess }: SignUp
                 {t('onboarding.signUp.loginLink')}
               </button>
             </p>
+          </div>
           </div>
         </div>
       </div>

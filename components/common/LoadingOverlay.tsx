@@ -6,36 +6,72 @@ import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 interface LoadingOverlayProps {
   isVisible: boolean
   message?: string
+  imageType?: 'default' | 'login' | 'logout' | 'signup'
+  minDuration?: number
   onAnimationComplete?: () => void
 }
 
 export default function LoadingOverlay({ 
   isVisible, 
   message = '잠시만 기다려주세요...', 
+  imageType = 'default',
+  minDuration = 0,
   onAnimationComplete 
 }: LoadingOverlayProps) {
   const { safeArea } = useDeviceDetection()
   const [showSpinner, setShowSpinner] = useState(false)
   const [fadeOut, setFadeOut] = useState(false)
+  const [startTime, setStartTime] = useState<number>(0)
+
+  // 이미지 파일 선택
+  const getImageSrc = () => {
+    switch (imageType) {
+      case 'login': return '/Login2.png'
+      case 'logout': return '/Logout2.png'
+      case 'signup': return '/Signup.png'
+      default: return '/Loading3.png'
+    }
+  }
 
   useEffect(() => {
     if (isVisible) {
+      // 시작 시간 기록
+      const currentTime = Date.now()
+      setStartTime(currentTime)
+      
       // 페이드인 후 스피너 표시
       const timer = setTimeout(() => {
         setShowSpinner(true)
       }, 300)
       return () => clearTimeout(timer)
     } else {
-      // 페이드아웃 시작
-      setFadeOut(true)
-      const timer = setTimeout(() => {
-        setShowSpinner(false)
-        setFadeOut(false)
-        onAnimationComplete?.()
-      }, 400)
-      return () => clearTimeout(timer)
+      // 최소 시간 보장 로직
+      const elapsedTime = Date.now() - startTime
+      const remainingTime = Math.max(0, minDuration - elapsedTime)
+      
+      const handleFadeOut = () => {
+        setFadeOut(true)
+        const timer = setTimeout(() => {
+          setShowSpinner(false)
+          setFadeOut(false)
+          onAnimationComplete?.()
+        }, 400)
+        return timer
+      }
+      
+      if (remainingTime > 0) {
+        // 최소 시간을 채우기 위해 추가 대기
+        const timer = setTimeout(() => {
+          handleFadeOut()
+        }, remainingTime)
+        return () => clearTimeout(timer)
+      } else {
+        // 즉시 페이드아웃 시작
+        const timer = handleFadeOut()
+        return () => clearTimeout(timer)
+      }
     }
-  }, [isVisible, onAnimationComplete])
+  }, [isVisible, onAnimationComplete, minDuration, startTime])
 
   if (!isVisible && !fadeOut) return null
 
@@ -100,14 +136,14 @@ export default function LoadingOverlay({
       `}</style>
 
       {/* 메인 콘텐츠 */}
-      <div className="flex flex-col -mt-16 items-center space-y-0">
-        {/* Loading.png 이미지 */}
+      <div className="flex flex-col -mt-16  items-center space-y-8">
+        {/* 로딩 이미지 */}
         {showSpinner && (
           <div className="relative animate-float">
             <img 
-              src="/Loading1.png" 
+              src={getImageSrc()} 
               alt="Loading" 
-              className="w-56 h-56 object-contain"
+              className="w-26 h-26 object-contain"
             />
           </div>
         )}

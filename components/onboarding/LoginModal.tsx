@@ -300,6 +300,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
     setCanDragFromScroll(false)
     
     setTimeout(() => {
+      // 모달 내용 초기화
+      setEmail('')
+      setPassword('')
+      setError(null)
+      setIsLoading(false)
+      
       onClose()
       
       // 모달이 완전히 닫힌 후 버튼 상태 정리
@@ -654,7 +660,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
 
         <div 
           ref={scrollContainerRef}
-          className="px-6 overflow-y-auto max-h-[calc(85vh-2rem)]"
+          className="overflow-y-auto max-h-[calc(85vh-2rem)]"
           style={{
             touchAction: scrollPhase === 'drag' ? 'none' : 'pan-y',
             overscrollBehavior: 'contain',
@@ -662,6 +668,8 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
             paddingBottom: 'calc(2rem + var(--actual-safe-bottom, 0px))'
           }}
         >
+          {/* 태블릿 반응형 컨테이너 */}
+          <div className="px-6 md:max-w-md md:mx-auto">
           {/* 헤더 */}
           <div className="text-center mb-6 pt-4 fade-start fade-title">
             <h1 className="text-lg -mx-2 font-black text-gray-800 mb-1 font-noto-serif-kr tracking-wide">
@@ -754,7 +762,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   }
                 }}
                 placeholder={t('onboarding.login.emailPlaceholder')}
-                className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-500"
+                className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400"
                 style={{
                   borderColor: email ? '#56874f' : undefined,
                   textDecoration: 'none',
@@ -783,7 +791,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                   }
                 }}
                 placeholder={t('onboarding.login.passwordPlaceholder')}
-                className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-500"
+                className="w-full px-4 py-3 bg-[#eae4d7] font-bold rounded-xl font-noto-serif-kr text-gray-800 text-base transition-all placeholder-fade placeholder:text-gray-400"
                 style={{
                   borderColor: password ? '#56874f' : undefined,
                   textDecoration: 'none',
@@ -813,7 +821,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           {/* 비밀번호 찾기 링크 */}
           <div className="text-right mb-4 mr-1 fade-start fade-forgot">
             <button
-              className="text-sm font-bold font-noto-serif-kr duration-200"
+              className="text-sm text-[#887763] font-bold font-noto-serif-kr duration-200"
               onClick={handleShowForgotPassword}
             >
               {t('onboarding.login.forgotPassword')}
@@ -857,6 +865,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 {t('onboarding.login.signUpButton')}
               </button>
             </p>
+          </div>
           </div>
         </div>
       </div>
