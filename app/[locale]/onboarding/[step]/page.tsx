@@ -26,5 +26,5 @@ export default function OnboardingStep({ params }: OnboardingStepProps) {
     )
   }
   
-  return <OnboardingFlow initialStep={stepNumber} locale={locale} />
+  return <OnboardingFlow locale={locale} />
 }

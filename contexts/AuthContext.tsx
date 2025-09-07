@@ -45,7 +45,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false) // 임시로 false로 시작
   const [error, setError] = useState<string | null>(null)
   
   // 중복 처리 방지를 위한 상태 추가
@@ -53,6 +53,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthStateChanging, setIsAuthStateChanging] = useState(false)
   
   const supabase = createClient()
+
+  console.log('🚨 IMMEDIATE: AuthProvider rendered with loading:', loading)
 
   // 간단한 백그라운드 프로필 동기화 (재시도 1회만)
   const backgroundProfileSync = async (user: User): Promise<void> => {
@@ -386,29 +388,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  // Initialize auth state
+  // 간단한 초기화 (임시)
   useEffect(() => {
-    const initializeAuth = async () => {
+    const initAuth = async () => {
       try {
-        // Get initial session
         const { data: { session } } = await supabase.auth.getSession()
-        
         if (session?.user) {
           setUser(session.user)
-          const userProfile = await fetchProfile(session.user.id)
-          setProfile(userProfile)
+          // 프로필은 나중에 로드
         }
       } catch (err) {
-        console.error('Error initializing auth:', err)
-        setError('인증 초기화 중 오류가 발생했습니다.')
-      } finally {
-        setLoading(false)
+        console.error('Auth init error:', err)
       }
     }
+    
+    initAuth()
+  }, [supabase])
 
-    initializeAuth()
-
-    // Listen for auth changes
+  // Listen for auth changes (별도 useEffect)
+  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         // 중복 처리 방지
@@ -418,6 +416,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         
         setIsAuthStateChanging(true)
+        let authTimeout: NodeJS.Timeout
         
         try {
           console.log('🔐 Auth state changed:', event, {
@@ -427,20 +426,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             metadata: session?.user?.user_metadata
           })
           
+          // 최대 15초 후 강제로 처리 완료 (안전장치)
+          authTimeout = setTimeout(() => {
+            console.log('⚠️ Auth state change timeout - forcing completion')
+            setLoading(false)
+            setIsAuthStateChanging(false)
+          }, 15000)
+          
           if (session?.user) {
             setUser(session.user)
             
             // 모든 로그인(이메일/OAuth)에 대해 프로필 생성/확인 시도
             if (event === 'SIGNED_IN') {
               console.log('🔑 User signed in, ensuring profile exists...')
-              const userProfile = await ensureProfileExists(session.user)
-              console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FALLBACK')
-              setProfile(userProfile)
+              try {
+                const userProfile = await ensureProfileExists(session.user)
+                console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FALLBACK')
+                setProfile(userProfile)
+              } catch (profileError) {
+                console.error('❌ Profile creation failed:', profileError)
+                setProfile(null)
+              }
             } else {
               // 기존 세션인 경우 프로필 가져오기
               console.log('🔄 Existing session, fetching profile...')
-              const userProfile = await fetchProfile(session.user.id)
-              setProfile(userProfile)
+              try {
+                const userProfile = await fetchProfile(session.user.id)
+                setProfile(userProfile)
+              } catch (profileError) {
+                console.error('❌ Profile fetch failed:', profileError)
+                setProfile(null)
+              }
             }
           } else {
             console.log('🚪 User signed out')
@@ -448,13 +464,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setProfile(null)
           }
           
+          console.log('✅ Auth state change completed - setting loading to false')
           setLoading(false)
           setError(null)
         } catch (err) {
           console.error('💥 Error in auth state change handler:', err)
           setError('인증 상태 처리 중 오류가 발생했습니다.')
+          setLoading(false)
         } finally {
+          console.log('🔚 Auth state change handler finished')
           setIsAuthStateChanging(false)
+          if (authTimeout) clearTimeout(authTimeout)
         }
       }
     )
@@ -464,10 +484,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Sign in function
   const signIn = async (email: string, password: string) => {
+    let signInTimeout: NodeJS.Timeout
+    
     try {
       console.log('🔐 Starting sign in process for:', email)
       setLoading(true)
       setError(null)
+
+      // 최대 20초 후 강제로 로딩 해제 (안전장치)
+      signInTimeout = setTimeout(() => {
+        console.log('⚠️ Sign in timeout - forcing loading to false')
+        setLoading(false)
+      }, 20000)
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim().toLowerCase(),
@@ -495,6 +523,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         
         setError(errorMessage)
+        clearTimeout(signInTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -504,7 +534,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // 프로필 로딩에 타임아웃 추가
         const profilePromise = fetchProfile(data.user.id)
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Profile loading timeout')), 10000)
+          setTimeout(() => reject(new Error('Profile loading timeout')), 8000)
         )
         
         let userProfile: any = null
@@ -533,16 +563,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
-      console.log('🔐 Sign in process completed')
+      console.log('🔐 Sign in process completed - setting loading to false')
+      if (signInTimeout) clearTimeout(signInTimeout)
       setLoading(false)
     }
   }
 
   // Google 소셜 로그인 함수
   const signInWithGoogle = async () => {
+    let googleTimeout: NodeJS.Timeout
+    
     try {
       setLoading(true)
       setError(null)
+
+      // 최대 15초 후 강제로 로딩 해제 (소셜 로그인용)
+      googleTimeout = setTimeout(() => {
+        console.log('⚠️ Google OAuth timeout - forcing loading to false')
+        setLoading(false)
+      }, 15000)
 
       console.log('Starting Google OAuth...')
 
@@ -578,6 +617,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         console.error('Google OAuth error:', error)
         setError(errorMessage)
+        clearTimeout(googleTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -588,15 +629,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
+      console.log('Google OAuth completed - setting loading to false')
+      if (googleTimeout) clearTimeout(googleTimeout)
       setLoading(false)
     }
   }
 
   // Facebook 소셜 로그인 함수
   const signInWithFacebook = async () => {
+    let facebookTimeout: NodeJS.Timeout
+    
     try {
       setLoading(true)
       setError(null)
+
+      facebookTimeout = setTimeout(() => {
+        console.log('⚠️ Facebook OAuth timeout - forcing loading to false')
+        setLoading(false)
+      }, 15000)
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
@@ -620,6 +670,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         
         setError(errorMessage)
+        clearTimeout(facebookTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -629,15 +681,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
+      console.log('Facebook OAuth completed - setting loading to false')
+      if (facebookTimeout) clearTimeout(facebookTimeout)
       setLoading(false)
     }
   }
 
   // Apple 소셜 로그인 함수
   const signInWithApple = async () => {
+    let appleTimeout: NodeJS.Timeout
+    
     try {
       setLoading(true)
       setError(null)
+
+      appleTimeout = setTimeout(() => {
+        console.log('⚠️ Apple OAuth timeout - forcing loading to false')
+        setLoading(false)
+      }, 15000)
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
@@ -661,6 +722,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         
         setError(errorMessage)
+        clearTimeout(appleTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -670,26 +733,40 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
+      console.log('Apple OAuth completed - setting loading to false')
+      if (appleTimeout) clearTimeout(appleTimeout)
       setLoading(false)
     }
   }
 
   // Sign up function
   const signUp = async (email: string, password: string, fullName: string) => {
+    let signUpTimeout: NodeJS.Timeout
+    
     try {
       setLoading(true)
       setError(null)
+
+      // 최대 20초 후 강제로 로딩 해제 (회원가입용)
+      signUpTimeout = setTimeout(() => {
+        console.log('⚠️ Sign up timeout - forcing loading to false')
+        setLoading(false)
+      }, 20000)
 
       // Validate inputs
       if (!email || !password || !fullName) {
         const errorMessage = '모든 필드를 입력해주세요.'
         setError(errorMessage)
+        clearTimeout(signUpTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
       if (password.length < 6) {
         const errorMessage = '비밀번호는 최소 6자 이상이어야 합니다.'
         setError(errorMessage)
+        clearTimeout(signUpTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -733,6 +810,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
         
         setError(errorMessage)
+        clearTimeout(signUpTimeout)
+        setLoading(false)
         return { success: false, error: errorMessage }
       }
 
@@ -780,6 +859,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(errorMessage)
       return { success: false, error: errorMessage }
     } finally {
+      console.log('🔐 Sign up process completed - setting loading to false')
+      if (signUpTimeout) clearTimeout(signUpTimeout)
       setLoading(false)
     }
   }

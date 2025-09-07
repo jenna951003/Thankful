@@ -1,7 +1,6 @@
 {
   "/page": "app/page.js",
   "/[locale]/page": "app/[locale]/page.js",
-  "/[locale]/splash/page": "app/[locale]/splash/page.js",
   "/[locale]/onboarding/page": "app/[locale]/onboarding/page.js",
   "/[locale]/onboarding/[step]/page": "app/[locale]/onboarding/[step]/page.js"
 }

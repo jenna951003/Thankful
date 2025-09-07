@@ -341,25 +341,35 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
       console.log('📋 Login result:', result)
       
       if (result.success) {
-        console.log('✅ Login successful, calling onLoginSuccess')
-        if (onLoginSuccess) {
-          onLoginSuccess(result.shouldRedirectToOnboarding)
-        }
-        // 약간의 지연 후 모달 닫기 (상태 업데이트 완료를 위함)
+        console.log('✅ Login successful - starting perfect sequence')
+        
+        // 🎯 1단계: 500ms 동안 "로그인 중..." 버튼 상태 유지
         setTimeout(() => {
+          console.log('🎯 Step 1: 500ms completed - starting modal close')
+          // 모달 닫기 시작 (500ms 소요)
           handleClose()
-        }, 100)
+          
+          // 🎯 2단계: 모달이 완전히 닫힌 후 (총 1000ms 후) onLoginSuccess 호출
+          setTimeout(() => {
+            console.log('🎯 Step 2: Modal completely closed - calling onLoginSuccess')
+            if (onLoginSuccess) {
+              onLoginSuccess(result.shouldRedirectToOnboarding)
+            }
+            // 이제 로딩 상태 해제
+            setIsLoading(false)
+          }, 500) // 모달 닫기 애니메이션 시간
+        }, 500) // 버튼 로딩 유지 시간
       } else {
         console.error('❌ Login failed:', result.error)
         setError(result.error || '로그인에 실패했습니다.')
+        setIsLoading(false) // 실패 시에만 즉시 해제
       }
     } catch (error) {
       console.error('💥 Login exception:', error)
       setError('로그인 중 오류가 발생했습니다.')
-    } finally {
-      console.log('🏁 Login process finished, resetting loading state')
-      setIsLoading(false)
+      setIsLoading(false) // 에러 시에만 즉시 해제
     }
+    // 🎯 finally 블록에서 setIsLoading(false) 제거 - 성공 시퀀스에서 제어
   }
 
   // Google 소셜 로그인 핸들러
@@ -843,14 +853,32 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1)'
               }}
             >
-              <span 
-                style={{
-                  display: 'inline-block',
-                  transform: 'scale(1)'
-                }}
-              >
-                {isLoading ? t('onboarding.login.loggingIn') : t('onboarding.login.loginButton')}
-              </span>
+              <div className="flex items-center justify-center">
+                {isLoading && (
+                  <div 
+                    className="w-5 h-5 rounded-full mr-3 animate-spin"
+                    style={{ 
+                      background: `conic-gradient(
+                        from 0deg,
+                        transparent 0deg,
+                        transparent 270deg,
+                        white 270deg,
+                        white 360deg
+                      )`,
+                      WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px))',
+                      mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 2px))'
+                    }}
+                  />
+                )}
+                <span 
+                  style={{
+                    display: 'inline-block',
+                    transform: 'scale(1)'
+                  }}
+                >
+                  {isLoading ? t('onboarding.login.loggingIn') : t('onboarding.login.loginButton')}
+                </span>
+              </div>
             </button>
           </div>
 

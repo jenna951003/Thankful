@@ -84,6 +84,7 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false)
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false)
+  const [isFadingOut, setIsFadingOut] = useState(false) // 🎯 페이드아웃 상태 추가
   const { state, startTransition, setStep } = useOnboarding()
   const { user, updateProfile } = useAuth()
   const router = useRouter()
@@ -114,16 +115,39 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
 
   // 로그인 성공 핸들러
   const handleLoginSuccess = (shouldRedirectToOnboarding?: boolean) => {
-    console.log('로그인 성공', { shouldRedirectToOnboarding })
+    console.log('🎯🎯🎯 LOGIN SUCCESS HANDLER CALLED!!! 🎯🎯🎯', { shouldRedirectToOnboarding })
+    console.log('🎯 로그인 성공 - 페이드아웃 시작', { shouldRedirectToOnboarding })
     
     if (shouldRedirectToOnboarding) {
       // 온보딩 미완료 시 2페이지로 이동
       changeStep(2)
     } else {
-      // 온보딩 완료 시 홈페이지로 이동
-      // 로그인 후 리다이렉트임을 표시
-      sessionStorage.setItem('justLoggedIn', 'true')
-      router.replace(`/${locale}`)
+      // 🎯 온보딩 완료 시 홈페이지로 부드럽게 전환
+      console.log('🎯 Step 3: onLoginSuccess called - waiting 1s before fadeout')
+      
+      // 🎯 1단계: 1초 대기 (모달 닫힌 후 여유 시간)
+      setTimeout(() => {
+        console.log('🎯 Step 4: 1s wait completed - starting fadeout')
+        // 2단계: 페이드아웃 시작
+        setIsFadingOut(true)
+        
+        // 🎯 3단계: 페이드아웃 완료 후 라우터 이동 (500ms 후)
+        setTimeout(() => {
+          console.log('🎯 Step 5: Fadeout complete - navigating to home')
+          // 로그인 후 리다이렉트임을 표시
+          console.log('🎯 Setting sessionStorage flags before navigation')
+          sessionStorage.setItem('justLoggedIn', 'true')
+          // 🎯 HomePage fadeIn 방지용 별도 플래그 설정
+          sessionStorage.setItem('homePageNoFadeIn', 'true')
+          console.log('🎯 SessionStorage flags set:', {
+            justLoggedIn: sessionStorage.getItem('justLoggedIn'),
+            homePageNoFadeIn: sessionStorage.getItem('homePageNoFadeIn')
+          })
+          console.log('🎯 About to navigate to:', `/${locale}`)
+          router.replace(`/${locale}`)
+          console.log('🎯 Navigation completed')
+        }, 500) // 페이드아웃 애니메이션 시간
+      }, 1000) // 모달 닫힌 후 대기 시간
     }
   }
 
@@ -210,7 +234,9 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                opacity: isFadingOut ? '0' : '1',
+                transition: 'opacity 0.5s ease-out'
               }}
             >
               {/* 상단 세이프존 - 고정 표시 */}

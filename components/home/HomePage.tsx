@@ -16,9 +16,10 @@ import LoadingOverlay from '../common/LoadingOverlay'
 
 interface HomePageProps {
   locale: string
+  showWithLoginAnimation?: boolean // 🎯 로그인 완료 후 애니메이션 플래그
 }
 
-export default function HomePage({ locale }: HomePageProps) {
+export default function HomePage({ locale, showWithLoginAnimation = false }: HomePageProps) {
   const router = useRouter()
   const { user, profile, loading, signOut } = useAuth()
   const { safeArea } = useDeviceDetection()
@@ -26,9 +27,52 @@ export default function HomePage({ locale }: HomePageProps) {
   const { t: tContext } = useTranslationContext()
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('home')
-  const [fadeIn, setFadeIn] = useState(true)
   const [isTestingLoading, setIsTestingLoading] = useState(false)
   const [loadingMessage, setLoadingMessage] = useState("테스트 중입니다...")
+  
+  // 🔧 로그인 후 부드러운 진입 애니메이션 관리
+  const [isAnimating, setIsAnimating] = useState(() => {
+    return showWithLoginAnimation
+  })
+  
+  const [fadeInClass, setFadeInClass] = useState(() => {
+    if (showWithLoginAnimation) {
+      console.log('🎯 HomePage: Starting with login animation (opacity 0)')
+      return 'opacity-0' // 로그인 애니메이션의 경우 0부터 시작
+    }
+    
+    // 기존 로직 유지
+    if (typeof window !== 'undefined') {
+      const shouldSkipFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      if (shouldSkipFadeIn) {
+        console.log('🎯 HomePage: Skipping fadeIn animation (login sequence)')
+        sessionStorage.removeItem('homePageNoFadeIn')
+        return 'opacity-100' // 즉시 표시
+      }
+    }
+    console.log('🎯 HomePage: Using normal fadeIn animation')
+    return 'opacity-100 animate-fade-in' // 일반 fadeIn
+  })
+
+  // 🎯 로그인 애니메이션 실행 (더 부드러운 타이밍)
+  useEffect(() => {
+    if (showWithLoginAnimation && isAnimating) {
+      console.log('🎯 HomePage: Starting smooth login entrance animation')
+      // 🎯 오버레이 페이드아웃과 동기화하여 더 자연스러운 전환
+      const timer = setTimeout(() => {
+        setFadeInClass('opacity-100 transition-opacity duration-800 ease-out')
+        console.log('🎯 HomePage: Smooth entrance animation applied (800ms duration)')
+        
+        // 애니메이션 완료 후 상태 정리
+        setTimeout(() => {
+          setIsAnimating(false)
+          console.log('🎯 HomePage: Smooth entrance animation completed')
+        }, 800)
+      }, 50) // 더 빠른 시작으로 seamless 전환
+      
+      return () => clearTimeout(timer)
+    }
+  }, [showWithLoginAnimation, isAnimating])
   
   // 비로그인 사용자도 홈페이지 사용 가능하도록 처리
   const savedDisplayName = getSavedDisplayName()
@@ -132,7 +176,7 @@ export default function HomePage({ locale }: HomePageProps) {
 
   return (
     <div 
-      className={`min-h-screen transition-opacity duration-200 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
+      className={`min-h-screen ${fadeInClass}`}
       style={{ 
         background: 'var(--bg-base)',
         paddingBottom: '80px' // 하단 네비게이션을 위한 여백
