@@ -69,6 +69,7 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
   const [onboardingCheckTimeout, setOnboardingCheckTimeout] = useState<NodeJS.Timeout | null>(null)
   const [forceShowHomePage, setForceShowHomePage] = useState(false)
   const [showHomePageWithAnimation, setShowHomePageWithAnimation] = useState(false)
+  const [isLoginFadingOut, setIsLoginFadingOut] = useState(false)
 
   // 🎯 안전장치: 8초 후 강제로 홈페이지 표시 (새로운 로그인 시퀀스에 맞춰 증가)
   useEffect(() => {
@@ -80,6 +81,7 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
       setIsRedirecting(false)
       setIsLoginLoading(false)
       setIsLogoutLoading(false)
+      setIsLoginFadingOut(false)
     }, 8000)
     
     return () => {
@@ -120,13 +122,15 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
           if (remainingTime > 0) {
             console.log(`🎯 Waiting additional ${remainingTime}ms to ensure minimum duration`)
             loginTimer = setTimeout(() => {
-              console.log('🔵 Login loading completed - hiding overlay')
+              console.log('🔵 Login loading completed - starting fadeout')
               setIsLoginLoading(false)
+              setIsLoginFadingOut(true)
               setIsLoginRedirect(false)
             }, remainingTime)
           } else {
-            console.log('🔵 Login loading completed immediately - hiding overlay')
+            console.log('🔵 Login loading completed immediately - starting fadeout')
             setIsLoginLoading(false)
+            setIsLoginFadingOut(true)
             setIsLoginRedirect(false)
           }
           return true // 완료됨
@@ -146,6 +150,7 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
         console.log('🔵 Force completing login loading after 5 seconds')
         if (authCheckInterval) clearInterval(authCheckInterval)
         setIsLoginLoading(false)
+        setIsLoginFadingOut(true)
         setIsLoginRedirect(false)
       }, 5000)
       
@@ -253,6 +258,8 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
     isCheckingOnboarding,
     isLoginLoading,
     isLogoutLoading,
+    isLoginFadingOut,
+    showHomePageWithAnimation,
     forceShowHomePage,
     user: !!user,
     profile: !!profile
@@ -265,10 +272,10 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
   }
 
   // 로딩 중이거나 리다이렉트 중일 때 (로그인/로그아웃 전용 로딩 포함)
-  if (loading || isRedirecting || isCheckingOnboarding || isLoginLoading || isLogoutLoading) {
+  if (loading || isRedirecting || isCheckingOnboarding || isLoginLoading || isLogoutLoading || isLoginFadingOut) {
     let loadingProps
     
-    if (isLoginLoading) {
+    if (isLoginLoading || isLoginFadingOut) {
       loadingProps = {
         imageType: 'login' as const,
         message: t('loading.signingIn') || '로그인 중입니다...',
@@ -293,17 +300,14 @@ export default function LocaleMainPage({ locale }: LocaleMainPageProps) {
     }
     
     return <LoadingOverlay 
-      isVisible={true} 
+      isVisible={!isLoginFadingOut} 
       {...loadingProps}
-      preRenderNextComponent={isLoginLoading ? () => <HomePage locale={locale} showWithLoginAnimation={true} /> : undefined}
+      preRenderNextComponent={(isLoginLoading || isLoginFadingOut) ? () => <HomePage locale={locale} showWithLoginAnimation={true} /> : undefined}
       onAnimationComplete={() => {
-        if (isLoginLoading) {
-          console.log('🎯 Login overlay fadeout started - preparing HomePage animation')
-          // 🎯 페이드아웃이 시작되는 시점에 HomePage 준비 (더 부드러운 전환)
-          setTimeout(() => {
-            console.log('🎯 Setting HomePage animation flag for smooth transition')
-            setShowHomePageWithAnimation(true)
-          }, 300) // 페이드아웃 중간 지점에서 HomePage 애니메이션 준비
+        if (isLoginFadingOut) {
+          console.log('🎯 Login overlay fadeout completed - showing HomePage with animation')
+          setIsLoginFadingOut(false)
+          setShowHomePageWithAnimation(true)
         }
       }}
     />

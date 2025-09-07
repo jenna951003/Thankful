@@ -41,25 +41,19 @@ export default function HomePage({ locale, showWithLoginAnimation = false }: Hom
       return 'opacity-0' // 로그인 애니메이션의 경우 0부터 시작
     }
     
-    // 기존 로직 유지
-    if (typeof window !== 'undefined') {
-      const shouldSkipFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
-      if (shouldSkipFadeIn) {
-        console.log('🎯 HomePage: Skipping fadeIn animation (login sequence)')
-        sessionStorage.removeItem('homePageNoFadeIn')
-        return 'opacity-100' // 즉시 표시
-      }
-    }
-    console.log('🎯 HomePage: Using normal fadeIn animation')
-    return 'opacity-100 animate-fade-in' // 일반 fadeIn
+    // 일반 홈페이지 접근시 깜빡임 없이 즉시 표시
+    console.log('🎯 HomePage: Showing immediately without animation')
+    return 'opacity-100' // 깜빡임 방지를 위해 animate-fade-in 제거
   })
 
   // 🎯 로그인 애니메이션 실행 (더 부드러운 타이밍)
   useEffect(() => {
     if (showWithLoginAnimation && isAnimating) {
       console.log('🎯 HomePage: Starting smooth login entrance animation')
+      console.log('🎯 HomePage: Current fadeInClass before animation:', fadeInClass)
       // 🎯 오버레이 페이드아웃과 동기화하여 더 자연스러운 전환
       const timer = setTimeout(() => {
+        console.log('🎯 HomePage: Applying smooth entrance animation')
         setFadeInClass('opacity-100 transition-opacity duration-800 ease-out')
         console.log('🎯 HomePage: Smooth entrance animation applied (800ms duration)')
         
@@ -68,7 +62,7 @@ export default function HomePage({ locale, showWithLoginAnimation = false }: Hom
           setIsAnimating(false)
           console.log('🎯 HomePage: Smooth entrance animation completed')
         }, 800)
-      }, 50) // 더 빠른 시작으로 seamless 전환
+      }, 100) // 더 안정적인 타이밍으로 조정
       
       return () => clearTimeout(timer)
     }

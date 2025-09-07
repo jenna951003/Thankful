@@ -73,6 +73,7 @@ export default function LoadingOverlay({
       
     } else {
       console.log('🎯 INVISIBLE: Starting fadeout process')
+      console.log('🎯 Current overlay states before fadeout:', { showSpinner, fadeOut, fadeIn })
       const elapsedTime = Date.now() - startTime
       const remainingTime = Math.max(0, minDuration - elapsedTime)
       
@@ -80,17 +81,18 @@ export default function LoadingOverlay({
       
       const handleFadeOut = () => {
         console.log('🎯 Starting smooth fadeout animation')
+        console.log('🎯 Setting fadeOut states: fadeIn=false, fadeOut=true')
         setFadeIn(false) // 페이드인 상태 초기화
         setFadeOut(true)
         
         // 🎯 부드러운 페이드아웃을 위해 600ms로 증가 (더 자연스러운 전환)
         const fadeOutTimer = setTimeout(() => {
-          console.log('🎯 Fadeout animation complete - notifying parent')
+          console.log('🎯 Fadeout animation complete - notifying parent component')
           onAnimationComplete?.()
           
           // 페이드아웃 완료 후 추가로 100ms 대기 후 완전히 제거
           setTimeout(() => {
-            console.log('🎯 Completely hiding overlay')
+            console.log('🎯 Completely hiding overlay - clearing all states')
             setShowSpinner(false)
             setFadeOut(false)
             setFadeIn(false) // 모든 상태 초기화
