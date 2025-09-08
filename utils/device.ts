@@ -109,6 +109,10 @@ export const saveUserDisplayName = (name: string) => {
  */
 export const getSavedDisplayName = (): string | null => {
   try {
+    // SSR 안전 처리: 클라이언트 사이드에서만 localStorage 접근
+    if (typeof window === 'undefined') {
+      return null
+    }
     return localStorage.getItem('userDisplayName')
   } catch (error) {
     console.error('❌ Error getting saved display name:', error)

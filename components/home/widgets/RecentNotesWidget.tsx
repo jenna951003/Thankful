@@ -44,7 +44,11 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
       }
     }
 
-    fetchRecentNotes()
+    // 🎯 TODO: notes 테이블 구현 후 주석 해제
+    // fetchRecentNotes()
+    
+    // 임시로 로딩 완료 처리
+    setLoading(false)
   }, [user?.id, supabase])
 
   const getNoteTypeIcon = (type: string) => {

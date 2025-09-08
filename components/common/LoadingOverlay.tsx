@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
 interface LoadingOverlayProps {
@@ -35,7 +35,11 @@ export default function LoadingOverlay({
   })
   const [fadeOut, setFadeOut] = useState(false)
   const [fadeIn, setFadeIn] = useState(false) // 🎯 페이드인 애니메이션 상태
-  const [startTime, setStartTime] = useState<number>(0)
+  
+  // 🔧 ref로 변경하여 리렌더링 방지
+  const startTimeRef = useRef<number>(0)
+  const callbackExecutedRef = useRef(false)
+  const fadeOutTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const getImageSrc = () => {
     switch (imageType) {
@@ -51,14 +55,17 @@ export default function LoadingOverlay({
       isVisible, 
       showSpinner, 
       fadeOut, 
-      startTime 
+      startTime: startTimeRef.current 
     })
     
     if (isVisible) {
       console.log('🎯 VISIBLE: Setting up loading overlay with fade-in')
       const currentTime = Date.now()
-      setStartTime(currentTime)
+      startTimeRef.current = currentTime  // ref 사용으로 변경
       console.log('🎯 Start time recorded:', currentTime)
+      
+      // 🔧 새로운 표시 시 콜백 플래그 리셋
+      callbackExecutedRef.current = false
       
       setShowSpinner(true)
       setFadeOut(false) // 확실히 fadeOut 초기화
@@ -74,7 +81,7 @@ export default function LoadingOverlay({
     } else {
       console.log('🎯 INVISIBLE: Starting fadeout process')
       console.log('🎯 Current overlay states before fadeout:', { showSpinner, fadeOut, fadeIn })
-      const elapsedTime = Date.now() - startTime
+      const elapsedTime = Date.now() - startTimeRef.current  // ref 사용으로 변경
       const remainingTime = Math.max(0, minDuration - elapsedTime)
       
       console.log('🎯 Timing check:', { elapsedTime, minDuration, remainingTime })
@@ -85,21 +92,34 @@ export default function LoadingOverlay({
         setFadeIn(false) // 페이드인 상태 초기화
         setFadeOut(true)
         
-        // 🎯 부드러운 페이드아웃을 위해 600ms로 증가 (더 자연스러운 전환)
-        const fadeOutTimer = setTimeout(() => {
-          console.log('🎯 Fadeout animation complete - notifying parent component')
-          onAnimationComplete?.()
+        // 이전 타이머가 있다면 정리
+        if (fadeOutTimerRef.current) {
+          clearTimeout(fadeOutTimerRef.current)
+        }
+        
+        // 🎯 CSS transition과 정확히 동기화된 콜백 실행 (600ms transition + 50ms 버퍼)
+        fadeOutTimerRef.current = setTimeout(() => {
+          console.log('🎯 Fadeout CSS transition complete - executing callback (precise timing)')
           
-          // 페이드아웃 완료 후 추가로 100ms 대기 후 완전히 제거
+          // 🔧 StrictMode 안전 콜백 실행
+          if (!callbackExecutedRef.current && onAnimationComplete) {
+            console.log('🎯 Executing animation complete callback (StrictMode safe)')
+            callbackExecutedRef.current = true
+            onAnimationComplete()
+          } else {
+            console.log('🎯 Callback already executed (StrictMode safe)')
+          }
+          
+          // 🔧 콜백 실행 후 최소한의 대기 후 정리 (깜빡임 방지)
           setTimeout(() => {
-            console.log('🎯 Completely hiding overlay - clearing all states')
+            console.log('🎯 Safely clearing overlay states (no flicker)')
             setShowSpinner(false)
             setFadeOut(false)
-            setFadeIn(false) // 모든 상태 초기화
-          }, 100)
-        }, 600)
+            setFadeIn(false)
+          }, 50) // 100ms -> 50ms로 단축하여 더 빠른 전환
+        }, 650) // 600ms -> 650ms로 미세 조정하여 CSS transition과 완벽 동기화
         
-        return fadeOutTimer
+        return fadeOutTimerRef.current
       }
       
       if (remainingTime > 0) {
@@ -114,7 +134,15 @@ export default function LoadingOverlay({
         return () => clearTimeout(timer)
       }
     }
-  }, [isVisible, onAnimationComplete, minDuration, startTime])
+    
+    // Cleanup 함수
+    return () => {
+      if (fadeOutTimerRef.current) {
+        clearTimeout(fadeOutTimerRef.current)
+        fadeOutTimerRef.current = null
+      }
+    }
+  }, [isVisible, onAnimationComplete, minDuration])  // startTime 제거로 무한 루프 방지
 
   if (!isVisible && !fadeOut && !showSpinner && !fadeIn) {
     console.log('🎯 RETURN NULL: Not rendering overlay')

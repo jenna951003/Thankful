@@ -74,7 +74,7 @@ function getLocale(request: NextRequest): string {
   // 매칭된 로케일 반환, 없으면 기본값 'en' (영어)
   const detectedLocale = localeMap[browserLocale] || 
                          localeMap[browserLocale.split('-')[0]] || 
-                         'en'
+                         'en' // 기본값을 영어로 설정
   
   console.log(`   Final Locale: ${detectedLocale} ${isCapacitorApp ? '(from device settings)' : '(from browser settings)'}`)
   console.log(`   Redirect: /${detectedLocale}/`)

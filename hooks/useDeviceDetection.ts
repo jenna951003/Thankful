@@ -76,8 +76,12 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
         const deviceInfo = await Device.getInfo()
         const languageInfo = await Device.getLanguageCode()
         
-        console.log('🔍 Capacitor 기기 정보:', deviceInfo)
-        console.log('🌍 언어:', languageInfo)
+        // 🔧 중복 로그 최소화 - 첫 실행시에만 출력
+        if (!(window as any).__deviceDetectionLogged) {
+          console.log('🔍 Capacitor 기기 정보:', deviceInfo)
+          console.log('🌍 언어:', languageInfo);
+          (window as any).__deviceDetectionLogged = true
+        }
         
         // iOS 기기인 경우
         if (deviceInfo.platform === 'ios') {
@@ -106,13 +110,16 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
 
         // 웹 환경인 경우 - 개발자 도구로 간주
         if (deviceInfo.platform === 'web') {
-          console.log('🌐 웹 환경 감지됨 - 개발자 도구로 설정')
+          // 🔧 중복 로그 최소화
+          if (!(window as any).__webDetectionLogged) {
+            console.log('🌐 웹 환경 감지됨 - 개발자 도구로 설정')
+            console.log('🖥️ 개발자 도구 화면 크기:', window.innerWidth, 'x', window.innerHeight);
+            (window as any).__webDetectionLogged = true
+          }
           
           // 개발자 도구에서 화면 크기로 기기 감지하여 세이프존 설정
           const screenWidth = window.innerWidth
           const screenHeight = window.innerHeight
-          
-          console.log('🖥️ 개발자 도구 화면 크기:', screenWidth, 'x', screenHeight)
           
           // iPhone 14 Pro Max (430x932)
           if (screenWidth === 430 && screenHeight === 932) return { brand: 'Web Browser', model: 'iPhone 14 Pro Max (Dev)', safeArea: IPHONE_SAFE_AREAS['iPhone 14 Pro Max'] }
