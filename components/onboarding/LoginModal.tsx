@@ -326,17 +326,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
   }, [onClose])
 
   const handleLogin = async () => {
+    console.log('🔥🔥🔥 LOGIN BUTTON CLICKED!!! 🔥🔥🔥', { email, password })
+
     if (!email || !password) {
-      console.log('❌ Email or password missing')
+      console.log('❌ Email or password missing', { email: !!email, password: !!password })
       return
     }
-    
+
     console.log('🚀 Starting login process in modal')
     setError(null) // 에러 초기화
     setIsLoading(true)
-    
+
     try {
-      console.log('📞 Calling signIn from modal')
+      console.log('📞 Calling signIn from modal with:', { email })
       const result = await signIn(email, password)
       console.log('📋 Login result:', result)
       
@@ -352,8 +354,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           // 🎯 2단계: 모달이 완전히 닫힌 후 (총 1000ms 후) onLoginSuccess 호출
           setTimeout(() => {
             console.log('🎯 Step 2: Modal completely closed - calling onLoginSuccess')
+            console.log('🎯 onLoginSuccess callback exists?', !!onLoginSuccess)
+            console.log('🎯 shouldRedirectToOnboarding:', result.shouldRedirectToOnboarding)
             if (onLoginSuccess) {
+              console.log('🚀🚀🚀 CALLING onLoginSuccess NOW!!! 🚀🚀🚀')
               onLoginSuccess(result.shouldRedirectToOnboarding)
+              console.log('✅✅✅ onLoginSuccess CALLED SUCCESSFULLY!!! ✅✅✅')
+            } else {
+              console.error('❌❌❌ onLoginSuccess callback is NULL!!! ❌❌❌')
             }
             // 이제 로딩 상태 해제
             setIsLoading(false)

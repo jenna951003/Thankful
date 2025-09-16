@@ -42,7 +42,19 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
   })
   const [isLoginFadingOut, setIsLoginFadingOut] = useState(false)
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(false)
-  const [shouldShowWithAnimation, setShouldShowWithAnimation] = useState(showWithLoginAnimation || isLoginLoading)
+
+  // 🎯 홈페이지 페이드인 애니메이션 조건 체크
+  const [shouldShowWithAnimation, setShouldShowWithAnimation] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const homePageNoFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      if (homePageNoFadeIn) {
+        console.log('🎯 homePageNoFadeIn flag detected - enabling animation')
+        // 플래그는 나중에 제거 (애니메이션 실행 시)
+        return true
+      }
+    }
+    return showWithLoginAnimation || isLoginLoading
+  })
   
   // 🔧 StrictMode 안전한 애니메이션 시스템 (ref 기반으로 완전 변경)
   const animationExecutedRef = useRef(false)
@@ -50,10 +62,30 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
   const initialRenderRef = useRef(true)
   
   // 🔧 StrictMode에서 안전한 초기값 설정 (함수형 초기값 제거)
-  const [isAnimating, setIsAnimating] = useState(showWithLoginAnimation)
+  const [isAnimating, setIsAnimating] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const homePageNoFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      if (homePageNoFadeIn) {
+        return true
+      }
+    }
+    return showWithLoginAnimation
+  })
   
   // 🔧 깜빡임 완전 방지를 위한 opacity 제어 (ref로 한 번만 결정)
   const getInitialOpacity = () => {
+    // homePageNoFadeIn 플래그 체크
+    if (typeof window !== 'undefined') {
+      const homePageNoFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      if (homePageNoFadeIn) {
+        if (initialRenderRef.current) {
+          console.log('🎯 HomePage: Initial render with homePageNoFadeIn animation (opacity-0)')
+          initialRenderRef.current = false
+        }
+        return 'opacity-0'
+      }
+    }
+
     if (showWithLoginAnimation) {
       if (initialRenderRef.current) {
         console.log('🎯 HomePage: Initial render with login animation (opacity-0)')
@@ -69,6 +101,29 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
   }
   
   const [fadeInClass, setFadeInClass] = useState(getInitialOpacity)
+
+  // 🎯 스테거드 애니메이션을 위한 상태들 (로그인 후에만 false로 시작)
+  const [showProfileHeader, setShowProfileHeader] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hasLoginFlag = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      return !hasLoginFlag // 로그인 후가 아니면 즉시 표시
+    }
+    return true
+  })
+  const [showDashboardContent, setShowDashboardContent] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hasLoginFlag = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      return !hasLoginFlag
+    }
+    return true
+  })
+  const [showBottomNavigation, setShowBottomNavigation] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hasLoginFlag = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      return !hasLoginFlag
+    }
+    return true
+  })
 
   // 🎯 완전한 단일 실행 애니메이션 (깜빡임 방지)
   useEffect(() => {
@@ -86,7 +141,16 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
     
     console.log('🎯 HomePage: Starting SINGLE animation execution (flicker-free)')
     animationExecutedRef.current = true // 🔧 즉시 플래그로 모든 중복 차단
-    
+
+    // 🎯 homePageNoFadeIn 플래그 제거 (애니메이션 시작 시점에)
+    if (typeof window !== 'undefined') {
+      const homePageNoFadeIn = sessionStorage.getItem('homePageNoFadeIn') === 'true'
+      if (homePageNoFadeIn) {
+        console.log('🎯 HomePage: Removing homePageNoFadeIn flag at animation start')
+        sessionStorage.removeItem('homePageNoFadeIn')
+      }
+    }
+
     console.log('🎯 HomePage: Animation guard set - NO MORE EXECUTIONS ALLOWED (flicker-free)')
     
     // 이전 타이머 안전 정리
@@ -134,8 +198,10 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
       
       setTimeout(() => {
         console.log('🎯 Login fadeout started')
+        console.log('🎯 Setting isLoginLoading=false, isLoginFadingOut=true')
         setIsLoginLoading(false)
         setIsLoginFadingOut(true)
+        console.log('🎯 LoadingOverlay should now start fadeout animation')
       }, 2000)
     }
   }, [isLoginLoading, loading, user, profile])
@@ -194,19 +260,36 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
   }
 
   // 진짜 오류 상황에만 오류 메시지 표시
-  // 🎯 로딩 오버레이 표시 조건
-  if (loading || isLoginLoading || isCheckingOnboarding) {
+  // 🎯 로딩 오버레이 표시 조건 (페이드아웃 중에도 표시)
+  if (loading || isLoginLoading || isCheckingOnboarding || isLoginFadingOut) {
     return (
       <LoadingOverlay
         isVisible={!isLoginFadingOut}
-        imageType={isLoginLoading ? 'login' : 'default'}
-        message={isLoginLoading ? '로그인 중입니다...' : '잠시만 기다려주세요...'}
+        imageType="login"
+        message="로그인 중입니다..."
         minDuration={2000}
         onAnimationComplete={() => {
           if (isLoginFadingOut) {
-            console.log('🎯 Login animation complete - showing HomePage with animation')
+            console.log('🎯 Login animation complete - starting staggered HomePage animation')
             setIsLoginFadingOut(false)
             setShouldShowWithAnimation(true)
+
+            // 🎯 스테거드 애니메이션 시작
+            console.log('🎯 Starting staggered fade-in animation')
+            setTimeout(() => {
+              console.log('🎯 Showing ProfileHeader')
+              setShowProfileHeader(true)
+            }, 100)
+
+            setTimeout(() => {
+              console.log('🎯 Showing DashboardContent')
+              setShowDashboardContent(true)
+            }, 300)
+
+            setTimeout(() => {
+              console.log('🎯 Showing BottomNavigation')
+              setShowBottomNavigation(true)
+            }, 500)
           }
         }}
       />
@@ -241,12 +324,14 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
       }}
     >
       {/* 프로필 헤더 */}
-      <ProfileHeader 
-        user={user}
-        profile={profile}
-        displayName={savedDisplayName}
-        onProfileClick={() => setIsProfileModalOpen(true)}
-      />
+      <div className={`transition-all duration-500 ease-out ${showProfileHeader ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-4'}`}>
+        <ProfileHeader
+          user={user}
+          profile={profile}
+          displayName={savedDisplayName}
+          onProfileClick={() => setIsProfileModalOpen(true)}
+        />
+      </div>
 
       {/* 개발자 테스트 버튼들 (개발 환경에서만 표시) */}
       {process.env.NODE_ENV === 'development' && (
@@ -262,18 +347,22 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
       )}
 
       {/* 대시보드 콘텐츠 */}
-      <DashboardContent 
-        activeTab={activeTab}
-        user={user}
-        profile={profile}
-        displayName={savedDisplayName}
-      />
+      <div className={`transition-all duration-500 ease-out ${showDashboardContent ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'}`}>
+        <DashboardContent
+          activeTab={activeTab}
+          user={user}
+          profile={profile}
+          displayName={savedDisplayName}
+        />
+      </div>
 
       {/* 하단 네비게이션 */}
-      <BottomNavigation 
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      <div className={`transition-all duration-500 ease-out ${showBottomNavigation ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-6'}`}>
+        <BottomNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      </div>
 
       {/* 프로필 모달 */}
       <ProfileModal 
