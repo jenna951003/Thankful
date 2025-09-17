@@ -11,8 +11,9 @@ import { useTranslationContext } from '../../contexts/TranslationContext'
 import LoadingOverlay from '../common/LoadingOverlay'
 import ProfileHeader from './ProfileHeader'
 import DashboardContent from './DashboardContent'
-import BottomNavigation from './BottomNavigation'
+import CustomNavBar from '../CustomNavBar'
 import ProfileModal from './ProfileModal'
+import SafeAreaVisualizer from '../common/SafeAreaVisualizer'
 
 interface HomePageProps {
   locale: string
@@ -316,13 +317,15 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
   }
 
   return (
-    <div 
+    <div
       className={`min-h-screen ${fadeInClass}`}
-      style={{ 
+      style={{
         background: 'var(--bg-base)',
         paddingBottom: '80px' // 하단 네비게이션을 위한 여백
       }}
     >
+      {/* 세이프존 시각화 (개발 환경에서만) - 파란색 세이프존 표시 */}
+      <SafeAreaVisualizer />
       {/* 프로필 헤더 */}
       <div className={`transition-all duration-500 ease-out ${showProfileHeader ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-4'}`}>
         <ProfileHeader
@@ -356,21 +359,20 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
         />
       </div>
 
-      {/* 하단 네비게이션 */}
-      <div className={`transition-all duration-500 ease-out ${showBottomNavigation ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-6'}`}>
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-      </div>
-
       {/* 프로필 모달 */}
-      <ProfileModal 
+      <ProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
         user={user}
         profile={profile}
         locale={locale}
+      />
+
+      {/* 하단 네비게이션 - 항상 고정 */}
+      <CustomNavBar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        showWithAnimation={showBottomNavigation}
       />
 
     </div>
