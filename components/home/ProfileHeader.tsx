@@ -10,18 +10,78 @@ interface ProfileHeaderProps {
   profile: Profile | null
   displayName?: string | null
   onProfileClick: () => void
+  locale: string
 }
 
-export default function ProfileHeader({ user, profile, displayName, onProfileClick }: ProfileHeaderProps) {
+export default function ProfileHeader({ user, profile, displayName, onProfileClick, locale }: ProfileHeaderProps) {
   const { safeArea } = useDeviceDetection()
   const { t } = useTranslation()
 
-  // 시간대별 인사말
+  // 닉네임 언어 감지 함수
+  const detectNameLanguage = (name: string): 'korean' | 'english' => {
+    if (!name) return 'korean'
+
+    // 한글 문자 확인 (한글 유니코드 범위: 가-힣, ㄱ-ㅎ, ㅏ-ㅣ)
+    const koreanRegex = /[가-힣ㄱ-ㅎㅏ-ㅣ]/
+    return koreanRegex.test(name) ? 'korean' : 'english'
+  }
+
+  // 로케일별 폰트 매핑 함수
+  const getLocaleFont = (textType: 'greeting' | 'name', targetLanguage?: 'korean' | 'english') => {
+    const language = targetLanguage || (locale === 'ko' ? 'korean' : 'english')
+
+    if (textType === 'greeting') {
+      // 인사말은 로케일에 따라
+      switch (locale) {
+        case 'ko':
+          return 'font-noto-serif-kr'
+        case 'en':
+          return 'font-fascinate'
+        case 'es':
+        case 'pt':
+          return 'font-hubballi'
+        default:
+          return 'font-noto-serif-kr'
+      }
+    } else {
+      // 닉네임은 감지된 언어에 따라
+      return language === 'korean' ? 'font-jua' : 'font-sofadi-one'
+    }
+  }
+
+  // 로케일별 호칭 및 폰트 반환 함수
+  const getHonorific = () => {
+    switch (locale) {
+      case 'ko':
+        return { text: '님', font: 'font-jua' }
+      case 'en':
+        return { text: '', font: '' }
+      case 'es':
+        return { text: '', font: 'font-hubballi' } // 필요시 Sr./Sra. 추가 가능
+      case 'pt':
+        return { text: '', font: 'font-hubballi' } // 필요시 Sr./Sra. 추가 가능
+      default:
+        return { text: '님', font: 'font-jua' }
+    }
+  }
+
+  // 시간대별 인사말 (TimeBasedImageBar와 동일한 5단계)
   const getGreeting = () => {
     const hour = new Date().getHours()
-    if (hour < 12) return t('home.greeting.morning')
-    if (hour < 18) return t('home.greeting.afternoon')
-    return t('home.greeting.evening')
+
+    if (hour < 6) {
+      return t('home.greeting.dawn') // 새벽의 평안
+    }
+    if (hour < 12) {
+      return t('home.greeting.morning') // 은혜로운 아침
+    }
+    if (hour < 18) {
+      return t('home.greeting.afternoon') // 평안한 오후
+    }
+    if (hour < 22) {
+      return t('home.greeting.evening') // 감사한 저녁
+    }
+    return t('home.greeting.night') // 조용한 밤
   }
 
   // 프로필 이미지 또는 기본 아바타
@@ -47,34 +107,36 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
   }
 
   return (
-    <div 
-      className="px-6 pt-4 pb-6"
-      style={{ 
-        paddingTop: `${safeArea.top + 16}px`
-      }}
+    <div
+      className="px-6 pt-2 pb-6"
     >
       {/* 헤더 컨테이너 */}
-      <div className="flex items-center justify-between">
-        {/* 인사말 및 사용자 이름 */}
-        <div className="flex-1">
-          <p className="text-sm text-gray-600 font-noto-serif-kr mb-1">
-            {getGreeting()}
-          </p>
-          <h1 className="text-2xl font-bold text-gray-800 font-jua">
-            {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}님
-          </h1>
-        </div>
-
+      <div className="flex items-center">
         {/* 프로필 아바타 */}
         <button
           onClick={onProfileClick}
-          className="w-12 h-12 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95"
-          style={{ 
+          className="w-12 h-12 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
+          style={{
             background: 'var(--retro-blue-gradient)',
           }}
         >
           {getAvatarContent()}
         </button>
+
+        {/* 인사말 및 사용자 이름 */}
+        <div className="ml-4 flex-grow">
+          <p className={`text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
+            {getGreeting()}{' '}
+            <span className={`text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
+              {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
+            </span>
+            {getHonorific().text && (
+              <span className={`text-xl font-bold text-gray-800 ${getHonorific().font}`}>
+                {' '}{getHonorific().text}
+              </span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* 구독 상태 표시 (Premium인 경우) */}

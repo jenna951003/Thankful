@@ -1,0 +1,23 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="evening-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c2d12;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="32" fill="url(#evening-gradient)"/>
+  <!-- 석양 -->
+  <circle cx="15" cy="45" r="18" fill="#fed7aa" opacity="0.8"/>
+  <!-- 구름들 -->
+  <circle cx="35" cy="25" r="8" fill="#451a03" opacity="0.4"/>
+  <circle cx="42" cy="23" r="6" fill="#451a03" opacity="0.4"/>
+  <circle cx="48" cy="25" r="5" fill="#451a03" opacity="0.4"/>
+
+  <!-- 산 실루엣 -->
+  <path d="M0 50 L20 38 L35 45 L50 35 L64 42 L64 64 L0 64 Z" fill="#451a03" opacity="0.6"/>
+
+  <!-- 나무 실루엣 -->
+  <rect x="25" y="45" width="2" height="15" fill="#451a03" opacity="0.8"/>
+  <circle cx="26" cy="45" r="4" fill="#451a03" opacity="0.6"/>
+</svg>

@@ -9,7 +9,7 @@ import LoginModal from './LoginModal'
 import SignUpModal from './SignUpModal'
 import ForgotPasswordModal from './ForgotPasswordModal'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { saveOnboardingData } from '../../utils/onboarding'
 
 // 구독 모달 컨텍스트

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { useLoginModal } from './OnboardingFlow'
 import { getOnboardingData, clearOnboardingData, hasOnboardingData } from '../../utils/onboarding'
 import { useTranslationContext } from '../../contexts/TranslationContext'

@@ -346,8 +346,29 @@ export function isHomeButtonDevice(model: string): boolean {
     'iPhone 8',
     'iPhone 8 Plus'
   ]
-  
+
   return homeButtonModels.some(homeModel => model.includes(homeModel))
+}
+
+// 테블릿 기기인지 확인하는 함수
+export function isTabletDevice(): boolean {
+  if (typeof window === 'undefined') return false
+
+  const userAgent = navigator.userAgent
+  const screenWidth = window.innerWidth
+  const screenHeight = window.innerHeight
+
+  // iPad 감지
+  if (userAgent.includes('iPad')) return true
+
+  // Android 테블릿 감지
+  if (userAgent.includes('Android') && !userAgent.includes('Mobile')) return true
+
+  // 화면 크기 기반 테블릿 감지 (768px 이상이고 1200px 미만)
+  const minSize = Math.min(screenWidth, screenHeight)
+  const maxSize = Math.max(screenWidth, screenHeight)
+
+  return minSize >= 768 && maxSize < 1200
 }
 
 export function useDeviceDetection() {
@@ -407,6 +428,7 @@ export function useDeviceDetection() {
     deviceName: `${deviceInfo.brand} ${deviceInfo.model}`,
     isIPhone: deviceInfo.brand === 'iPhone',
     isWebEnvironment: deviceInfo.brand === 'Web Browser',
-    isHomeButtonDevice: isHomeButtonDevice(deviceInfo.model)
+    isHomeButtonDevice: isHomeButtonDevice(deviceInfo.model),
+    isTablet: isTabletDevice()
   }
 }

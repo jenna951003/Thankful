@@ -296,9 +296,11 @@
   },
   "home": {
     "greeting": {
-      "morning": "Bom dia",
-      "afternoon": "Boa tarde",
-      "evening": "Boa noite"
+      "dawn": "Obrigado por nos visitar mesmo ao amanhecer, que tal um momento de gratidão silenciosa?",
+      "morning": "Bom dia! Gostaria de compartilhar seu primeiro momento de gratidão hoje?",
+      "afternoon": "Que bom te ver esta tarde, como tem sido seu dia até agora?",
+      "evening": "Obrigado pelo seu trabalho árduo hoje, quer compartilhar um momento especial?",
+      "night": "Obrigado por estar aqui tão tarde também, vamos encerrar o dia com carinho?"
     }
   },
   "navigation": {

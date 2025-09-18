@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Haptics, ImpactStyle } from '@capacitor/haptics'
 import { useTranslation } from '../../hooks/useTranslation'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { useSignUpModal, useForgotPasswordModal } from './OnboardingFlow'
 
 interface LoginModalProps {

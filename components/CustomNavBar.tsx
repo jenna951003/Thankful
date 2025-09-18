@@ -3,6 +3,7 @@
 import { Home, Plus, Bookmark, Settings, X, Users } from 'lucide-react';
 import { useSpring, animated } from '@react-spring/web';
 import { useState } from 'react';
+import { useDeviceDetection } from '../hooks/useDeviceDetection';
 
 interface CustomNavBarProps {
   activeTab?: string;
@@ -15,6 +16,7 @@ export default function CustomNavBar({
   onTabChange,
   showWithAnimation = true
 }: CustomNavBarProps) {
+  const { isTablet } = useDeviceDetection();
   const [isWriteMode, setIsWriteMode] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -33,7 +35,7 @@ export default function CustomNavBar({
         setShowCreateModal(false);
         setIsWriteMode(false);
         setIsClosing(false);
-      }, 600); // 애니메이션 완전 종료까지 대기
+      }, 800); // 애니메이션 완전 종료까지 대기
     } else {
       setShowCreateModal(true);
       setIsWriteMode(true);
@@ -51,7 +53,7 @@ export default function CustomNavBar({
         onTabChange('write');
         console.log('Creating:', type);
       }
-    }, 600);
+    }, 800);
   };
 
   const navBarSpring = useSpring({
@@ -110,8 +112,8 @@ export default function CustomNavBar({
   const backdropSpring = useSpring({
     opacity: showCreateModal && !isClosing ? 1 : 0,
     config: {
-      tension: 150,
-      friction: 35
+      tension: 300,
+      friction: 25
     }
   });
 
@@ -169,20 +171,20 @@ export default function CustomNavBar({
               setShowCreateModal(false);
               setIsWriteMode(false);
               setIsClosing(false);
-            }, 600);
+            }, 800);
           }}
         />
       )}
 
       {/* 네비게이션 바 - 448px 너비로 고정 */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4">
+      <div className={`fixed bottom-0 left-0 right-0 z-50 px-4 ${isTablet ? 'pb-4' : 'pb-2'}`}>
         <animated.div
           className="flex justify-center"
           style={navBarSpring}
         >
-          <div className="bg-slate-700 backdrop-blur-xl rounded-full px-8 py-2 shadow-2xl w-[448px]">
+          <div className={`bg-slate-700 backdrop-blur-xl  shadow-lg w-[448px] ${isTablet ? 'px-12 py-3 rounded-4xl' : 'px-8 py-2 rounded-3xl'}`}>
             <div className="flex items-center w-full">
-              <div className="flex items-center space-x-4 flex-1 justify-end">
+              <div className={`flex items-center flex-1 justify-end ${isTablet ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('home')}
                   className={`p-2.5 transition-all duration-300 ease-out rounded-full outline-none ${
@@ -205,7 +207,7 @@ export default function CustomNavBar({
                 </button>
               </div>
 
-              <div className="flex justify-center px-6">
+              <div className={`flex justify-center ${isTablet ? 'px-8' : 'px-6'}`}>
                 <animated.button
                   onClick={handlePlusClick}
                   className="p-3.5 my-1 rounded-full text-white outline-none"
@@ -233,7 +235,7 @@ export default function CustomNavBar({
                 </animated.button>
               </div>
 
-              <div className="flex items-center space-x-4 flex-1">
+              <div className={`flex items-center flex-1 ${isTablet ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('saved')}
                   className={`p-2.5 transition-all duration-300 ease-out rounded-full outline-none ${

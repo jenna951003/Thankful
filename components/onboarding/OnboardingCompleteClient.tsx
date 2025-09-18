@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslationContext } from '../../contexts/TranslationContext'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { completeOnboarding, saveOnboardingData } from '../../utils/onboarding'
 import { getUserDisplayName, saveUserDisplayName } from '../../utils/device'

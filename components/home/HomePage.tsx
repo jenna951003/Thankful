@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, memo } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 import { useTranslation } from '../../hooks/useTranslation'
 import { getSavedDisplayName } from '../../utils/device'
@@ -14,6 +14,7 @@ import DashboardContent from './DashboardContent'
 import CustomNavBar from '../CustomNavBar'
 import ProfileModal from './ProfileModal'
 import SafeAreaVisualizer from '../common/SafeAreaVisualizer'
+import TimeBasedImageBar from './TimeBasedImageBar'
 
 interface HomePageProps {
   locale: string
@@ -22,7 +23,24 @@ interface HomePageProps {
 
 const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false }: HomePageProps) {
   const router = useRouter()
-  const { user, profile, loading, signOut, checkOnboardingStatus } = useAuth()
+  const { user, loading, signOut } = useAuth()
+
+  // 사용자 정보에서 displayName 추출
+  const getUserDisplayName = () => {
+    if (user?.user_metadata?.display_name) return user.user_metadata.display_name
+    if (user?.user_metadata?.full_name) return user.user_metadata.full_name
+    if (user?.email) {
+      // 이메일에서 @ 앞부분을 이름으로 사용
+      const emailName = user.email.split('@')[0]
+      return emailName.charAt(0).toUpperCase() + emailName.slice(1)
+    }
+    return null
+  }
+
+  // 임시: profile은 null이지만 displayName은 user 정보에서 가져옴
+  const profile = null
+  const userDisplayName = getUserDisplayName()
+  const checkOnboardingStatus = () => true // 임시로 항상 완료된 것으로 처리
   const { safeArea } = useDeviceDetection()
   const { t } = useTranslation()
   const { t: tContext } = useTranslationContext()
@@ -207,10 +225,10 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
     }
   }, [isLoginLoading, loading, user, profile])
   
-  // 🎯 온보딩 체크 로직 (단순화됨)
+  // 🎯 온보딩 체크 로직 (더 관대하게 수정)
   useEffect(() => {
     if (!loading && !isLoginLoading && !isLoginFadingOut) {
-      // 로그인하지 않은 경우 로컬 온보딩 체크
+      // 로그인하지 않은 경우만 로컬 온보딩 체크
       if (!user) {
         const localOnboardingCompleted = isOnboardingCompleted()
         if (!localOnboardingCompleted) {
@@ -219,20 +237,16 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
           return
         }
       }
-      
-      // 로그인한 경우 DB 온보딩 체크
-      if (user && profile) {
-        const isComplete = checkOnboardingStatus()
-        if (!isComplete) {
-          console.log('🎯 Logged in but onboarding incomplete - redirecting to onboarding/2')
-          router.replace(`/${locale}/onboarding/2`)
-          return
-        }
+
+      // 로그인한 경우는 일단 홈페이지 표시 (온보딩 체크 건너뛰기)
+      if (user) {
+        console.log('🎯 User logged in - showing homepage (skipping onboarding check)')
       }
     }
-  }, [loading, user, profile, isLoginLoading, isLoginFadingOut, checkOnboardingStatus, router, locale])
+  }, [loading, user, isLoginLoading, isLoginFadingOut, router, locale])
   
-  const canShowHomePage = user ? !!profile : !!savedDisplayName
+  // 로그인한 사용자는 profile 없이도 홈페이지 사용 가능, 비로그인 사용자는 저장된 이름 필요
+  const canShowHomePage = user ? true : !!(userDisplayName || savedDisplayName)
 
   // 온보딩 초기화 함수
   const handleResetOnboarding = () => {
@@ -326,28 +340,21 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
     >
       {/* 세이프존 시각화 (개발 환경에서만) - 파란색 세이프존 표시 */}
       <SafeAreaVisualizer />
+
+      {/* Time-based Image Bar */}
+      <TimeBasedImageBar className="pb-4" />
+
       {/* 프로필 헤더 */}
       <div className={`transition-all duration-500 ease-out ${showProfileHeader ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-4'}`}>
         <ProfileHeader
           user={user}
           profile={profile}
-          displayName={savedDisplayName}
+          displayName={userDisplayName || savedDisplayName}
           onProfileClick={() => setIsProfileModalOpen(true)}
+          locale={locale}
         />
       </div>
 
-      {/* 개발자 테스트 버튼들 (개발 환경에서만 표시) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="absolute top-4 right-14 z-50 flex flex-col gap-2">
-          <button
-            onClick={handleResetOnboarding}
-            className="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg hover:bg-orange-600 transition-colors"
-            style={{ fontSize: '10px' }}
-          >
-            온보딩 초기화
-          </button>
-        </div>
-      )}
 
       {/* 대시보드 콘텐츠 */}
       <div className={`transition-all duration-500 ease-out ${showDashboardContent ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-4'}`}>
@@ -355,7 +362,7 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
           activeTab={activeTab}
           user={user}
           profile={profile}
-          displayName={savedDisplayName}
+          displayName={userDisplayName || savedDisplayName}
         />
       </div>
 

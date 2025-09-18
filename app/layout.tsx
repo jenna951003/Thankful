@@ -13,7 +13,7 @@ import {
 } from 'next/font/google'
 import './globals.css'
 import OfflineIndicator from '../components/common/OfflineIndicator'
-import { AuthProvider } from '../contexts/AuthContext'
+import { AuthProvider } from '../contexts/AuthProvider'
 
 // Google Fonts 설정
 const inter = Inter({ 

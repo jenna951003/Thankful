@@ -297,9 +297,11 @@
   },
   "home": {
     "greeting": {
-      "morning": "Good morning",
-      "afternoon": "Good afternoon",
-      "evening": "Good evening"
+      "dawn": "Thanks for visiting even at dawn, how about some quiet gratitude?",
+      "morning": "Good morning! Would you share your first grateful moment today?",
+      "afternoon": "Nice to see you this afternoon, how has your day been so far?",
+      "evening": "Thank you for your hard work today, care to share a special moment?",
+      "night": "Thanks for being here late too, shall we warmly wrap up the day?"
     }
   },
   "navigation": {

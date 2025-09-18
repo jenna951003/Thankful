@@ -10,7 +10,7 @@ import LoginModal from './LoginModal'
 import SignUpModal from './SignUpModal'
 import ForgotPasswordModal from './ForgotPasswordModal'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { saveOnboardingData } from '../../utils/onboarding'
 
 // 온보딩 스크린 컴포넌트들 임포트

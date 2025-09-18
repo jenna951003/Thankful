@@ -7,6 +7,7 @@ import StreakWidget from './StreakWidget'
 import TodayVerse from './TodayVerse'
 import RecentNotes from './RecentNotes'
 import QuickActions from './QuickActions'
+import TimeBasedImageBar from './TimeBasedImageBar'
 
 interface HomeContentProps {
   locale: string
@@ -62,7 +63,11 @@ export default function HomeContent({ locale }: HomeContentProps) {
   // Show auth screen if not logged in
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#eeead9] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#eeead9]">
+        {/* Time-based Image Bar for non-logged users */}
+        <TimeBasedImageBar className="pt-4 pb-2" />
+
+        <div className="flex items-center justify-center p-4 min-h-[calc(100vh-8rem)]">
         <div className="text-center">
           <div className="w-24 h-24 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-4xl mb-6 mx-auto">
             📖
@@ -81,14 +86,18 @@ export default function HomeContent({ locale }: HomeContentProps) {
           </button>
           {showAuth && <AuthScreen onClose={() => setShowAuth(false)} />}
         </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 pb-32">
+    <div className="min-h-screen bg-gray-50 pb-32">
+      {/* Time-based Image Bar */}
+      <TimeBasedImageBar className="pt-4 pb-2" />
+
       {/* Modern Header */}
-      <div className="pt-8 pb-6">
+      <div className="pt-4 pb-6 px-4">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-semibold text-gray-900 mb-1">
@@ -109,7 +118,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
       </div>
 
       {/* Dashboard Cards Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6 px-4">
         {/* Today's Stats Card */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           <div className="flex items-center justify-between mb-3">
@@ -136,7 +145,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
       </div>
 
       {/* Progress Chart Card */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-6 mx-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">이번 주 활동</h2>
           <button className="text-sm text-blue-600 font-medium">전체보기</button>
@@ -177,7 +186,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
       </div>
 
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-3 gap-3 mb-6 px-4">
         <button className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex flex-col items-center">
           <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-2">
             <span className="text-lg">🙏</span>
@@ -201,7 +210,7 @@ export default function HomeContent({ locale }: HomeContentProps) {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mx-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-gray-900">최근 활동</h2>
           <button className="text-sm text-blue-600 font-medium">더보기</button>

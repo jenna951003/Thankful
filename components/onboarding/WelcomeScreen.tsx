@@ -6,7 +6,7 @@ import { useTranslationContext } from '../../contexts/TranslationContext'
 import { useOnboarding } from '../../contexts/OnboardingContext'
 import { useLoginModal } from './OnboardingFlow'
 import { resetOnboarding, clearOnboardingData } from '../../utils/onboarding'
-import { useAuth } from '../../contexts/AuthContext'
+import { useAuth } from '../../contexts/AuthProvider'
 import { createClient } from '../../utils/supabase/client'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 
