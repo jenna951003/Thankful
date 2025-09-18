@@ -69,7 +69,7 @@ export default function TimeBasedImageBar({ className = '' }: TimeBasedImageBarP
     >
       {/* 캡슐형 이미지 바 */}
       <div
-        className="relative h-16 rounded-2xl overflow-hidden mx-4 active:scale-98 transition-all duration-300 select-none"
+        className="relative h-16 rounded-xl overflow-hidden mx-4 active:scale-98 transition-all duration-300 select-none"
         style={{
           boxShadow: '0 8px 12px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
           userSelect: 'none',

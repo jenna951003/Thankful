@@ -350,25 +350,36 @@ export function isHomeButtonDevice(model: string): boolean {
   return homeButtonModels.some(homeModel => model.includes(homeModel))
 }
 
-// 테블릿 기기인지 확인하는 함수
-export function isTabletDevice(): boolean {
+// 테블릿 크기인지 확인하는 함수 (화면 폭 기반)
+export function isTabletSize(): boolean {
   if (typeof window === 'undefined') return false
 
-  const userAgent = navigator.userAgent
   const screenWidth = window.innerWidth
-  const screenHeight = window.innerHeight
+  const userAgent = navigator.userAgent
 
-  // iPad 감지
+  // iPad는 무조건 테블릿
   if (userAgent.includes('iPad')) return true
 
   // Android 테블릿 감지
   if (userAgent.includes('Android') && !userAgent.includes('Mobile')) return true
 
-  // 화면 크기 기반 테블릿 감지 (768px 이상이고 1200px 미만)
-  const minSize = Math.min(screenWidth, screenHeight)
-  const maxSize = Math.max(screenWidth, screenHeight)
+  // 화면 폭 기반 테블릿 감지 (768px 이상)
+  return screenWidth >= 768
+}
 
-  return minSize >= 768 && maxSize < 1200
+// 소형 기기인지 확인하는 함수 (아이폰 SE급 크기)
+export function isSmallSize(): boolean {
+  if (typeof window === 'undefined') return false
+
+  const screenWidth = window.innerWidth
+
+  // 화면 폭 기반 소형 기기 감지 (375px 이하)
+  return screenWidth <= 375
+}
+
+// 아이폰 SE 라인인지 확인하는 함수 (호환성 유지용)
+export function isIPhoneSEDevice(): boolean {
+  return isSmallSize()
 }
 
 export function useDeviceDetection() {
@@ -429,6 +440,9 @@ export function useDeviceDetection() {
     isIPhone: deviceInfo.brand === 'iPhone',
     isWebEnvironment: deviceInfo.brand === 'Web Browser',
     isHomeButtonDevice: isHomeButtonDevice(deviceInfo.model),
-    isTablet: isTabletDevice()
+    isTablet: isTabletSize(),
+    isIPhoneSE: isSmallSize(),
+    isTabletSize: isTabletSize(),
+    isSmallSize: isSmallSize()
   }
 }

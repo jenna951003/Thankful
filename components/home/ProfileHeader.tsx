@@ -34,7 +34,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
       // 인사말은 로케일에 따라
       switch (locale) {
         case 'ko':
-          return 'font-noto-serif-kr'
+          return 'font-dongle'
         case 'en':
           return 'font-fascinate'
         case 'es':
@@ -111,32 +111,47 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
       className="px-6 pt-2 pb-6"
     >
       {/* 헤더 컨테이너 */}
-      <div className="flex items-center">
-        {/* 프로필 아바타 */}
-        <button
-          onClick={onProfileClick}
-          className="w-12 h-12 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
-          style={{
-            background: 'var(--retro-blue-gradient)',
-          }}
-        >
-          {getAvatarContent()}
-        </button>
+      <div className="flex items-start justify-between">
+        {/* 왼쪽: 프로필 + 인사말 */}
+        <div className="flex items-start flex-grow">
+          {/* 프로필 아바타 */}
+          <button
+            onClick={onProfileClick}
+            className="w-12 h-12 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
+            style={{
+              background: 'var(--retro-blue-gradient)',
+            }}
+          >
+            {getAvatarContent()}
+          </button>
 
-        {/* 인사말 및 사용자 이름 */}
-        <div className="ml-4 flex-grow">
-          <p className={`text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
-            {getGreeting()}{' '}
-            <span className={`text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
-              {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
-            </span>
-            {getHonorific().text && (
-              <span className={`text-xl font-bold text-gray-800 ${getHonorific().font}`}>
-                {' '}{getHonorific().text}
+          {/* 인사말 및 사용자 이름 */}
+          <div className="ml-4 flex-grow mr-4">
+            <p>
+              {/* 닉네임 */}
+              <span className={`text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
+                {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
               </span>
-            )}
-          </p>
+              {getHonorific().text && (
+                <span className={`text-xl font-bold text-gray-800 ${getHonorific().font}`}>
+                  {getHonorific().text}
+                </span>
+              )}
+              {/* 인사말 */}
+              <span className={`ml-2 text-lg fo:text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
+                {getGreeting()}
+              </span>
+            </p>
+          </div>
         </div>
+
+        {/* 오른쪽: 알람 아이콘 */}
+        <button
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0"
+          style={{ background: '#e6dcc0' }}
+        >
+          🔔
+        </button>
       </div>
 
       {/* 구독 상태 표시 (Premium인 경우) */}
