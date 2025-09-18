@@ -25,7 +25,7 @@ export default function TimeBasedImageBar({ className = '' }: TimeBasedImageBarP
 
     if (hour < 6) {
       return {
-        src: isTablet ? '/DawnT.webp' : '/Dawn.webp',
+        src: isTablet ? '/DawnT.webp' : '/Morning2.webp',
         alt: '새벽의 평안',
         gradientClass: 'bg-gradient-to-r from-indigo-900/20 via-purple-800/10 to-blue-900/20'
       }
@@ -46,13 +46,13 @@ export default function TimeBasedImageBar({ className = '' }: TimeBasedImageBarP
     }
     if (hour < 22) {
       return {
-        src: '/images/time-based/evening.svg',
+        src: isTablet ? '/MorningT.webp' : '/Morning.webp',
         alt: '은혜로운 저녁',
         gradientClass: 'bg-gradient-to-r from-rose-100 via-pink-50 to-purple-100'
       }
     }
     return {
-      src: '/images/time-based/night.svg',
+      src: isTablet ? '/MorningT.webp' : '/Morning1.webp',
       alt: '조용한 밤',
       gradientClass: 'bg-gradient-to-r from-slate-800/20 via-gray-700/10 to-blue-900/20'
     }
@@ -71,7 +71,7 @@ export default function TimeBasedImageBar({ className = '' }: TimeBasedImageBarP
       <div
         className="relative h-16 rounded-xl overflow-hidden mx-4 active:scale-98 transition-all duration-300 select-none"
         style={{
-          boxShadow: '0 8px 12px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 4px 4px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.4)',
           userSelect: 'none',
           WebkitUserSelect: 'none',
           WebkitTouchCallout: 'none'

@@ -6,7 +6,9 @@ import { useTranslation } from '../../hooks/useTranslation'
 import TodayGratitudeCard from './widgets/TodayGratitudeCard'
 import StreakWidget from './widgets/StreakWidget'
 import RecentNotesWidget from './widgets/RecentNotesWidget'
-import QuickActionsWidget from './widgets/QuickActionsWidget'
+import StatsWidget from './widgets/StatsWidget'
+import WeeklyStreakWidget from './widgets/WeeklyStreakWidget'
+import DetailViewButton from './widgets/DetailViewButton'
 
 interface DashboardContentProps {
   activeTab: string
@@ -21,7 +23,7 @@ export default function DashboardContent({ activeTab, user, profile, displayName
   if (activeTab !== 'home') {
     // 다른 탭의 콘텐츠는 나중에 구현
     return (
-      <div className="px-6 py-8">
+      <div className="px-4 py-8">
         <div className="text-center">
           <div className="text-4xl mb-4">🚧</div>
           <h2 className="text-xl font-bold text-gray-800 mb-2 font-jua">
@@ -36,18 +38,21 @@ export default function DashboardContent({ activeTab, user, profile, displayName
   }
 
   return (
-    <div className="px-6 space-y-6">
+    <div className="px-4 space-y-6">
+      {/* 주간 스트릭 위젯 */}
+      <WeeklyStreakWidget user={user} />
+
+      {/* 더 자세히보기 버튼 */}
+      <DetailViewButton />
+
       {/* 오늘의 감사 카드 */}
       <TodayGratitudeCard user={user} />
 
-      {/* 위젯들 그리드 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* 연속 일수 위젯 */}
-        <StreakWidget user={user} />
-        
-        {/* 빠른 액션 위젯 */}
-        <QuickActionsWidget />
-      </div>
+      {/* 연속 기록 위젯 */}
+      <StreakWidget user={user} />
+
+      {/* 통계 위젯 */}
+      <StatsWidget user={user} />
 
       {/* 최근 노트 위젯 */}
       <RecentNotesWidget user={user} />

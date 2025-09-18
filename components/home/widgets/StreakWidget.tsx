@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { User } from '@supabase/supabase-js'
 import { createClient } from '../../../utils/supabase/client'
 import { useTranslation } from '../../../hooks/useTranslation'
@@ -11,13 +12,11 @@ interface StreakWidgetProps {
 
 interface StreakData {
   gratitude: number
-  sermon: number
-  prayer: number
 }
 
 export default function StreakWidget({ user }: StreakWidgetProps) {
   const { t } = useTranslation()
-  const [streaks, setStreaks] = useState<StreakData>({ gratitude: 0, sermon: 0, prayer: 0 })
+  const [streaks, setStreaks] = useState<StreakData>({ gratitude: 0 })
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
@@ -39,11 +38,11 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
           return
         }
 
-        const streakData: StreakData = { gratitude: 0, sermon: 0, prayer: 0 }
+        const streakData: StreakData = { gratitude: 0 }
         
         data?.forEach((streak: any) => {
-          if (streak.note_type in streakData) {
-            streakData[streak.note_type as keyof StreakData] = streak.current_streak || 0
+          if (streak.note_type === 'gratitude') {
+            streakData.gratitude = streak.current_streak || 0
           }
         })
 
@@ -85,7 +84,12 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
     }
   }
 
-  const totalStreak = Object.values(streaks).reduce((sum, streak) => sum + streak, 0)
+  const totalStreak = streaks.gratitude
+
+  // 오늘의 주간 정보
+  const today = new Date()
+  const weekDay = today.toLocaleDateString('ko-KR', { weekday: 'long' })
+  const weekOfMonth = Math.ceil(today.getDate() / 7)
 
   if (loading) {
     return (
@@ -106,50 +110,53 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-gray-800 font-jua">연속 기록</h3>
-        <div className="text-lg">🔥</div>
+        <Image
+          src="/Home/Fire.png"
+          alt="연속기록"
+          width={24}
+          height={24}
+          className="select-none"
+        />
       </div>
 
-      {/* 총 연속 일수 */}
+      {/* 감사노트 연속 일수 */}
       <div className="text-center mb-4">
-        <div 
+        <div
           className="text-3xl font-bold font-jua mb-1"
-          style={{ color: 'var(--retro-orange)' }}
+          style={{ color: 'var(--retro-green)' }}
         >
           {totalStreak}일
         </div>
-        <p className="text-xs text-gray-600 font-noto-serif-kr">총 연속 기록</p>
+        <p className="text-xs text-gray-600 font-noto-serif-kr">감사노트 연속 기록</p>
       </div>
 
-      {/* 개별 스트릭 */}
-      <div className="space-y-3">
-        {Object.entries(streaks).map(([type, count]) => (
-          <div key={type} className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">{getStreakIcon(type)}</span>
-              <span className="text-sm font-medium text-gray-700 font-noto-serif-kr">
-                {getStreakLabel(type)}
-              </span>
-            </div>
-            <div 
-              className="px-2 py-1 rounded-full text-xs font-bold text-white min-w-[32px] text-center"
-              style={{ background: getStreakColor(type) }}
-            >
-              {count}
-            </div>
+      {/* 오늘 주간 정보 */}
+      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="text-sm">📅</span>
+            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr">
+              오늘 주간
+            </span>
           </div>
-        ))}
+          <div className="text-right">
+            <div className="text-sm font-bold text-gray-800 font-jua">{weekDay}</div>
+            <div className="text-xs text-gray-600 font-noto-serif-kr">{weekOfMonth}주차</div>
+          </div>
+        </div>
       </div>
+
 
       {/* 격려 메시지 */}
       <div className="mt-4 pt-3 border-t border-gray-200">
         <p className="text-xs text-gray-600 text-center font-noto-serif-kr">
-          {totalStreak === 0 
-            ? "오늘부터 시작해보세요! 🌟"
-            : totalStreak < 7 
+          {totalStreak === 0
+            ? "첫 감사노트를 작성해보세요! 🌟"
+            : totalStreak < 7
               ? "좋은 시작이에요! 계속해보세요 💪"
               : totalStreak < 30
-                ? "훌륭한 습관이에요! 🎉"
-                : "정말 대단해요! 계속 유지하세요! 🏆"
+                ? "훌륭한 감사 습관이에요! 🎉"
+                : "정말 대단한 감사의 마음이에요! 🏆"
           }
         </p>
       </div>

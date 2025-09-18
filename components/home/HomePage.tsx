@@ -14,6 +14,8 @@ import DashboardContent from './DashboardContent'
 import CustomNavBar from '../CustomNavBar'
 import ProfileModal from './ProfileModal'
 import SafeAreaVisualizer from '../common/SafeAreaVisualizer'
+import TopSafeAreaOverlay from '../common/TopSafeAreaOverlay'
+import BottomSafeAreaOverlay from '../common/BottomSafeAreaOverlay'
 import TimeBasedImageBar from './TimeBasedImageBar'
 
 interface HomePageProps {
@@ -338,11 +340,14 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
         paddingBottom: '80px' // 하단 네비게이션을 위한 여백
       }}
     >
+      {/* 상단 세이프존 가림막 - 스크롤 시 페이드 */}
+      <TopSafeAreaOverlay />
+
       {/* 세이프존 시각화 (개발 환경에서만) - 파란색 세이프존 표시 */}
       <SafeAreaVisualizer />
 
       {/* Time-based Image Bar */}
-      <TimeBasedImageBar className="pb-4" />
+      {/* <TimeBasedImageBar className="pb-4" /> */}
 
       {/* 프로필 헤더 */}
       <div className={`transition-all duration-500 ease-out ${showProfileHeader ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-4'}`}>
@@ -381,6 +386,9 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
         onTabChange={setActiveTab}
         showWithAnimation={showBottomNavigation}
       />
+
+      {/* 하단 세이프존 가림막 */}
+      <BottomSafeAreaOverlay />
 
     </div>
   )

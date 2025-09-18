@@ -145,7 +145,7 @@ export default function CustomNavBar({
   });
 
   const buttonColorSpring = useSpring({
-    backgroundColor: isWriteMode && !isClosing ? '#a16363' : '#748547',
+    backgroundColor: isWriteMode && !isClosing ? '#c67171' : '#8dae65',
     config: {
       tension: 300,
       friction: 25
@@ -240,19 +240,19 @@ export default function CustomNavBar({
       )}
 
       {/* 네비게이션 바 - 448px 너비로 고정 */}
-      <div className={`fixed bottom-0 left-0 right-0 z-50 px-4 ${
+      <div className={`fixed bottom-0 left-0 right-0 z-50 px-2 select-none ${
         isTabletSize ? 'pb-4' : isSmallSize ? 'pb-2' : 'pb-0 -mb-2'
       }`}>
         <animated.div
           className="flex justify-center"
           style={navBarSpring}
         >
-          <div className={`bg-[#fafffa] backdrop-blur-xl  shadow-lg w-[448px] ${isTabletSize ? 'px-12 py-3 rounded-4xl' : 'px-6 py-2 rounded-3xl'}`}>
+          <div className={`bg-[#fafffa] select-none backdrop-blur-xl  shadow-lg w-[448px] ${isTabletSize ? 'px-12 py-3 rounded-4xl' : 'px-6 py-2 rounded-4xl'}`}>
             <div className="flex items-center w-full">
               <div className={`flex items-center flex-1 justify-end ${isTabletSize ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('home')}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none ${
+                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'home'
                       ? 'bg-gray-200'
                       : ''
@@ -263,12 +263,12 @@ export default function CustomNavBar({
                     alt="Home"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={activeTab === 'home' ? 'opacity-100' : 'opacity-100'}
+                    className={`select-none ${activeTab === 'home' ? 'opacity-100' : 'opacity-100'}`}
                   />
                 </button>
                 <button
                   onClick={() => handleTabClick('community')}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none ${
+                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'community'
                       ? 'bg-gray-200'
                       : ''
@@ -279,7 +279,7 @@ export default function CustomNavBar({
                     alt="Community"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={activeTab === 'community' ? 'opacity-100' : 'opacity-100'}
+                    className={`select-none ${activeTab === 'community' ? 'opacity-100' : 'opacity-100'}`}
                   />
                 </button>
               </div>
@@ -287,7 +287,7 @@ export default function CustomNavBar({
               <div className={`flex justify-center ${isTabletSize ? 'px-8' : 'px-6'}`}>
                 <animated.button
                   onClick={handlePlusClick}
-                  className="p-3.5 my-1 rounded-full text-white outline-none"
+                  className="p-3.5 my-1 rounded-full text-white outline-none active:scale-95 transition-all duration-300 select-none"
                   style={{
                     ...buttonColorSpring,
                     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
@@ -300,13 +300,13 @@ export default function CustomNavBar({
                       className="absolute flex items-center justify-center"
                       style={plusIconSpring}
                     >
-                      <Plus size={22} strokeWidth={3} />
+                      <Plus size={22} strokeWidth={3.5} />
                     </animated.div>
                     <animated.div
                       className="absolute flex items-center justify-center"
                       style={xIconSpring}
                     >
-                      <X size={22} strokeWidth={3} />
+                      <X size={22} strokeWidth={3.5} />
                     </animated.div>
                   </div>
                 </animated.button>
@@ -315,7 +315,7 @@ export default function CustomNavBar({
               <div className={`flex items-center flex-1 ${isTabletSize ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('saved')}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none ${
+                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'saved'
                       ? 'bg-gray-200'
                       : ''
@@ -326,12 +326,12 @@ export default function CustomNavBar({
                     alt="Saved"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={activeTab === 'saved' ? 'opacity-100' : 'opacity-100'}
+                    className={`select-none ${activeTab === 'saved' ? 'opacity-100' : 'opacity-100'}`}
                   />
                 </button>
                 <button
                   onClick={() => handleTabClick('settings')}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none ${
+                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'settings'
                       ? 'bg-gray-200'
                       : ''
@@ -342,7 +342,7 @@ export default function CustomNavBar({
                     alt="Settings"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={activeTab === 'settings' ? 'opacity-100' : 'opacity-100'}
+                    className={`select-none ${activeTab === 'settings' ? 'opacity-100' : 'opacity-100'}`}
                   />
                 </button>
               </div>

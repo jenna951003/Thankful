@@ -108,16 +108,19 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
 
   return (
     <div
-      className="px-6 pt-2 pb-6"
+      className="px-4 pt-2 pb-6"
+      style={{
+        paddingTop: `${safeArea.top + 8}px`
+      }}
     >
       {/* 헤더 컨테이너 */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between mt-2">
         {/* 왼쪽: 프로필 + 인사말 */}
         <div className="flex items-start flex-grow">
           {/* 프로필 아바타 */}
           <button
             onClick={onProfileClick}
-            className="w-12 h-12 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
+            className="w-14 h-14 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
             style={{
               background: 'var(--retro-blue-gradient)',
             }}
@@ -126,19 +129,19 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
           </button>
 
           {/* 인사말 및 사용자 이름 */}
-          <div className="ml-4 flex-grow mr-4">
+          <div className="ml-3 flex-grow mr-4 -mt-1">
             <p>
               {/* 닉네임 */}
-              <span className={`text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
+              <span className={`pt-6 text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
                 {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
               </span>
               {getHonorific().text && (
-                <span className={`text-xl font-bold text-gray-800 ${getHonorific().font}`}>
+                <span className={`ml-0.5 pt-6 text-lg font-bold text-gray-800 ${getHonorific().font}`}>
                   {getHonorific().text}
                 </span>
               )}
               {/* 인사말 */}
-              <span className={`ml-2 text-lg fo:text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
+              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
                 {getGreeting()}
               </span>
             </p>
@@ -146,12 +149,16 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
         </div>
 
         {/* 오른쪽: 알람 아이콘 */}
-        <button
+        {/* <button
           className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0"
           style={{ background: '#e6dcc0' }}
         >
-          🔔
-        </button>
+          <img
+            src="/Bell.svg"
+            alt="Notification"
+            className="w-5 h-5 select-none"
+          />
+        </button> */}
       </div>
 
       {/* 구독 상태 표시 (Premium인 경우) */}
