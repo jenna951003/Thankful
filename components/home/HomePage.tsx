@@ -25,7 +25,7 @@ interface HomePageProps {
 
 const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false }: HomePageProps) {
   const router = useRouter()
-  const { user, loading, signOut } = useAuth()
+  const { user, profile, loading, signOut } = useAuth()
 
   // 사용자 정보에서 displayName 추출
   const getUserDisplayName = () => {
@@ -39,8 +39,7 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
     return null
   }
 
-  // 임시: profile은 null이지만 displayName은 user 정보에서 가져옴
-  const profile = null
+  // 사용자 정보에서 displayName 추출 (fallback 용도)
   const userDisplayName = getUserDisplayName()
   const checkOnboardingStatus = () => true // 임시로 항상 완료된 것으로 처리
   const { safeArea } = useDeviceDetection()
@@ -227,23 +226,34 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
     }
   }, [isLoginLoading, loading, user, profile])
   
-  // 🎯 온보딩 체크 로직 (더 관대하게 수정)
+  // 🎯 온보딩 체크 로직 (로딩 완료 후에만 실행)
   useEffect(() => {
-    if (!loading && !isLoginLoading && !isLoginFadingOut) {
-      // 로그인하지 않은 경우만 로컬 온보딩 체크
-      if (!user) {
-        const localOnboardingCompleted = isOnboardingCompleted()
-        if (!localOnboardingCompleted) {
-          console.log('🎯 Not logged in and no onboarding - redirecting to onboarding')
-          router.replace(`/${locale}/onboarding/1`)
-          return
-        }
-      }
+    // AuthProvider 로딩 중이면 아무것도 하지 않음
+    if (loading) {
+      console.log('🔄 AuthProvider 로딩 중... 대기')
+      return
+    }
 
-      // 로그인한 경우는 일단 홈페이지 표시 (온보딩 체크 건너뛰기)
-      if (user) {
-        console.log('🎯 User logged in - showing homepage (skipping onboarding check)')
+    // 로그인 애니메이션 중이면 아무것도 하지 않음
+    if (isLoginLoading || isLoginFadingOut) {
+      console.log('🎭 로그인 애니메이션 중... 대기')
+      return
+    }
+
+    console.log('🎯 인증 상태 체크 시작:', { user: !!user, loading })
+
+    // 로그인하지 않은 경우만 로컬 온보딩 체크
+    if (!user) {
+      const localOnboardingCompleted = isOnboardingCompleted()
+      console.log('🎯 로그인 안됨 - 온보딩 상태:', localOnboardingCompleted)
+      if (!localOnboardingCompleted) {
+        console.log('🎯 온보딩 미완료 - 온보딩으로 이동')
+        router.replace(`/${locale}/onboarding/1`)
+        return
       }
+    } else {
+      // 로그인한 경우는 홈페이지 표시
+      console.log('🎯 사용자 로그인됨 - 홈페이지 표시')
     }
   }, [loading, user, isLoginLoading, isLoginFadingOut, router, locale])
   

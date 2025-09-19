@@ -106,28 +106,55 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
   }
 
   return (
-    <div className="retro-card p-4">
+    <div
+      className="retro-card p-4 select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        touchAction: 'pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        userSelect: 'none',
+        WebkitTapHighlightColor: 'transparent'
+      }}
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-gray-800 font-jua">연속 기록</h3>
+        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>연속 기록</h3>
         <Image
           src="/Home/Fire.png"
           alt="연속기록"
           width={24}
           height={24}
           className="select-none"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
         />
       </div>
 
       {/* 감사노트 연속 일수 */}
       <div className="text-center mb-4">
         <div
-          className="text-3xl font-bold font-jua mb-1"
-          style={{ color: 'var(--retro-green)' }}
+          className="text-3xl font-bold font-jua mb-1 select-none"
+          style={{
+            color: 'var(--retro-green)',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}
         >
           {totalStreak}일
         </div>
-        <p className="text-xs text-gray-600 font-noto-serif-kr">감사노트 연속 기록</p>
+        <p className="text-xs text-gray-600 font-noto-serif-kr select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>감사노트 연속 기록</p>
       </div>
 
       {/* 오늘 주간 정보 */}
@@ -135,13 +162,25 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-sm">📅</span>
-            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr">
+            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>
               오늘 주간
             </span>
           </div>
           <div className="text-right">
-            <div className="text-sm font-bold text-gray-800 font-jua">{weekDay}</div>
-            <div className="text-xs text-gray-600 font-noto-serif-kr">{weekOfMonth}주차</div>
+            <div className="text-sm font-bold text-gray-800 font-jua select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>{weekDay}</div>
+            <div className="text-xs text-gray-600 font-noto-serif-kr select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>{weekOfMonth}주차</div>
           </div>
         </div>
       </div>

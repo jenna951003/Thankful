@@ -25,14 +25,33 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
   })
 
   return (
-    <div className="bg-[#dcd4c6] rounded-2xl p-6 mb-6">
+    <div
+      className="bg-[#dcd4c6] rounded-2xl p-6 mb-6 select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        touchAction: 'pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        userSelect: 'none',
+        WebkitTapHighlightColor: 'transparent'
+      }}
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-lg font-bold text-gray-800 font-jua">
+          <h2 className="text-lg font-bold text-gray-800 font-jua select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             오늘의 말씀
           </h2>
-          <p className="text-sm text-gray-600 font-bold font-noto-serif-kr">
+          <p className="text-sm text-gray-600 font-bold font-noto-serif-kr select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             {today}
           </p>
         </div>
@@ -42,19 +61,50 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
           width={36}
           height={36}
           className="select-none"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
         />
       </div>
 
       {/* 오늘의 말씀 구절 */}
       <div
-        className="mb-4 p-4 py-16 rounded-lg"
+        className="mb-4 p-8 pb-36 pt-24 rounded-3xl relative overflow-hidden"
         style={{ background: '#f4efe7' }}
       >
-        <div className="text-center">
-          <p className="text-base font-medium text-gray-700 mb-2 font-noto-serif-kr">
+        {/* 배경 이미지 오버레이 */}
+        <Image
+          src="/Home/Verse.webp"
+          alt="말씀 배경"
+          fill
+          className="object-cover object-center select-none"
+          style={{
+            zIndex: 1,
+            opacity: 0.5,
+            touchAction: 'pan-y',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+        />
+
+        {/* 텍스트 콘텐츠 */}
+        <div className="text-center select-none relative" style={{ zIndex: 2 }}>
+          <p className="text-base font-medium text-gray-700 mb-2 font-noto-serif-kr select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             " 여호와는 나의 목자시니 내게 부족함이 없으리로다 "
           </p>
-          <p className="text-xs text-gray-500 font-bold font-noto-serif-kr">
+          <p className="text-xs text-gray-500 font-bold font-noto-serif-kr select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             시편 23:1
           </p>
         </div>
@@ -66,7 +116,11 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
         className="mt-4 p-3 rounded-lg"
         style={{ background: '#f0f5f0' }}
       >
-        <p className="text-sm text-gray-700 font-noto-serif-kr text-center">
+        <p className="text-sm text-gray-700 font-noto-serif-kr text-center select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>
           💚 <strong>이 말씀을 통해 받은 은혜와 감사함을</strong><br/>
           <strong>감사노트에 기록해보세요</strong>
         </p>
@@ -75,10 +129,23 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
       {/* 감사노트 작성 버튼 */}
       <button
         onClick={handleGratitudeNote}
-        className="w-full mt-4 py-3 px-6 text-white font-bold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 font-jua"
-        style={{ background: 'var(--retro-green-gradient)' }}
+        onContextMenu={(e) => e.preventDefault()}
+        className="w-full mt-4 py-3 px-6 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 font-jua select-none"
+        style={{
+          background: 'var(--retro-green-gradient)',
+          touchAction: 'pan-y',
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none',
+          WebkitTapHighlightColor: 'transparent'
+        }}
       >
-        🙏 감사노트 작성하기
+        <span className="select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>🙏 감사노트 작성하기</span>
       </button>
     </div>
   )

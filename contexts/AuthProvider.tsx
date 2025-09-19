@@ -1,11 +1,16 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { createClient } from '../utils/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
+import { Profile } from '../utils/supabase/types'
+
+// Supabase 클라이언트를 컴포넌트 외부에서 한 번만 생성
+const supabase = createClient()
 
 interface AuthContextType {
   user: User | null
+  profile: Profile | null
   session: Session | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
@@ -31,17 +36,90 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+
+  // 프로필 데이터 fetch 함수 (useCallback으로 메모이제이션)
+  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
+    console.log('🔍 AuthProvider fetchProfile started for userId:', userId)
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle()
+
+      if (error) {
+        console.error('💥 Profile fetch error:', error)
+        return null
+      }
+
+      if (!data) {
+        console.warn('⚠️ No profile found for user:', userId)
+        return null
+      }
+
+      console.log('✅ Profile fetch successful:', {
+        id: data.id,
+        email: data.email,
+        displayName: data.display_name,
+        avatarUrl: data.avatar_url,
+        fullName: data.full_name
+      })
+      return data
+    } catch (err) {
+      console.error('💥 Profile fetch exception:', err)
+      return null
+    }
+  }, [])
 
   useEffect(() => {
-    // Get initial session
+    let isMounted = true
+
+    // Get initial session and profile
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
+      try {
+        console.log('🚀 AuthProvider 초기화 시작...')
+        const { data: { session } } = await supabase.auth.getSession()
+
+        if (!isMounted) return
+
+        setSession(session)
+        setUser(session?.user ?? null)
+
+        if (session?.user) {
+          console.log('📋 초기 세션 발견:', session.user.email)
+          // 프로필 로드
+          try {
+            const userProfile = await fetchProfile(session.user.id)
+            if (isMounted) {
+              console.log('📝 초기 프로필 로드 결과:', userProfile ? 'SUCCESS' : 'FAILED')
+              setProfile(userProfile)
+            }
+          } catch (error) {
+            console.error('❌ 초기 프로필 로드 에러:', error)
+            if (isMounted) setProfile(null)
+          }
+        } else {
+          console.log('📭 초기 세션 없음')
+          setProfile(null)
+        }
+
+        // 초기화 완료
+        if (isMounted) {
+          console.log('✅ AuthProvider 초기화 완료')
+          setLoading(false)
+        }
+      } catch (error) {
+        console.error('💥 AuthProvider 초기화 에러:', error)
+        if (isMounted) {
+          setUser(null)
+          setProfile(null)
+          setLoading(false)
+        }
+      }
     }
 
     getInitialSession()
@@ -49,24 +127,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!isMounted) return
+
+        console.log(`🔑 Auth event: ${event}`, session?.user?.email)
+
         setSession(session)
         setUser(session?.user ?? null)
-        setLoading(false)
 
-        // Handle sign in
-        if (event === 'SIGNED_IN' && session?.user) {
-          // User profile should be created automatically via database trigger
-          console.log('User signed in:', session.user.email)
-        }
-
-        // Handle sign out
-        if (event === 'SIGNED_OUT') {
-          console.log('User signed out')
+        if (session?.user) {
+          // 프로필 로드
+          try {
+            const userProfile = await fetchProfile(session.user.id)
+            if (isMounted) {
+              console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FAILED')
+              setProfile(userProfile)
+            }
+          } catch (error) {
+            console.error('❌ 프로필 로드 에러:', error)
+            if (isMounted) setProfile(null)
+          }
+        } else {
+          console.log('🚪 User signed out')
+          setProfile(null)
         }
       }
     )
 
     return () => {
+      isMounted = false
       subscription.unsubscribe()
     }
   }, [])
@@ -124,6 +212,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const value: AuthContextType = {
     user,
+    profile,
     session,
     loading,
     signIn,

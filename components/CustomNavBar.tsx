@@ -145,7 +145,7 @@ export default function CustomNavBar({
   });
 
   const buttonColorSpring = useSpring({
-    backgroundColor: isWriteMode && !isClosing ? '#c67171' : '#8dae65',
+    backgroundColor: isWriteMode && !isClosing ? '#c67171' : '#5e8d61',
     config: {
       tension: 300,
       friction: 25
@@ -178,16 +178,38 @@ export default function CustomNavBar({
               <div className="bg-[#64975e] rounded-xl p-1">
                 <button
                   onClick={() => handleCreateOption('gratitude')}
-                  className="w-full px-4 py-3 text-left rounded-xl hover:bg-white/10 transition-colors duration-300"
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="w-full px-4 py-3 text-left rounded-xl transition-colors duration-300 select-none"
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
-                  <div className="text-white font-medium font-jua text-lg">🙏 감사노트</div>
+                  <div className="text-white font-medium font-jua text-lg select-none" style={{
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none'
+                  }}>🙏 감사노트</div>
                   <div className="text-gray-100 text-sm font-noto-serif-kr">감사한 일들을 기록해요</div>
                 </button>
               </div>
               <div className="bg-[#75975e] rounded-xl p-1">
                 <button
                   onClick={() => handleCreateOption('sermon')}
-                  className="w-full px-4 py-3 text-left rounded-xl hover:bg-white/10 transition-colors duration-300"
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="w-full px-4 py-3 text-left rounded-xl transition-colors duration-300 select-none"
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <div className="text-white font-medium font-jua text-lg">📖 설교노트</div>
                   <div className="text-gray-100 text-sm font-noto-serif-kr">말씀과 은혜를 기록해요</div>
@@ -196,7 +218,16 @@ export default function CustomNavBar({
               <div className="bg-[#9cb179] rounded-xl p-1">
                 <button
                   onClick={() => handleCreateOption('prayer')}
-                  className="w-full px-4 py-3 text-left rounded-xl hover:bg-white/10 transition-colors duration-300"
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="w-full px-4 py-3 text-left rounded-xl transition-colors duration-300 select-none"
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <div className="text-white font-medium font-jua text-lg">🤲 기도노트</div>
                   <div className="text-gray-100 text-sm font-noto-serif-kr">기도제목을 적어요</div>
@@ -252,34 +283,58 @@ export default function CustomNavBar({
               <div className={`flex items-center flex-1 justify-end ${isTabletSize ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('home')}
+                  onContextMenu={(e) => e.preventDefault()}
                   className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'home'
                       ? 'bg-gray-200'
                       : ''
                   }`}
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <Image
                     src="/BHome.png"
                     alt="Home"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={`select-none ${activeTab === 'home' ? 'opacity-100' : 'opacity-100'}`}
+                    className={`select-none ${activeTab === 'home' ? 'opacity-100' : 'opacity-70'}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </button>
                 <button
                   onClick={() => handleTabClick('community')}
+                  onContextMenu={(e) => e.preventDefault()}
                   className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'community'
                       ? 'bg-gray-200'
                       : ''
                   }`}
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <Image
                     src="/BCommunity.png"
                     alt="Community"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={`select-none ${activeTab === 'community' ? 'opacity-100' : 'opacity-100'}`}
+                    className={`select-none ${activeTab === 'community' ? 'opacity-100' : 'opacity-70'}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </button>
               </div>
@@ -287,12 +342,19 @@ export default function CustomNavBar({
               <div className={`flex justify-center ${isTabletSize ? 'px-8' : 'px-6'}`}>
                 <animated.button
                   onClick={handlePlusClick}
+                  onContextMenu={(e) => e.preventDefault()}
                   className="p-3.5 my-1 rounded-full text-white outline-none active:scale-95 transition-all duration-300 select-none"
                   style={{
                     ...buttonColorSpring,
                     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
                     width: '52px',
-                    height: '52px'
+                    height: '52px',
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
                   }}
                 >
                   <div className="flex items-center justify-center">
@@ -315,34 +377,58 @@ export default function CustomNavBar({
               <div className={`flex items-center flex-1 ${isTabletSize ? 'space-x-6' : 'space-x-4'}`}>
                 <button
                   onClick={() => handleTabClick('saved')}
+                  onContextMenu={(e) => e.preventDefault()}
                   className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'saved'
                       ? 'bg-gray-200'
                       : ''
                   }`}
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <Image
                     src="/BSave.png"
                     alt="Saved"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={`select-none ${activeTab === 'saved' ? 'opacity-100' : 'opacity-100'}`}
+                    className={`select-none ${activeTab === 'saved' ? 'opacity-100' : 'opacity-70'}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </button>
                 <button
                   onClick={() => handleTabClick('settings')}
+                  onContextMenu={(e) => e.preventDefault()}
                   className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'settings'
                       ? 'bg-gray-200'
                       : ''
                   }`}
+                  style={{
+                    touchAction: 'pan-y',
+                    WebkitTouchCallout: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                 >
                   <Image
                     src="/BSetting.png"
                     alt="Settings"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
-                    className={`select-none ${activeTab === 'settings' ? 'opacity-100' : 'opacity-100'}`}
+                    className={`select-none ${activeTab === 'settings' ? 'opacity-100' : 'opacity-70'}`}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                    onDragStart={(e) => e.preventDefault()}
                   />
                 </button>
               </div>

@@ -108,16 +108,34 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
   }
 
   return (
-    <div className="retro-card p-4">
+    <div
+      className="retro-card p-4 select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        touchAction: 'pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        userSelect: 'none',
+        WebkitTapHighlightColor: 'transparent'
+      }}
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-800 font-jua">통계</h3>
+        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>통계</h3>
         <Image
           src="/Home/Static.png"
           alt="통계"
           width={24}
           height={24}
           className="select-none"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
         />
       </div>
 
@@ -125,10 +143,18 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
         {/* 이번 주 진행률 */}
         <div>
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr">
+            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>
               이번 주 목표
             </span>
-            <span className="text-sm font-bold text-gray-800 font-jua">
+            <span className="text-sm font-bold text-gray-800 font-jua select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>
               {stats.weeklyCount}/{stats.weeklyGoal}
             </span>
           </div>
@@ -147,10 +173,18 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
         <div className="grid grid-cols-2 gap-3">
           {/* 이번 달 */}
           <div className="text-center p-3 bg-gray-50 rounded-lg">
-            <div className="text-lg font-bold text-gray-800 font-jua">
+            <div className="text-lg font-bold text-gray-800 font-jua select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>
               {stats.monthlyCount}
             </div>
-            <div className="text-xs text-gray-600 font-noto-serif-kr">이번 달</div>
+            <div className="text-xs text-gray-600 font-noto-serif-kr select-none" style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}>이번 달</div>
             {getMonthlyChange() !== 0 && (
               <div
                 className={`text-xs font-medium ${

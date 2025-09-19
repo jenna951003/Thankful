@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
+import Image from 'next/image'
 import { createClient } from '../../../utils/supabase/client'
 
 interface WeeklyStreakWidgetProps {
@@ -19,7 +20,36 @@ interface DayData {
 export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
   const [weeklyData, setWeeklyData] = useState<DayData[]>([])
   const [loading, setLoading] = useState(true)
+  const [currentTime, setCurrentTime] = useState(new Date())
   const supabase = createClient()
+
+  // 시간 업데이트
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 60000) // 1분마다 업데이트
+
+    return () => clearInterval(timer)
+  }, [])
+
+  // 시간대별 이미지 투명도 결정
+  const getTimeBasedOpacity = () => {
+    const hour = currentTime.getHours()
+
+    if (hour < 6) {
+      return 0.3 // 새벽 - 어둡게
+    }
+    if (hour < 12) {
+      return 1.0 // 아침 - 밝게
+    }
+    if (hour < 18) {
+      return 0.8 // 오후 - 보통
+    }
+    if (hour < 22) {
+      return 0.6 // 저녁 - 조금 어둡게
+    }
+    return 0.4 // 밤 - 어둡게
+  }
 
   useEffect(() => {
     const generateWeeklyData = () => {
@@ -65,24 +95,44 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
     generateWeeklyData()
   }, [user])
 
-  if (loading) {
-    return (
-      <div className="retro-card p-4 animate-pulse">
-        <div className="h-4 bg-gray-200 rounded mb-3"></div>
-        <div className="flex justify-between">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} className="flex flex-col items-center space-y-2">
-              <div className="h-3 w-6 bg-gray-200 rounded"></div>
-              <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  }
+  // 목업 데이터 사용으로 로딩이 즉시 완료되므로 로딩 UI 주석 처리
+  // if (loading) {
+  //   return (
+  //     <div className="retro-card p-4 animate-pulse">
+  //       <div className="h-4 bg-gray-200 rounded mb-3"></div>
+  //       <div className="flex justify-between">
+  //         {Array.from({ length: 7 }).map((_, i) => (
+  //           <div key={i} className="flex flex-col items-center space-y-2">
+  //             <div className="h-3 w-6 bg-gray-200 rounded"></div>
+  //             <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
-    <div className="bg-[#ded3ca] rounded-2xl p-4">
+    <div className="bg-[#dcd4c6] rounded-2xl p-4 shadow-md relative">
+      {/* 시간별 이미지 - 우측상단 */}
+      {/* <div className="absolute -top-8 -right-6 z-10">
+        <div
+          className="w-48 h-8 rounded-lg overflow-hidden"
+          style={{ opacity: getTimeBasedOpacity() }}
+        >
+          <Image
+            src="/Home/Image.png"
+            alt="시간별 이미지"
+            width={192}
+            height={32}
+            className="w-full h-full object-cover"
+            priority={true}
+            quality={100}
+            sizes="192px"
+          />
+        </div>
+      </div> */}
+
       {/* 헤더 */}
 
 
@@ -92,7 +142,7 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
           <div key={index} className="flex flex-col items-center space-y-2">
             {/* 요일 */}
             <div
-              className={`text-xs font-bold font-jua ${
+              className={`text-xs font-bold font-jua select-none ${
                 dayData.isToday
                   ? dayData.dayOfWeek === 0
                     ? 'text-[#f05151] font-bold'
@@ -105,13 +155,18 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                       ? 'text-[#3471ea]'
                       : 'text-gray-700'
               }`}
+              style={{
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                userSelect: 'none'
+              }}
             >
               {dayData.day}
             </div>
 
             {/* 날짜 */}
             <div
-              className={`text-xs font-bold font-jua ${
+              className={`text-xs font-bold font-jua select-none ${
                 dayData.isToday
                   ? dayData.dayOfWeek === 0
                     ? 'text-[#f05151] font-bold'
@@ -124,6 +179,11 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                       ? 'text-[#3471ea]'
                       : 'text-gray-700'
               }`}
+              style={{
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                userSelect: 'none'
+              }}
             >
               {dayData.date}
             </div>
@@ -147,17 +207,21 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
               }`}
             >
               {dayData.completed ? (
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <Image
+                  src="/Home/Check.png"
+                  alt="완료"
+                  width={32}
+                  height={32}
+                  className="select-none"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                  onDragStart={(e) => e.preventDefault()}
+                  style={{
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    userSelect: 'none'
+                  }}
+                />
               ) : dayData.isToday ? (
                 <div className={`w-2 h-2 rounded-full ${
                   dayData.dayOfWeek === 0

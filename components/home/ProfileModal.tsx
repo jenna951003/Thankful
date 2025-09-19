@@ -176,15 +176,23 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
           <div className="px-6 pb-6">
             <div className="flex items-center space-x-4 mb-6">
               {/* 프로필 이미지 */}
-              <div 
+              <div
                 className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
-                style={{ background: 'var(--retro-blue-gradient)' }}
+                style={{
+                  background: (profile?.avatar_url && profile.avatar_url.trim() !== '')
+                    ? 'transparent'
+                    : 'var(--retro-blue-gradient)'
+                }}
               >
-                {profile?.avatar_url ? (
-                  <img 
-                    src={profile.avatar_url} 
-                    alt="Profile" 
+                {profile?.avatar_url && profile.avatar_url.trim() !== '' ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt="Profile"
                     className="w-full h-full object-cover"
+                    onLoad={() => console.log('✅ ProfileModal 이미지 로드 성공:', profile.avatar_url)}
+                    onError={(e) => {
+                      console.error('❌ ProfileModal 이미지 로드 실패:', profile.avatar_url, e)
+                    }}
                   />
                 ) : (
                   <div className="text-white font-bold text-xl">

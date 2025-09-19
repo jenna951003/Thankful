@@ -86,19 +86,39 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
 
   // 프로필 이미지 또는 기본 아바타
   const getAvatarContent = () => {
-    if (profile?.avatar_url) {
+    // 디버깅 로그 추가
+    console.log('🔍 ProfileHeader 디버깅:', {
+      profile_exists: !!profile,
+      avatar_url: profile?.avatar_url,
+      avatar_url_type: typeof profile?.avatar_url,
+      avatar_url_length: profile?.avatar_url?.length,
+      display_name: profile?.display_name,
+      full_name: profile?.full_name,
+      displayName: displayName
+    })
+
+    if (profile?.avatar_url && profile.avatar_url.trim() !== '') {
       return (
-        <img 
-          src={profile.avatar_url} 
-          alt="Profile" 
-          className="w-full h-full object-cover"
+        <img
+          src={profile.avatar_url}
+          alt="Profile"
+          className="w-full h-full object-cover select-none"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          onDragStart={(e) => e.preventDefault()}
+          onLoad={() => console.log('✅ 프로필 이미지 로드 성공:', profile.avatar_url)}
+          onError={(e) => {
+            console.error('❌ 프로필 이미지 로드 실패:', profile.avatar_url, e)
+          }}
         />
       )
     }
-    
+
     // 이름의 첫 글자 또는 기본 이모지
     const userName = profile?.display_name || profile?.full_name || displayName || '익명'
     const firstChar = userName.charAt(0) || '👤'
+    console.log('📝 아바타 대신 첫 글자 표시:', { userName, firstChar })
+
     return (
       <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
         {firstChar}
@@ -120,28 +140,56 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
           {/* 프로필 아바타 */}
           <button
             onClick={onProfileClick}
-            className="w-14 h-14 rounded-full overflow-hidden shadow-md transition-transform duration-200 hover:scale-105 active:scale-95 flex-shrink-0"
+            onContextMenu={(e) => e.preventDefault()}
+            className="w-14 h-14 rounded-full overflow-hidden shadow-lg transition-transform duration-200 active:scale-95 flex-shrink-0 select-none"
             style={{
-              background: 'var(--retro-blue-gradient)',
+              background: (profile?.avatar_url && profile.avatar_url.trim() !== '')
+                ? 'transparent'
+                : 'var(--retro-blue-gradient)',
+              touchAction: 'pan-y',
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none',
+              WebkitTapHighlightColor: 'transparent'
             }}
           >
             {getAvatarContent()}
           </button>
 
           {/* 인사말 및 사용자 이름 */}
-          <div className="ml-3 flex-grow mr-4 -mt-1">
-            <p>
+          <div className="ml-3 flex-grow mr-4 -mt-1 select-none" style={{
+            touchAction: 'pan-y',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none',
+            WebkitTapHighlightColor: 'transparent'
+          }}>
+            <p className="select-none">
               {/* 닉네임 */}
-              <span className={`pt-6 text-xl font-bold text-gray-800 ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`}>
+              <span className={`pt-6 text-xl font-bold text-gray-800 select-none ${getLocaleFont('name', detectNameLanguage(profile?.display_name || profile?.full_name || displayName || '익명 사용자'))}`} style={{
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                userSelect: 'none'
+              }}>
                 {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
               </span>
               {getHonorific().text && (
-                <span className={`ml-0.5 pt-6 text-lg font-bold text-gray-800 ${getHonorific().font}`}>
+                <span className={`ml-0.5 pt-6 text-lg font-bold text-gray-800 select-none ${getHonorific().font}`} style={{
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  userSelect: 'none'
+                }}>
                   {getHonorific().text}
                 </span>
               )}
               {/* 인사말 */}
-              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold ${getLocaleFont('greeting')}`}>
+              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold select-none ${getLocaleFont('greeting')}`} style={{
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                userSelect: 'none'
+              }}>
                 {getGreeting()}
               </span>
             </p>
@@ -164,12 +212,15 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
       {/* 구독 상태 표시 (Premium인 경우) */}
       {profile?.subscription_tier !== 'free' && (
         <div className="mt-3 flex justify-start">
-          <div 
-            className="px-3 py-1 rounded-full text-xs font-semibold text-white"
-            style={{ 
-              background: profile?.subscription_tier === 'premium' 
-                ? 'var(--retro-purple-gradient)' 
-                : 'var(--retro-green-gradient)'
+          <div
+            className="px-3 py-1 rounded-full text-xs font-semibold text-white select-none"
+            style={{
+              background: profile?.subscription_tier === 'premium'
+                ? 'var(--retro-purple-gradient)'
+                : 'var(--retro-green-gradient)',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
             }}
           >
             {profile?.subscription_tier === 'premium' ? '프리미엄' : '교회'}

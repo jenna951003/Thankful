@@ -106,10 +106,25 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
   }
 
   return (
-    <div className="retro-card p-4">
+    <div
+      className="retro-card p-4 select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        touchAction: 'pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        userSelect: 'none',
+        WebkitTapHighlightColor: 'transparent'
+      }}
+    >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-800 font-jua">최근 기록</h3>
+        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          userSelect: 'none'
+        }}>최근 기록</h3>
         <div className="text-lg">📋</div>
       </div>
 
@@ -117,10 +132,18 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
       {notes.length === 0 ? (
         <div className="text-center py-8">
           <div className="text-4xl mb-2">📝</div>
-          <p className="text-gray-600 font-noto-serif-kr">
+          <p className="text-gray-600 font-noto-serif-kr select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             아직 작성한 기록이 없어요
           </p>
-          <p className="text-sm text-gray-500 font-noto-serif-kr mt-1">
+          <p className="text-sm text-gray-500 font-noto-serif-kr mt-1 select-none" style={{
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none'
+          }}>
             첫 번째 감사 일기를 작성해보세요!
           </p>
         </div>
@@ -129,7 +152,7 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
           {notes.map((note) => (
             <div
               key={note.id}
-              className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+              className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 cursor-pointer select-none"
               onClick={() => {
                 console.log('노트 클릭:', note.id)
                 // TODO: 노트 상세보기 페이지로 이동

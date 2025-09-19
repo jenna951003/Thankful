@@ -123,7 +123,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           id: data.id,
           email: data.email,
           displayName: data.display_name,
-          onboardingCompleted: data.onboarding_completed
+          avatarUrl: data.avatar_url,
+          fullName: data.full_name,
+          onboardingCompleted: data.onboarding_completed,
+          subscriptionTier: data.subscription_tier
         })
         return data
       }
@@ -388,20 +391,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  // 간단한 초기화 (임시)
+  // 초기 세션 및 프로필 로드
   useEffect(() => {
     const initAuth = async () => {
       try {
+        console.log('🚀 AuthProvider 초기화 시작...')
         const { data: { session } } = await supabase.auth.getSession()
+
         if (session?.user) {
+          console.log('📋 초기 세션 발견:', session.user.email)
           setUser(session.user)
-          // 프로필은 나중에 로드
+
+          // 초기 세션이 있으면 프로필도 로드
+          try {
+            const userProfile = await ensureProfileExists(session.user)
+            console.log('📝 초기 프로필 로드 결과:', userProfile ? 'SUCCESS' : 'FALLBACK')
+            setProfile(userProfile)
+          } catch (profileError) {
+            console.error('❌ 초기 프로필 로드 실패:', profileError)
+            setProfile(null)
+          }
+        } else {
+          console.log('📭 초기 세션 없음')
         }
       } catch (err) {
-        console.error('Auth init error:', err)
+        console.error('💥 Auth 초기화 오류:', err)
       }
     }
-    
+
     initAuth()
   }, [supabase])
 
@@ -435,28 +452,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           
           if (session?.user) {
             setUser(session.user)
-            
-            // 모든 로그인(이메일/OAuth)에 대해 프로필 생성/확인 시도
-            if (event === 'SIGNED_IN') {
-              console.log('🔑 User signed in, ensuring profile exists...')
-              try {
-                const userProfile = await ensureProfileExists(session.user)
-                console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FALLBACK')
-                setProfile(userProfile)
-              } catch (profileError) {
-                console.error('❌ Profile creation failed:', profileError)
-                setProfile(null)
-              }
-            } else {
-              // 기존 세션인 경우 프로필 가져오기
-              console.log('🔄 Existing session, fetching profile...')
-              try {
-                const userProfile = await fetchProfile(session.user.id)
-                setProfile(userProfile)
-              } catch (profileError) {
-                console.error('❌ Profile fetch failed:', profileError)
-                setProfile(null)
-              }
+
+            // 모든 세션(신규 로그인 및 기존 세션 복원)에 대해 프로필 로드
+            console.log(`🔑 User session active (${event}), loading profile...`)
+            try {
+              const userProfile = await ensureProfileExists(session.user)
+              console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FALLBACK')
+              setProfile(userProfile)
+            } catch (profileError) {
+              console.error('❌ Profile load failed:', profileError)
+              setProfile(null)
             }
           } else {
             console.log('🚪 User signed out')
