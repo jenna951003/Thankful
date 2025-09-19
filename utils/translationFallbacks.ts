@@ -5,11 +5,20 @@ export const translationFallbacks: Record<string, string> = {
   'onboarding.welcome.subtitle': '감사의 마음으로 채워가는\n영적 저널링',
   'onboarding.welcome.startButton': '시작하기',
   'onboarding.welcome.signInButton': '이미 계정이 있어요',
-  
+
   // Common loading states
   'loading.pleaseWait': '잠시만 기다려주세요...',
   'loading.processing': '처리 중...',
   'loading.loading': '로딩 중...',
+
+  // Home calendar and time greetings
+  'home.calendar': '달력 보기',
+  'home.timeGreeting.dawn': '새벽부터 함께해요',
+  'home.timeGreeting.morning': '상쾌한 아침이네요',
+  'home.timeGreeting.lunch': '점심시간도 감사해요',
+  'home.timeGreeting.afternoon': '따뜻한 오후예요',
+  'home.timeGreeting.evening': '하루 수고 많으셨어요',
+  'home.timeGreeting.night': '포근한 밤이에요',
 }
 
 // 번역 키에 대한 안전한 fallback을 제공하는 함수

@@ -86,10 +86,57 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
 
   const totalStreak = streaks.gratitude
 
-  // 오늘의 주간 정보
-  const today = new Date()
-  const weekDay = today.toLocaleDateString('ko-KR', { weekday: 'long' })
-  const weekOfMonth = Math.ceil(today.getDate() / 7)
+  // 기독교 감성의 연속 기록 메시지
+  const getStreakMessage = (streak: number): string => {
+    if (streak === 0) return "첫 감사의 기록을 시작해보세요! ✍️"
+    if (streak <= 2) return "좋은 시작이에요! 주님께 감사해요 🌱"
+    if (streak <= 6) return "꾸준한 감사의 마음이 아름다워요 💝"
+    if (streak <= 13) return "일주일 동안 감사했어요! 하나님께 영광 🙏"
+    if (streak <= 29) return "2주간의 감사! 주님이 기뻐하세요 ☀️"
+    if (streak <= 59) return "한 달간의 감사! 은혜가 충만해요 🕊️"
+    if (streak <= 99) return "두 달간 신실하게! 주님의 축복이에요 🌈"
+    if (streak <= 199) return "100일의 감사! 하나님께서 크게 쓰실 거예요 ⭐"
+    if (streak <= 364) return "200일 이상! 주님 안에서 성장하고 있어요 🌿"
+    return "1년 이상! 주님께서 예비하신 축복의 여정 🎁"
+  }
+
+  // 이모지와 텍스트를 분리하는 함수
+  const parseMessage = (message: string) => {
+    // 이모지 정규식 (유니코드 이모지 패턴)
+    const emojiRegex = /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1F018}-\u{1F270}]/gu
+
+    const parts = []
+    let lastIndex = 0
+    let match
+
+    while ((match = emojiRegex.exec(message)) !== null) {
+      // 이모지 앞의 텍스트 추가
+      if (match.index > lastIndex) {
+        parts.push({
+          type: 'text',
+          content: message.slice(lastIndex, match.index)
+        })
+      }
+
+      // 이모지 추가
+      parts.push({
+        type: 'emoji',
+        content: match[0]
+      })
+
+      lastIndex = emojiRegex.lastIndex
+    }
+
+    // 마지막 텍스트 추가
+    if (lastIndex < message.length) {
+      parts.push({
+        type: 'text',
+        content: message.slice(lastIndex)
+      })
+    }
+
+    return parts
+  }
 
   if (loading) {
     return (
@@ -107,7 +154,7 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
 
   return (
     <div
-      className="retro-card p-4 select-none"
+      className="bg-[#dcd4c6] rounded-2xl p-6 mb-6 select-none"
       onContextMenu={(e) => e.preventDefault()}
       style={{
         touchAction: 'pan-y',
@@ -120,7 +167,7 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
     >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+        <h3 className="text-lg font-bold text-gray-800 font-jua select-none" style={{
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
@@ -128,9 +175,9 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
         <Image
           src="/Home/Fire.png"
           alt="연속기록"
-          width={24}
-          height={24}
-          className="select-none"
+          width={42}
+          height={42}
+          className="select-none active:scale-95 transition-all duration-300"
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
@@ -142,7 +189,7 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
         <div
           className="text-3xl font-bold font-jua mb-1 select-none"
           style={{
-            color: 'var(--retro-green)',
+            color: '#d7877e',
             WebkitUserSelect: 'none',
             MozUserSelect: 'none',
             userSelect: 'none'
@@ -150,54 +197,36 @@ export default function StreakWidget({ user }: StreakWidgetProps) {
         >
           {totalStreak}일
         </div>
-        <p className="text-xs text-gray-600 font-noto-serif-kr select-none" style={{
+        <p className="text-sm text-gray-600 font-bold font-noto-serif-kr select-none" style={{
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
         }}>감사노트 연속 기록</p>
       </div>
 
-      {/* 오늘 주간 정보 */}
-      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-sm">📅</span>
-            <span className="text-sm font-medium text-gray-700 font-noto-serif-kr select-none" style={{
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              userSelect: 'none'
-            }}>
-              오늘 주간
-            </span>
-          </div>
-          <div className="text-right">
-            <div className="text-sm font-bold text-gray-800 font-jua select-none" style={{
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              userSelect: 'none'
-            }}>{weekDay}</div>
-            <div className="text-xs text-gray-600 font-noto-serif-kr select-none" style={{
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              userSelect: 'none'
-            }}>{weekOfMonth}주차</div>
-          </div>
-        </div>
-      </div>
 
 
       {/* 격려 메시지 */}
-      <div className="mt-4 pt-3 border-t border-gray-200">
-        <p className="text-xs text-gray-600 text-center font-noto-serif-kr">
-          {totalStreak === 0
-            ? "첫 감사노트를 작성해보세요! 🌟"
-            : totalStreak < 7
-              ? "좋은 시작이에요! 계속해보세요 💪"
-              : totalStreak < 30
-                ? "훌륭한 감사 습관이에요! 🎉"
-                : "정말 대단한 감사의 마음이에요! 🏆"
-          }
-        </p>
+      <div className="mt-4 pt-3 ">
+        <div className="ml-0 bg-white/50 py-1 rounded-2xl text-gray-600 text-center font-dongle font-bold flex items-center justify-center flex-wrap">
+          {parseMessage(getStreakMessage(totalStreak)).map((part, index) => (
+            <span
+              key={index}
+              className={
+                part.type === 'emoji'
+                  ? 'text-sm ml-2 mt-0.5'
+                  : 'text-2xl'
+              }
+              style={{
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                userSelect: 'none'
+              }}
+            >
+              {part.content}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )

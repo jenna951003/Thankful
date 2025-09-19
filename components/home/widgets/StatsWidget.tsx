@@ -109,7 +109,7 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
 
   return (
     <div
-      className="retro-card p-4 select-none"
+      className="bg-[#dcd4c6] rounded-2xl p-6 mb-6 select-none"
       onContextMenu={(e) => e.preventDefault()}
       style={{
         touchAction: 'pan-y',
@@ -122,7 +122,7 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
     >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+        <h3 className="text-lg font-bold text-gray-800 font-jua select-none" style={{
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
@@ -130,9 +130,9 @@ export default function StatsWidget({ user }: StatsWidgetProps) {
         <Image
           src="/Home/Static.png"
           alt="통계"
-          width={24}
-          height={24}
-          className="select-none"
+          width={42}
+          height={42}
+          className="select-none active:scale-95 transition-all duration-300"
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}

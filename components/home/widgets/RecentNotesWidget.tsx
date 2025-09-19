@@ -107,7 +107,7 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
 
   return (
     <div
-      className="retro-card p-4 select-none"
+      className="bg-[#dcd4c6] rounded-2xl p-6 mb-6 select-none"
       onContextMenu={(e) => e.preventDefault()}
       style={{
         touchAction: 'pan-y',
@@ -120,12 +120,12 @@ export default function RecentNotesWidget({ user }: RecentNotesWidgetProps) {
     >
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-gray-800 font-jua select-none" style={{
+        <h3 className="text-lg font-bold text-gray-800 font-jua select-none" style={{
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
         }}>최근 기록</h3>
-        <div className="text-lg">📋</div>
+        <div className="text-4xl select-none transition-all duration-300 active:scale-95">📋</div>
       </div>
 
       {/* 노트 목록 */}

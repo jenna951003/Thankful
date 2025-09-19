@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { 
+import {
   Inter,
   Jua,
   Fascinate,
@@ -9,7 +9,9 @@ import {
   Noto_Serif_KR,
   Nanum_Brush_Script,
   Sofadi_One,
-  Mitr
+  Mitr,
+  Poppins,
+  Zen_Dots
 } from 'next/font/google'
 import './globals.css'
 import OfflineIndicator from '../components/common/OfflineIndicator'
@@ -78,10 +80,24 @@ const sofadiOne = Sofadi_One({
   display: 'swap'
 })
 
-const mitr = Mitr({ 
+const mitr = Mitr({
   subsets: ['latin'],
   weight: ['200', '300', '400', '500', '600', '700'],
   variable: '--font-mitr',
+  display: 'swap'
+})
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
+  display: 'swap'
+})
+
+const zenDots = Zen_Dots({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-zen-dots',
   display: 'swap'
 })
 
@@ -109,9 +125,9 @@ export default function RootLayout({
           `
         }} />
       </head>
-      <body 
+      <body
         className={`
-          ${inter.variable} 
+          ${inter.variable}
           ${jua.variable}
           ${fascinate.variable}
           ${sourGummy.variable}
@@ -121,6 +137,8 @@ export default function RootLayout({
           ${nanumBrushScript.variable}
           ${sofadiOne.variable}
           ${mitr.variable}
+          ${poppins.variable}
+          ${zenDots.variable}
         `}
         style={{ backgroundColor: 'rgb(238, 234, 217)' }}
       >

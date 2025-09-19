@@ -79,6 +79,14 @@ body {
   font-family: var(--font-mitr), 'Mitr', sans-serif;
 }
 
+.font-poppins {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.font-zen-dots {
+  font-family: var(--font-zen-dots), 'Zen Dots', cursive;
+}
+
 /* 폰트 굵기 변형 클래스들 */
 
 /* Jua 폰트 굵기 변형 */
@@ -216,6 +224,53 @@ body {
 .font-sofadi-one-bold {
   font-family: var(--font-sofadi-one), 'Sofadi One', cursive;
   font-weight: 700;
+}
+
+/* Poppins 폰트 굵기 변형 */
+.font-poppins-thin {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 100;
+}
+
+.font-poppins-light {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 300;
+}
+
+.font-poppins-normal {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.font-poppins-medium {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.font-poppins-semibold {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.font-poppins-bold {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+.font-poppins-extrabold {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 800;
+}
+
+.font-poppins-black {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 900;
+}
+
+/* Zen Dots 폰트 굵기 변형 */
+.font-zen-dots-normal {
+  font-family: var(--font-zen-dots), 'Zen Dots', cursive;
+  font-weight: 400;
 }
 
 

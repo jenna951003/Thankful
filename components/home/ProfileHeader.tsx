@@ -158,7 +158,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
           </button>
 
           {/* 인사말 및 사용자 이름 */}
-          <div className="ml-3 flex-grow mr-4 -mt-1 select-none" style={{
+          <div className="ml-4 flex-grow mr-4 mt-0.5 select-none" style={{
             touchAction: 'pan-y',
             WebkitTouchCallout: 'none',
             WebkitUserSelect: 'none',
@@ -176,7 +176,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
                 {profile?.display_name || profile?.full_name || displayName || '익명 사용자'}
               </span>
               {getHonorific().text && (
-                <span className={`ml-0.5 pt-6 text-lg font-bold text-gray-800 select-none ${getHonorific().font}`} style={{
+                <span className={`ml-0.5 pt-6 text-lg font-bold text-gray-800  select-none ${getHonorific().font}`} style={{
                   WebkitUserSelect: 'none',
                   MozUserSelect: 'none',
                   userSelect: 'none'
@@ -185,7 +185,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
                 </span>
               )}
               {/* 인사말 */}
-              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold select-none ${getLocaleFont('greeting')}`} style={{
+              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold leading-5 select-none ${getLocaleFont('greeting')}`} style={{
                 WebkitUserSelect: 'none',
                 MozUserSelect: 'none',
                 userSelect: 'none'
@@ -196,17 +196,36 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
           </div>
         </div>
 
-        {/* 오른쪽: 알람 아이콘 */}
-        {/* <button
-          className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0"
-          style={{ background: '#e6dcc0' }}
+        {/* 오른쪽: 알림 아이콘 */}
+        <button
+          onClick={() => console.log('알림 페이지로 이동')}
+          onContextMenu={(e) => e.preventDefault()}
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 flex-shrink-0 select-none"
+          style={{
+            background: '#dcd4c6',
+            boxShadow: '0 2px 2px rgb(143, 139, 139), 0 2px 2px rgba(0, 0, 0, 0.1)',
+            touchAction: 'pan-y',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            userSelect: 'none',
+            WebkitTapHighlightColor: 'transparent'
+          }}
         >
           <img
             src="/Bell.svg"
             alt="Notification"
             className="w-5 h-5 select-none"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+            style={{
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              userSelect: 'none'
+            }}
           />
-        </button> */}
+        </button>
       </div>
 
       {/* 구독 상태 표시 (Premium인 경우) */}

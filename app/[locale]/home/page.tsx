@@ -9,7 +9,18 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+    <div
+      className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 select-none"
+      onContextMenu={(e) => e.preventDefault()}
+      style={{
+        touchAction: 'pan-y',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        userSelect: 'none',
+        WebkitTapHighlightColor: 'transparent'
+      }}
+    >
       {/* Safe Zone Top */}
       <div style={{ height: 'var(--actual-safe-top)' }} />
       

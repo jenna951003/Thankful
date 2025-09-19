@@ -58,9 +58,9 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
         <Image
           src="/Home/Bible.png"
           alt="성경"
-          width={36}
-          height={36}
-          className="select-none"
+          width={42}
+          height={42}
+          className="select-none active:scale-95 transition-all duration-300"
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
@@ -114,14 +114,14 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
       {/* 감사노트 안내 */}
       <div
         className="mt-4 p-3 rounded-lg"
-        style={{ background: '#f0f5f0' }}
+        style={{ background: '' }}
       >
-        <p className="text-sm text-gray-700 font-noto-serif-kr text-center select-none" style={{
+        <p className="text-xl text-gray-700 font-nanum-brush-script text-center select-none" style={{
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
         }}>
-          💚 <strong>이 말씀을 통해 받은 은혜와 감사함을</strong><br/>
+          <strong>이 말씀을 통해 받은 은혜와 감사함을</strong><br/>
           <strong>감사노트에 기록해보세요</strong>
         </p>
       </div>
@@ -130,9 +130,9 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
       <button
         onClick={handleGratitudeNote}
         onContextMenu={(e) => e.preventDefault()}
-        className="w-full mt-4 py-3 px-6 text-white font-bold rounded-lg transition-all duration-200 active:scale-95 font-jua select-none"
+        className="w-full mt-4 py-3 px-6 text-white font-bold rounded-2xl transition-all duration-200 active:scale-95 font-jua select-none"
         style={{
-          background: 'var(--retro-green-gradient)',
+          background: '#729774',
           touchAction: 'pan-y',
           WebkitTouchCallout: 'none',
           WebkitUserSelect: 'none',
@@ -145,7 +145,7 @@ export default function TodayGratitudeCard({ user }: TodayGratitudeCardProps) {
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           userSelect: 'none'
-        }}>🙏 감사노트 작성하기</span>
+        }}>감사노트 작성하기</span>
       </button>
     </div>
   )

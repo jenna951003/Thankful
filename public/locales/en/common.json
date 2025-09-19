@@ -302,6 +302,15 @@
       "afternoon": "Nice to see you this afternoon, how has your day been so far?",
       "evening": "Thank you for your hard work today, care to share a special moment?",
       "night": "Thanks for being here late too, shall we warmly wrap up the day?"
+    },
+    "calendar": "View Calendar",
+    "timeGreeting": {
+      "dawn": "Early morning together",
+      "morning": "Fresh morning vibes",
+      "lunch": "Grateful for lunch time",
+      "afternoon": "Warm afternoon",
+      "evening": "Thanks for your hard work",
+      "night": "Cozy night time"
     }
   },
   "navigation": {

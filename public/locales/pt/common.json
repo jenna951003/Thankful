@@ -301,6 +301,15 @@
       "afternoon": "Que bom te ver esta tarde, como tem sido seu dia até agora?",
       "evening": "Obrigado pelo seu trabalho árduo hoje, quer compartilhar um momento especial?",
       "night": "Obrigado por estar aqui tão tarde também, vamos encerrar o dia com carinho?"
+    },
+    "calendar": "Ver Calendário",
+    "timeGreeting": {
+      "dawn": "Madrugada juntos",
+      "morning": "Manhã fresca e nova",
+      "lunch": "Gratos pela hora do almoço",
+      "afternoon": "Tarde acolhedora",
+      "evening": "Obrigado pelo seu esforço",
+      "night": "Noite aconchegante"
     }
   },
   "navigation": {
