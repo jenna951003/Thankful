@@ -39,7 +39,7 @@ export default function DashboardContent({ activeTab, user, profile, displayName
 
   return (
     <div
-      className="px-4 space-y-8 select-none"
+      className="space-y-8 select-none"
       onContextMenu={(e) => e.preventDefault()}
       style={{
         touchAction: 'pan-y',
@@ -51,7 +51,7 @@ export default function DashboardContent({ activeTab, user, profile, displayName
       }}
     >
       {/* 페이지 제목 */}
-      <div className="ml-1 mt-0 mb-4">
+      <div className="ml-1 mt-0 mb-4 px-4">
         <h1
           className="text-[48px] font-light text-gray-800 font-zen-dots select-none leading-tight"
           style={{
@@ -65,19 +65,27 @@ export default function DashboardContent({ activeTab, user, profile, displayName
       </div>
 
       {/* 주간 스트릭 위젯 */}
-      <WeeklyStreakWidget user={user} />
+      <div className="px-4">
+        <WeeklyStreakWidget user={user} />
+      </div>
 
-      {/* 오늘의 감사 카드 */}
+      {/* 오늘의 감사 카드 - 전체 너비 */}
       <TodayGratitudeCard user={user} />
 
       {/* 연속 기록 위젯 */}
-      <StreakWidget user={user} />
+      <div className="px-4">
+        <StreakWidget user={user} />
+      </div>
 
       {/* 통계 위젯 */}
-      <StatsWidget user={user} />
+      <div className="px-4">
+        <StatsWidget user={user} />
+      </div>
 
       {/* 최근 노트 위젯 */}
-      <RecentNotesWidget user={user} />
+      <div className="px-4">
+        <RecentNotesWidget user={user} />
+      </div>
 
       {/* 추가 여백 (하단 네비게이션을 위함) */}
       <div className="h-4" />

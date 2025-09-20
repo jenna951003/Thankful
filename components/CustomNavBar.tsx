@@ -24,6 +24,12 @@ export default function CustomNavBar({
   const [isAnimating, setIsAnimating] = useState(false);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 탭별 이미지 경로 생성 함수
+  const getImagePath = (tabName: string, isActive: boolean): string => {
+    const suffix = isActive ? '' : '2';
+    return `/B${tabName}${suffix}.png`;
+  };
+
   // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
     return () => {
@@ -173,7 +179,7 @@ export default function CustomNavBar({
               overflow: 'hidden'
             }}
           >
-            <div className="bg-[#fafffa] rounded-2xl px-4 py-4 w-[448px]">
+            <div className="bg-[#fafffa] rounded-2xl px-4 py-4 w-[320px]">
             <div className="space-y-3">
               <div className="bg-[#64975e] rounded-xl p-1">
                 <button
@@ -278,13 +284,13 @@ export default function CustomNavBar({
           className="flex justify-center"
           style={navBarSpring}
         >
-          <div className={`bg-[#fafffa] select-none backdrop-blur-xl  shadow-lg w-[448px] ${isTabletSize ? 'px-12 py-3 rounded-4xl' : 'px-6 py-2 rounded-4xl'}`}>
+          <div className={`bg-[#68865f] select-none backdrop-blur-xl  shadow-lg w-[320px] ${isTabletSize ? 'px-12 py-3 rounded-4xl' : 'px-2 py-0 rounded-4xl'}`}>
             <div className="flex items-center w-full">
-              <div className={`flex items-center flex-1 justify-end ${isTabletSize ? 'space-x-6' : 'space-x-4'}`}>
+              <div className={`flex items-center flex-1 justify-end ${isTabletSize ? 'space-x-6' : 'space-x-2'}`}>
                 <button
                   onClick={() => handleTabClick('home')}
                   onContextMenu={(e) => e.preventDefault()}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
+                  className={`p-3 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'home'
                       ? 'bg-gray-200'
                       : ''
@@ -299,7 +305,7 @@ export default function CustomNavBar({
                   }}
                 >
                   <Image
-                    src="/BHome.png"
+                    src={getImagePath('Home', activeTab === 'home')}
                     alt="Home"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
@@ -312,7 +318,7 @@ export default function CustomNavBar({
                 <button
                   onClick={() => handleTabClick('community')}
                   onContextMenu={(e) => e.preventDefault()}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
+                  className={`p-3 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'community'
                       ? 'bg-gray-200'
                       : ''
@@ -327,7 +333,7 @@ export default function CustomNavBar({
                   }}
                 >
                   <Image
-                    src="/BCommunity.png"
+                    src={getImagePath('Community', activeTab === 'community')}
                     alt="Community"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
@@ -378,7 +384,7 @@ export default function CustomNavBar({
                 <button
                   onClick={() => handleTabClick('saved')}
                   onContextMenu={(e) => e.preventDefault()}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
+                  className={`p-3 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'saved'
                       ? 'bg-gray-200'
                       : ''
@@ -393,7 +399,7 @@ export default function CustomNavBar({
                   }}
                 >
                   <Image
-                    src="/BSave.png"
+                    src={getImagePath('Save', activeTab === 'saved')}
                     alt="Saved"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
@@ -406,7 +412,7 @@ export default function CustomNavBar({
                 <button
                   onClick={() => handleTabClick('settings')}
                   onContextMenu={(e) => e.preventDefault()}
-                  className={`p-2.5 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
+                  className={`p-3 transition-all duration-500 ease-out rounded-full outline-none active:scale-95 select-none ${
                     activeTab === 'settings'
                       ? 'bg-gray-200'
                       : ''
@@ -421,7 +427,7 @@ export default function CustomNavBar({
                   }}
                 >
                   <Image
-                    src="/BSetting.png"
+                    src={getImagePath('Setting', activeTab === 'settings')}
                     alt="Settings"
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}

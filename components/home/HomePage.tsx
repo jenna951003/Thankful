@@ -393,7 +393,21 @@ const HomePage = memo(function HomePage({ locale, showWithLoginAnimation = false
       {/* 하단 네비게이션 - 항상 고정 */}
       <CustomNavBar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={(tab) => {
+          if (tab !== 'home') {
+            if (tab === 'community') {
+              router.push(`/${locale}/community`);
+            } else if (tab === 'saved') {
+              router.push(`/${locale}/saved`);
+            } else if (tab === 'settings') {
+              router.push(`/${locale}/settings`);
+            } else if (tab === 'write') {
+              console.log('Write tab selected');
+            }
+          } else {
+            setActiveTab(tab);
+          }
+        }}
         showWithAnimation={showBottomNavigation}
       />
 

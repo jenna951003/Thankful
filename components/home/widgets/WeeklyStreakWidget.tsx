@@ -194,13 +194,13 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                 dayData.isToday
                   ? `rounded-full text-white ${
                       dayData.dayOfWeek === 0
-                        ? 'bg-[#f05151]'
+                        ? 'bg-[#ec7979]'
                         : dayData.dayOfWeek === 6
                           ? 'bg-[#3471ea]'
                           : 'bg-[#747b76]'
                     }`
                   : dayData.dayOfWeek === 0
-                    ? 'text-[#f05151]'
+                    ? 'text-[#ec7979]'
                     : dayData.dayOfWeek === 6
                       ? 'text-[#3471ea]'
                       : 'text-gray-700'
@@ -219,12 +219,12 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
               className={`text-sm font-bold font-jua select-none ${
                 dayData.isToday
                   ? dayData.dayOfWeek === 0
-                    ? 'text-[#f05151] font-bold'
+                    ? 'text-[#ec7979] font-bold'
                     : dayData.dayOfWeek === 6
                       ? 'text-[#3471ea] font-bold'
                       : 'text-[#747b76] font-bold'
                   : dayData.dayOfWeek === 0
-                    ? 'text-[#f05151]'
+                    ? 'text-[#ec7979]'
                     : dayData.dayOfWeek === 6
                       ? 'text-[#3471ea]'
                       : 'text-gray-700'
@@ -242,18 +242,12 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
             <div
               className={`w-8 h-8 ml-0.5 rounded-full flex items-center justify-center transition-all duration-200 ${
                 dayData.completed
-                  ? dayData.dayOfWeek === 0 // 일요일
-                    ? 'bg-[#f05151] text-white shadow-md'
-                    : dayData.dayOfWeek === 6 // 토요일
-                      ? 'bg-[#3471ea] text-white shadow-md'
-                      : 'bg-[#55af67] text-white shadow-md' // 평일
+                  ? 'bg-[#55af67] text-white shadow-md' // 모든 요일 동일한 초록색
                   : dayData.isToday
-                    ? dayData.dayOfWeek === 0
-                      ? 'bg-gray-300 border-2 border-[#f05151] border-dashed'
-                      : dayData.dayOfWeek === 6
-                        ? 'bg-gray-300 border-2 border-[#3471ea] border-dashed'
-                        : 'bg-gray-300 border-2 border-[#747b76] border-dashed'
-                    : 'bg-gray-300'
+                    ? 'bg-gray-300 border-2 border-[#747b76] border-dashed' // 모든 요일 동일한 회색 테두리
+                    : dayData.isPastDay
+                      ? 'bg-[#ec7979] text-white shadow-md' // 과거 미완료 날짜는 붉은톤
+                      : 'bg-gray-300' // 미래 날짜
               }`}
             >
               {dayData.completed ? (
@@ -388,6 +382,8 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
               />
+              {/* 흰색 오버레이 */}
+              <div className="absolute inset-0 bg-white/30 bg-opacity-20 pointer-events-none"></div>
             </div>
           </div>
           <div className="mr-1.5 -mt-0.5 text-right">
