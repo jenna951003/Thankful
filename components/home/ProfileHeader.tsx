@@ -4,6 +4,8 @@ import { User } from '@supabase/supabase-js'
 import { Profile } from '../../utils/supabase/types'
 import { useDeviceDetection } from '../../hooks/useDeviceDetection'
 import { useTranslation } from '../../hooks/useTranslation'
+import { useMemo, useCallback, memo } from 'react'
+import { debugLogger } from '../../utils/debugLogger'
 
 interface ProfileHeaderProps {
   user: User | null
@@ -11,9 +13,10 @@ interface ProfileHeaderProps {
   displayName?: string | null
   onProfileClick: () => void
   locale: string
+  isLoading?: boolean
 }
 
-export default function ProfileHeader({ user, profile, displayName, onProfileClick, locale }: ProfileHeaderProps) {
+const ProfileHeader = memo(function ProfileHeader({ user, profile, displayName, onProfileClick, locale, isLoading = false }: ProfileHeaderProps) {
   const { safeArea } = useDeviceDetection()
   const { t } = useTranslation()
 
@@ -84,19 +87,8 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
     return t('home.greeting.night') // 조용한 밤
   }
 
-  // 프로필 이미지 또는 기본 아바타
-  const getAvatarContent = () => {
-    // 디버깅 로그 추가
-    console.log('🔍 ProfileHeader 디버깅:', {
-      profile_exists: !!profile,
-      avatar_url: profile?.avatar_url,
-      avatar_url_type: typeof profile?.avatar_url,
-      avatar_url_length: profile?.avatar_url?.length,
-      display_name: profile?.display_name,
-      full_name: profile?.full_name,
-      displayName: displayName
-    })
-
+  // 프로필 이미지 또는 기본 아바타 (useMemo로 메모이제이션)
+  const avatarContent = useMemo(() => {
     if (profile?.avatar_url && profile.avatar_url.trim() !== '') {
       return (
         <img
@@ -106,9 +98,8 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
           draggable={false}
           onContextMenu={(e) => e.preventDefault()}
           onDragStart={(e) => e.preventDefault()}
-          onLoad={() => console.log('✅ 프로필 이미지 로드 성공:', profile.avatar_url)}
           onError={(e) => {
-            console.error('❌ 프로필 이미지 로드 실패:', profile.avatar_url, e)
+            debugLogger.error('❌ 프로필 이미지 로드 실패:', profile.avatar_url)
           }}
         />
       )
@@ -117,11 +108,41 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
     // 이름의 첫 글자 또는 기본 이모지
     const userName = profile?.display_name || profile?.full_name || displayName || '익명'
     const firstChar = userName.charAt(0) || '👤'
-    console.log('📝 아바타 대신 첫 글자 표시:', { userName, firstChar })
 
     return (
       <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
         {firstChar}
+      </div>
+    )
+  }, [profile, displayName]) // profile 객체 전체와 displayName으로 의존성 단순화
+
+  // 로딩 스켈레톤 UI
+  if (isLoading) {
+    return (
+      <div
+        className="px-4 pt-2 pb-6"
+        style={{
+          paddingTop: `${safeArea.top + 8}px`
+        }}
+      >
+        <div className="flex items-start justify-between mt-2">
+          {/* 왼쪽: 프로필 + 인사말 로딩 */}
+          <div className="flex items-start flex-grow">
+            {/* 프로필 아바타 로딩 */}
+            <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse flex-shrink-0"></div>
+
+            {/* 인사말 로딩 */}
+            <div className="ml-4 flex-grow mr-4 mt-0.5">
+              <div className="space-y-2">
+                <div className="h-6 bg-gray-200 rounded animate-pulse w-32"></div>
+                <div className="h-5 bg-gray-200 rounded animate-pulse w-24"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* 오른쪽: 알림 아이콘 로딩 */}
+          <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse flex-shrink-0"></div>
+        </div>
       </div>
     )
   }
@@ -154,7 +175,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
               WebkitTapHighlightColor: 'transparent'
             }}
           >
-            {getAvatarContent()}
+            {avatarContent}
           </button>
 
           {/* 인사말 및 사용자 이름 */}
@@ -185,7 +206,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
                 </span>
               )}
               {/* 인사말 */}
-              <span className={`ml-2 text-xl fo:text-sm text-gray-600 font-semibold leading-5 select-none ${getLocaleFont('greeting')}`} style={{
+              <span className={`ml-2 text-xl text-gray-600 font-semibold leading-5 select-none ${getLocaleFont('greeting')}`} style={{
                 WebkitUserSelect: 'none',
                 MozUserSelect: 'none',
                 userSelect: 'none'
@@ -198,7 +219,7 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
 
         {/* 오른쪽: 알림 아이콘 */}
         <button
-          onClick={() => console.log('알림 페이지로 이동')}
+          onClick={() => {/* 알림 페이지 기능 추후 구현 */}}
           onContextMenu={(e) => e.preventDefault()}
           className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 active:scale-95 flex-shrink-0 select-none"
           style={{
@@ -248,4 +269,20 @@ export default function ProfileHeader({ user, profile, displayName, onProfileCli
       )}
     </div>
   )
-}
+}, (prevProps, nextProps) => {
+  // 실제 변경되는 props만 체크하여 불필요한 렌더링 방지
+  return (
+    prevProps.user?.id === nextProps.user?.id &&
+    prevProps.profile?.id === nextProps.profile?.id &&
+    prevProps.profile?.display_name === nextProps.profile?.display_name &&
+    prevProps.profile?.full_name === nextProps.profile?.full_name &&
+    prevProps.profile?.avatar_url === nextProps.profile?.avatar_url &&
+    prevProps.profile?.subscription_tier === nextProps.profile?.subscription_tier &&
+    prevProps.displayName === nextProps.displayName &&
+    prevProps.locale === nextProps.locale &&
+    prevProps.onProfileClick === nextProps.onProfileClick &&
+    prevProps.isLoading === nextProps.isLoading
+  )
+})
+
+export default ProfileHeader

@@ -1,10 +1,11 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useRef, memo } from 'react'
 import { createClient } from '../utils/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
 import { Profile } from '../utils/supabase/types'
 import { useTranslation } from '../hooks/useTranslation'
+import { debugLogger } from '../utils/debugLogger'
 
 // Supabase 클라이언트를 컴포넌트 외부에서 한 번만 생성
 const supabase = createClient()
@@ -28,6 +29,7 @@ interface AuthContextType {
   signInWithFacebook: () => Promise<AuthResult>
   signInWithApple: () => Promise<AuthResult>
   resetPassword: (email: string) => Promise<AuthResult>
+  updateProfile: (updates: Partial<Profile>) => Promise<AuthResult>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -44,16 +46,49 @@ interface AuthProviderProps {
   children: React.ReactNode
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+// 🎯 React.memo로 불필요한 리렌더링 방지
+export const AuthProvider = memo(function AuthProvider({ children }: AuthProviderProps) {
   const { t } = useTranslation()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // 프로필 데이터 fetch 함수 (useCallback으로 메모이제이션)
+  // 🎯 중복 초기화 방지용 ref
+  const initializationRef = useRef(false)
+  const subscriptionRef = useRef<any>(null)
+
+  // 🎯 프로필 캐싱 및 중복 요청 방지
+  const profileCacheRef = useRef<Map<string, Profile | null>>(new Map())
+  const fetchingProfileRef = useRef<Set<string>>(new Set())
+
+  // 프로필 데이터 fetch 함수 (캐싱 및 중복 요청 방지)
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
-    console.log('🔍 AuthProvider fetchProfile started for userId:', userId)
+    // 캐시에서 확인
+    const cachedProfile = profileCacheRef.current.get(userId)
+    if (cachedProfile !== undefined) {
+      if (process.env.NODE_ENV === 'development') {
+        debugLogger.log('🎯 Using cached profile for userId:', userId)
+      }
+      return cachedProfile
+    }
+
+    // 이미 요청 중인지 확인
+    if (fetchingProfileRef.current.has(userId)) {
+      if (process.env.NODE_ENV === 'development') {
+        debugLogger.log('⏳ Profile fetch already in progress for userId:', userId)
+      }
+      // 잠시 대기 후 캐시에서 다시 확인
+      await new Promise(resolve => setTimeout(resolve, 100))
+      return profileCacheRef.current.get(userId) || null
+    }
+
+    // 요청 시작 플래그 설정
+    fetchingProfileRef.current.add(userId)
+
+    if (process.env.NODE_ENV === 'development') {
+      debugLogger.log('🔍 AuthProvider fetchProfile started for userId:', userId)
+    }
 
     try {
       const { data, error } = await supabase
@@ -63,36 +98,68 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .maybeSingle()
 
       if (error) {
-        console.error('💥 Profile fetch error:', error)
+        if (process.env.NODE_ENV === 'development') {
+          console.error('💥 Profile fetch error:', error)
+        }
+        // 캐시에 null 저장
+        profileCacheRef.current.set(userId, null)
         return null
       }
 
       if (!data) {
-        console.warn('⚠️ No profile found for user:', userId)
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('⚠️ No profile found for user:', userId)
+        }
+        // 캐시에 null 저장
+        profileCacheRef.current.set(userId, null)
         return null
       }
 
-      console.log('✅ Profile fetch successful:', {
-        id: data.id,
-        email: data.email,
-        displayName: data.display_name,
-        avatarUrl: data.avatar_url,
-        fullName: data.full_name
-      })
+      if (process.env.NODE_ENV === 'development') {
+        debugLogger.log('✅ Profile fetch successful:', {
+          id: data.id,
+          email: data.email,
+          displayName: data.display_name,
+          avatarUrl: data.avatar_url,
+          fullName: data.full_name
+        })
+      }
+
+      // 캐시에 저장
+      profileCacheRef.current.set(userId, data)
       return data
     } catch (err) {
-      console.error('💥 Profile fetch exception:', err)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('💥 Profile fetch exception:', err)
+      }
+      // 캐시에 null 저장
+      profileCacheRef.current.set(userId, null)
       return null
+    } finally {
+      // 요청 완료 플래그 제거
+      fetchingProfileRef.current.delete(userId)
     }
   }, [])
 
   useEffect(() => {
+    // 🎯 중복 초기화 방지 - 이미 초기화되었다면 건너뛰기
+    if (initializationRef.current) {
+      if (process.env.NODE_ENV === 'development') {
+        debugLogger.log('🛑 AuthProvider 중복 초기화 방지 - 이미 초기화됨')
+      }
+      return
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      debugLogger.log('🚀 AuthProvider 초기화 시작... (첫 번째 실행)')
+    }
+    initializationRef.current = true
+
     let isMounted = true
 
     // Get initial session and profile
     const getInitialSession = async () => {
       try {
-        console.log('🚀 AuthProvider 초기화 시작...')
         const { data: { session } } = await supabase.auth.getSession()
 
         if (!isMounted) return
@@ -101,30 +168,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setUser(session?.user ?? null)
 
         if (session?.user) {
-          console.log('📋 초기 세션 발견:', session.user.email)
+          if (process.env.NODE_ENV === 'development') {
+            debugLogger.log('📋 초기 세션 발견:', session.user.email)
+          }
           // 프로필 로드
           try {
             const userProfile = await fetchProfile(session.user.id)
             if (isMounted) {
-              console.log('📝 초기 프로필 로드 결과:', userProfile ? 'SUCCESS' : 'FAILED')
+              if (process.env.NODE_ENV === 'development') {
+                debugLogger.log('📝 초기 프로필 로드 결과:', userProfile ? 'SUCCESS' : 'FAILED')
+              }
               setProfile(userProfile)
             }
           } catch (error) {
-            console.error('❌ 초기 프로필 로드 에러:', error)
+            if (process.env.NODE_ENV === 'development') {
+              console.error('❌ 초기 프로필 로드 에러:', error)
+            }
             if (isMounted) setProfile(null)
           }
         } else {
-          console.log('📭 초기 세션 없음')
+          if (process.env.NODE_ENV === 'development') {
+            debugLogger.log('📭 초기 세션 없음')
+          }
           setProfile(null)
         }
 
         // 초기화 완료
         if (isMounted) {
-          console.log('✅ AuthProvider 초기화 완료')
+          if (process.env.NODE_ENV === 'development') {
+            debugLogger.log('✅ AuthProvider 초기화 완료')
+          }
           setLoading(false)
         }
       } catch (error) {
-        console.error('💥 AuthProvider 초기화 에러:', error)
+        if (process.env.NODE_ENV === 'development') {
+          console.error('💥 AuthProvider 초기화 에러:', error)
+        }
         if (isMounted) {
           setUser(null)
           setProfile(null)
@@ -135,12 +214,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     getInitialSession()
 
+    // 🎯 기존 구독이 있으면 해지 (중복 방지)
+    if (subscriptionRef.current) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🧹 기존 auth subscription 해지')
+      }
+      subscriptionRef.current.unsubscribe()
+    }
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!isMounted) return
 
-        console.log(`🔑 Auth event: ${event}`, session?.user?.email)
+        if (process.env.NODE_ENV === 'development') {
+          debugLogger.log(`🔑 Auth event: ${event}`, session?.user?.email)
+        }
 
         setSession(session)
         setUser(session?.user ?? null)
@@ -150,28 +239,44 @@ export function AuthProvider({ children }: AuthProviderProps) {
           try {
             const userProfile = await fetchProfile(session.user.id)
             if (isMounted) {
-              console.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FAILED')
+              if (process.env.NODE_ENV === 'development') {
+                debugLogger.log('📝 Profile result:', userProfile ? 'SUCCESS' : 'FAILED')
+              }
               setProfile(userProfile)
             }
           } catch (error) {
-            console.error('❌ 프로필 로드 에러:', error)
+            if (process.env.NODE_ENV === 'development') {
+              console.error('❌ 프로필 로드 에러:', error)
+            }
             if (isMounted) setProfile(null)
           }
         } else {
-          console.log('🚪 User signed out')
+          if (process.env.NODE_ENV === 'development') {
+            debugLogger.log('🚪 User signed out')
+          }
           setProfile(null)
         }
       }
     )
 
+    // 구독 ref에 저장
+    subscriptionRef.current = subscription
+
     return () => {
       isMounted = false
-      subscription.unsubscribe()
+      if (subscription) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🧹 AuthProvider cleanup - subscription 해지')
+        }
+        subscription.unsubscribe()
+      }
     }
   }, [])
 
   const signIn = async (email: string, password: string): Promise<AuthResult> => {
-    console.log('🔑 AuthProvider signIn called:', { email })
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔑 AuthProvider signIn called:', { email })
+    }
     setLoading(true)
 
     try {
@@ -479,6 +584,47 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  const updateProfile = async (updates: Partial<Profile>): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider updateProfile called:', updates)
+
+    if (!user) {
+      console.error('❌ No user found for profile update')
+      return {
+        success: false,
+        error: 'User not authenticated'
+      }
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', user.id)
+        .select()
+        .single()
+
+      if (error) {
+        console.error('❌ Profile update error:', error.message)
+        return {
+          success: false,
+          error: 'Failed to update profile'
+        }
+      }
+
+      console.log('✅ Profile updated successfully:', data)
+      setProfile(data)
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 Profile update exception:', err)
+      return {
+        success: false,
+        error: 'Failed to update profile'
+      }
+    }
+  }
+
   const value: AuthContextType = {
     user,
     profile,
@@ -490,7 +636,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signInWithGoogle,
     signInWithFacebook,
     signInWithApple,
-    resetPassword
+    resetPassword,
+    updateProfile
   }
 
   return (
@@ -498,4 +645,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
       {children}
     </AuthContext.Provider>
   )
-}
+})

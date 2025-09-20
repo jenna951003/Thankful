@@ -2,7 +2,12 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   // App Router에서는 i18n 설정을 middleware에서 처리
-  
+
+  // Next.js Image 최적화 설정
+  images: {
+    qualities: [75, 100], // quality 100 지원 추가
+  },
+
   // Capacitor 관련 모듈은 클라이언트에서만 실행되도록 설정 (Next.js 15+ 방식)
   serverExternalPackages: ['@capacitor/core', '@capacitor/haptics'],
   

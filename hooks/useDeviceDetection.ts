@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Device } from '@capacitor/device'
+import { debugLogger } from '../utils/debugLogger'
 
 export interface SafeArea {
   top: number
@@ -78,8 +79,8 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
         
         // 🔧 중복 로그 최소화 - 첫 실행시에만 출력
         if (!(window as any).__deviceDetectionLogged) {
-          console.log('🔍 Capacitor 기기 정보:', deviceInfo)
-          console.log('🌍 언어:', languageInfo);
+          debugLogger.log('🔍 Capacitor 기기 정보:', deviceInfo)
+          debugLogger.log('🌍 언어:', languageInfo);
           (window as any).__deviceDetectionLogged = true
         }
         
@@ -89,8 +90,8 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
           const model = deviceInfo.name || deviceInfo.model || 'iPhone'
           const safeArea = IPHONE_SAFE_AREAS[model] || { top: 47, bottom: 34, left: 0, right: 0 }
           
-          console.log('📱 감지된 모델:', model)
-          console.log('🔍 찾은 세이프존:', safeArea)
+          debugLogger.debug('📱 감지된 모델:', model)
+          debugLogger.debug('🔍 찾은 세이프존:', safeArea)
           
           return {
             brand: 'iPhone',
@@ -112,8 +113,8 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
         if (deviceInfo.platform === 'web') {
           // 🔧 중복 로그 최소화
           if (!(window as any).__webDetectionLogged) {
-            console.log('🌐 웹 환경 감지됨 - 개발자 도구로 설정')
-            console.log('🖥️ 개발자 도구 화면 크기:', window.innerWidth, 'x', window.innerHeight);
+            debugLogger.log('🌐 웹 환경 감지됨 - 개발자 도구로 설정')
+            debugLogger.log('🖥️ 개발자 도구 화면 크기:', window.innerWidth, 'x', window.innerHeight);
             (window as any).__webDetectionLogged = true
           }
           
@@ -219,7 +220,7 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
         }
         
       } catch (capError) {
-        console.log('⚠️ Capacitor 에러, User-Agent 기반 감지로 전환:', capError)
+        debugLogger.debug('⚠️ Capacitor 에러, User-Agent 기반 감지로 전환:', capError)
         // User-Agent 기반 감지로 넘어감
       }
     }
@@ -258,7 +259,7 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
       const iOSVersion = userAgent.match(/OS (\d+)_(\d+)_?(\d+)?/i)
       if (iOSVersion) {
         const majorVersion = parseInt(iOSVersion[1])
-        console.log('📱 iOS 버전:', majorVersion)
+        debugLogger.debug('📱 iOS 버전:', majorVersion)
         
         if (majorVersion >= 18) return { brand: 'iPhone', model: 'iPhone 16 Pro Max', safeArea: IPHONE_SAFE_AREAS['iPhone 16 Pro Max'] }
         if (majorVersion >= 17) return { brand: 'iPhone', model: 'iPhone 15 Pro Max', safeArea: IPHONE_SAFE_AREAS['iPhone 15 Pro Max'] }
@@ -277,7 +278,7 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
       const screenWidth = window.innerWidth
       const screenHeight = window.innerHeight
       
-      console.log('🖥️ 화면 크기 fallback:', screenWidth, 'x', screenHeight)
+      debugLogger.debug('🖥️ 화면 크기 fallback:', screenWidth, 'x', screenHeight)
       
       // iPhone SE 시리즈 (가장 우선순위 높게)
       if (screenWidth === 375 && screenHeight === 667) return { brand: 'iPhone', model: 'iPhone SE', safeArea: IPHONE_SAFE_AREAS['iPhone SE'] }
@@ -309,7 +310,7 @@ async function detectDeviceInfo(): Promise<DeviceInfo> {
     }
     
   } catch (error) {
-    console.error('Capacitor 기기 감지 에러:', error)
+    debugLogger.error('Capacitor 기기 감지 에러:', error)
     
     // fallback: 웹 기반 감지
     const userAgent = navigator.userAgent
@@ -382,13 +383,16 @@ export function isIPhoneSEDevice(): boolean {
   return isSmallSize()
 }
 
+// CSS 변수 캐시 (중복 설정 방지)
+let currentSafeAreaValues: { top: number; bottom: number } | null = null
+
 export function useDeviceDetection() {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
     brand: 'Unknown',
     model: 'Loading...',
     safeArea: { top: 0, bottom: 0, left: 0, right: 0 }
   })
-  
+
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -396,15 +400,25 @@ export function useDeviceDetection() {
       try {
         const info = await detectDeviceInfo()
         setDeviceInfo(info)
-        
-        // CSS 변수로 세이프존 설정
+
+        // CSS 변수 중복 설정 방지
         if (typeof window !== 'undefined' && document.documentElement) {
-          document.documentElement.style.setProperty('--actual-safe-top', `${info.safeArea.top}px`)
-          document.documentElement.style.setProperty('--actual-safe-bottom', `${info.safeArea.bottom}px`)
-          console.log('🎨 CSS 변수 설정:', `top: ${info.safeArea.top}px, bottom: ${info.safeArea.bottom}px`)
+          const { top, bottom } = info.safeArea
+
+          // 값이 변경된 경우에만 CSS 변수 업데이트
+          if (!currentSafeAreaValues ||
+              currentSafeAreaValues.top !== top ||
+              currentSafeAreaValues.bottom !== bottom) {
+
+            document.documentElement.style.setProperty('--actual-safe-top', `${top}px`)
+            document.documentElement.style.setProperty('--actual-safe-bottom', `${bottom}px`)
+
+            currentSafeAreaValues = { top, bottom }
+            debugLogger.debug('🎨 CSS 변수 설정:', `top: ${top}px, bottom: ${bottom}px`)
+          }
         }
       } catch (error) {
-        console.error('기기 감지 에러:', error)
+        debugLogger.error('기기 감지 에러:', error)
         setDeviceInfo({
           brand: 'Unknown',
           model: 'Error',
@@ -415,20 +429,27 @@ export function useDeviceDetection() {
       }
     }
 
-    // 리사이즈 이벤트 리스너 추가 (개발자 도구에서 기기 변경 감지)
+    // 리사이즈 이벤트 리스너 추가 (throttling 적용)
+    let resizeTimeout: NodeJS.Timeout
     const handleResize = () => {
       if (typeof window !== 'undefined') {
-        console.log('🔄 화면 크기 변경 감지, 기기 정보 재감지')
-        initializeDeviceInfo()
+        clearTimeout(resizeTimeout)
+        resizeTimeout = setTimeout(() => {
+          debugLogger.debug('🔄 화면 크기 변경 감지, 기기 정보 재감지')
+          initializeDeviceInfo()
+        }, 300) // 300ms throttling
       }
     }
 
     initializeDeviceInfo()
-    
+
     // 웹 환경에서만 리사이즈 이벤트 리스너 추가
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
+      return () => {
+        window.removeEventListener('resize', handleResize)
+        clearTimeout(resizeTimeout)
+      }
     }
   }, [])
 

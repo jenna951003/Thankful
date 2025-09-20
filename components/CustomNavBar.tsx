@@ -310,6 +310,7 @@ export default function CustomNavBar({
                     width={isTabletSize ? 28 : 24}
                     height={isTabletSize ? 28 : 24}
                     className={`select-none ${activeTab === 'home' ? 'opacity-100' : 'opacity-70'}`}
+                    priority={activeTab === 'home'}
                     draggable={false}
                     onContextMenu={(e) => e.preventDefault()}
                     onDragStart={(e) => e.preventDefault()}

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { updateSession } from './utils/supabase/middleware'
+import { debugLogger } from './utils/debugLogger'
 
 const locales = ['ko', 'en', 'es', 'pt']
 
@@ -16,10 +17,10 @@ function getLocale(request: NextRequest): string {
     .toLowerCase()
   
   // 환경별 언어 감지 로그 (개발용)
-  console.log(`🌍 Language Detection:`)
-  console.log(`   Environment: ${isCapacitorApp ? '📱 Mobile App' : '🌐 Web Browser'}`)
-  console.log(`   Accept-Language: ${acceptLanguage}`)
-  console.log(`   Detected: ${browserLocale}`)
+  debugLogger.debug(`🌍 Language Detection:`)
+  debugLogger.debug(`   Environment: ${isCapacitorApp ? '📱 Mobile App' : '🌐 Web Browser'}`)
+  debugLogger.debug(`   Accept-Language: ${acceptLanguage}`)
+  debugLogger.debug(`   Detected: ${browserLocale}`)
   
   // 언어-국가 매핑 (스페인어/포르투갈어 사용 국가들 포함)
   const localeMap: { [key: string]: string } = {
@@ -76,8 +77,8 @@ function getLocale(request: NextRequest): string {
                          localeMap[browserLocale.split('-')[0]] || 
                          'en' // 기본값을 영어로 설정
   
-  console.log(`   Final Locale: ${detectedLocale} ${isCapacitorApp ? '(from device settings)' : '(from browser settings)'}`)
-  console.log(`   Redirect: /${detectedLocale}/`)
+  debugLogger.debug(`   Final Locale: ${detectedLocale} ${isCapacitorApp ? '(from device settings)' : '(from browser settings)'}`)
+  debugLogger.debug(`   Redirect: /${detectedLocale}/`)
   
   return detectedLocale
 }
@@ -85,12 +86,16 @@ function getLocale(request: NextRequest): string {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   
-  // 정적 파일 및 API 경로는 건너뛰기
+  // 정적 파일 및 API 경로는 건너뛰기 (HomePage 렌더링 방지)
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
-    pathname.includes('.') // 파일 확장자가 있는 경우
+    pathname === '/favicon.ico' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname.startsWith('/locales/') ||
+    pathname.includes('.') // 파일 확장자가 있는 경우 (이미지, 폰트 등)
   ) {
     return
   }

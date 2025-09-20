@@ -42,10 +42,16 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
         const cacheBuster = Date.now()
         const response = await fetch(`/locales/${locale}/common.json?v=${cacheBuster}`)
         const data = await response.json()
-        console.log(`✅ [TranslationContext] Loaded translations for ${locale}:`, Object.keys(data))
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ [TranslationContext] Loaded translations for ${locale}:`, Object.keys(data))
+        }
+
         setTranslations(data)
       } catch (error) {
-        console.error(`❌ [TranslationContext] Failed to load translations for ${locale}:`, error)
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`❌ [TranslationContext] Failed to load translations for ${locale}:`, error)
+        }
         setTranslations({})
       } finally {
         setIsLoading(false)
@@ -58,34 +64,47 @@ export const TranslationProvider: React.FC<TranslationProviderProps> = ({
   const t = (key: string): string => {
     // 번역 데이터가 아직 로딩 중이면 fallback 사용
     if (isLoading || !translations || Object.keys(translations).length === 0) {
-      console.warn(`⏳ [Translation] Data not ready, using fallback: ${key} (locale: ${locale}, isLoading: ${isLoading})`)
+      // fallback 로그는 debug 레벨로 변경하여 노이즈 감소
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(`⏳ [Translation] Data not ready, using fallback: ${key} (locale: ${locale}, isLoading: ${isLoading})`)
+      }
       return getTranslationFallback(key, locale)
     }
 
     const keys = key.split('.')
     let value = translations
-    
-    console.debug(`🔍 [Translation] Looking for key: ${key} in locale: ${locale}`)
-    
+
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`🔍 [Translation] Looking for key: ${key} in locale: ${locale}`)
+    }
+
     for (let i = 0; i < keys.length; i++) {
       const k = keys[i]
       if (value && typeof value === 'object' && k in value) {
         value = value[k]
-        console.debug(`  ✓ Found part ${i + 1}/${keys.length}: ${keys.slice(0, i + 1).join('.')}`)
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`  ✓ Found part ${i + 1}/${keys.length}: ${keys.slice(0, i + 1).join('.')}`)
+        }
       } else {
-        console.warn(`🔍 [Translation] Key not found: ${key} (locale: ${locale})`)
-        console.warn(`  ❌ Failed at part ${i + 1}/${keys.length}: '${k}' not found in:`, Object.keys(value || {}))
-        console.warn(`  📊 Available translations:`, translations)
-        
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`🔍 [Translation] Key not found: ${key} (locale: ${locale})`)
+          console.debug(`  ❌ Failed at part ${i + 1}/${keys.length}: '${k}' not found in:`, Object.keys(value || {}))
+          console.debug(`  📊 Available translations:`, translations)
+        }
+
         // fallback 값 시도
         const fallback = getTranslationFallback(key, locale)
-        console.warn(`  🔄 Using fallback: ${fallback}`)
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`  🔄 Using fallback: ${fallback}`)
+        }
         return fallback
       }
     }
-    
+
     const result = typeof value === 'string' ? value : key
-    console.debug(`  ✅ Final result for '${key}': ${result}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.debug(`  ✅ Final result for '${key}': ${result}`)
+    }
     return result
   }
 

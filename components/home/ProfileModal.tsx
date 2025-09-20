@@ -82,7 +82,7 @@ export default function ProfileModal({ isOpen, onClose, user, profile, locale }:
 
       // 온보딩 페이지로 리다이렉션
       setTimeout(() => {
-        router.replace(`/${locale}/onboarding/1`)
+        router.replace(`/${locale}/onboarding`)
       }, 1500)
       
     } catch (error) {

@@ -329,8 +329,8 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                 width={72}
                 height={72}
                 className="object-cover"
-                priority={true}
-                quality={100}
+                priority={false}
+                quality={75}
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
@@ -375,8 +375,8 @@ export default function WeeklyStreakWidget({ user }: WeeklyStreakWidgetProps) {
                 alt="시간별 이미지"
                 fill
                 className="object-cover"
-                priority={true}
-                quality={100}
+                priority={false}
+                quality={75}
                 sizes="(max-width: 768px) 100vw, 80vw"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}

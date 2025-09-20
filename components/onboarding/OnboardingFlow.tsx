@@ -137,11 +137,9 @@ function OnboardingContent({ locale }: OnboardingFlowProps) {
           // 로그인 후 리다이렉트임을 표시
           console.log('🎯 Setting sessionStorage flags before navigation')
           sessionStorage.setItem('justLoggedIn', 'true')
-          // 🎯 HomePage fadeIn 방지용 별도 플래그 설정
-          sessionStorage.setItem('homePageNoFadeIn', 'true')
+          // 🎯 homePageNoFadeIn 플래그는 제거 (새로운 애니메이션 시스템 사용)
           console.log('🎯 SessionStorage flags set:', {
-            justLoggedIn: sessionStorage.getItem('justLoggedIn'),
-            homePageNoFadeIn: sessionStorage.getItem('homePageNoFadeIn')
+            justLoggedIn: sessionStorage.getItem('justLoggedIn')
           })
           console.log('🎯 About to navigate to:', `/${locale}`)
           router.replace(`/${locale}`)

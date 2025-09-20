@@ -1,4 +1,5 @@
 // Capacitor 모듈들을 웹 환경에서 안전하게 사용하기 위한 유틸리티
+import { debugLogger } from './debugLogger'
 
 export const safeHaptics = {
   async impact(style: 'LIGHT' | 'MEDIUM' | 'HEAVY' = 'LIGHT') {
@@ -7,10 +8,10 @@ export const safeHaptics = {
         const { Haptics, ImpactStyle } = await import('@capacitor/haptics')
         await Haptics.impact({ style: ImpactStyle[style] })
       } else {
-        console.log('🌐 웹 환경에서는 햅틱 피드백을 사용할 수 없습니다')
+        debugLogger.debug('🌐 웹 환경에서는 햅틱 피드백을 사용할 수 없습니다')
       }
     } catch (error) {
-      console.log('⚠️ 햅틱 피드백 실행 중 오류:', error)
+      debugLogger.debug('⚠️ 햅틱 피드백 실행 중 오류:', error)
     }
   },
 
@@ -20,10 +21,10 @@ export const safeHaptics = {
         const { Haptics, NotificationType } = await import('@capacitor/haptics')
         await Haptics.notification({ type: NotificationType[type] })
       } else {
-        console.log('🌐 웹 환경에서는 햅틱 피드백을 사용할 수 없습니다')
+        debugLogger.debug('🌐 웹 환경에서는 햅틱 피드백을 사용할 수 없습니다')
       }
     } catch (error) {
-      console.log('⚠️ 햅틱 피드백 실행 중 오류:', error)
+      debugLogger.debug('⚠️ 햅틱 피드백 실행 중 오류:', error)
     }
   }
 }
@@ -35,7 +36,7 @@ export const safeDevice = {
         const { Device } = await import('@capacitor/device')
         return await Device.getInfo()
       } else {
-        console.log('🌐 웹 환경에서는 기기 정보를 가져올 수 없습니다')
+        debugLogger.debug('🌐 웹 환경에서는 기기 정보를 가져올 수 없습니다')
         return {
           platform: 'web',
           name: 'Web Browser',
@@ -44,7 +45,7 @@ export const safeDevice = {
         }
       }
     } catch (error) {
-      console.log('⚠️ 기기 정보 가져오기 실행 중 오류:', error)
+      debugLogger.debug('⚠️ 기기 정보 가져오기 실행 중 오류:', error)
       return {
         platform: 'web',
         name: 'Web Browser',
@@ -60,11 +61,11 @@ export const safeDevice = {
         const { Device } = await import('@capacitor/device')
         return await Device.getLanguageCode()
       } else {
-        console.log('🌐 웹 환경에서는 기기 언어를 가져올 수 없습니다')
+        debugLogger.debug('🌐 웹 환경에서는 기기 언어를 가져올 수 없습니다')
         return { value: 'ko' }
       }
     } catch (error) {
-      console.log('⚠️ 기기 언어 가져오기 실행 중 오류:', error)
+      debugLogger.debug('⚠️ 기기 언어 가져오기 실행 중 오류:', error)
       return { value: 'ko' }
     }
   }

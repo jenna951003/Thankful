@@ -82,8 +82,8 @@ export default function SplashPageClient({ locale }: SplashPageClientProps) {
                   console.log('➡️ Navigating to main page:', `/${locale}`)
                   router.replace(`/${locale}`)
                 } else {
-                  console.log('➡️ Navigating to onboarding:', `/${locale}/onboarding/1`)
-                  router.replace(`/${locale}/onboarding/1`)
+                  console.log('➡️ Navigating to onboarding:', `/${locale}/onboarding`)
+                  router.replace(`/${locale}/onboarding`)
                 }
               }, 800) // 페이드아웃 애니메이션 시간
             }, 2000)
