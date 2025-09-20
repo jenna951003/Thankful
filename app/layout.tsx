@@ -15,7 +15,6 @@ import {
 } from 'next/font/google'
 import './globals.css'
 import OfflineIndicator from '../components/common/OfflineIndicator'
-import { AuthProvider } from '../contexts/AuthProvider'
 
 // Google Fonts 설정
 const inter = Inter({ 
@@ -142,10 +141,8 @@ export default function RootLayout({
         `}
         style={{ backgroundColor: 'rgb(238, 234, 217)' }}
       >
-        <AuthProvider>
-          <OfflineIndicator />
-          {children}
-        </AuthProvider>
+        <OfflineIndicator />
+        {children}
       </body>
     </html>
   )

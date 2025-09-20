@@ -190,6 +190,7 @@
         "fullNameFormat": "El nombre solo puede contener letras, números y guiones bajos.",
         "agreementRequired": "Debes aceptar los Términos de Servicio y la Política de Privacidad para registrarte.",
         "signUpFailed": "Error durante el registro.",
+        "emailAlreadyExists": "Este correo ya está registrado. Intenta iniciar sesión.",
         "googleSignUpFailed": "Registro con Google fallido.",
         "facebookSignUpFailed": "Registro con Facebook fallido.",
         "appleSignUpFailed": "Registro con Apple fallido.",

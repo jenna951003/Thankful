@@ -195,6 +195,7 @@
         "fullNameFormat": "Name can only contain letters, numbers, and underscores (_).",
         "agreementRequired": "You must agree to the Terms of Service and Privacy Policy to sign up.",
         "signUpFailed": "An error occurred during sign up.",
+        "emailAlreadyExists": "This email is already registered. Please try logging in.",
         "googleSignUpFailed": "Google sign up failed.",
         "facebookSignUpFailed": "Facebook sign up failed.",
         "appleSignUpFailed": "Apple sign up failed.",

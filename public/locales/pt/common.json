@@ -190,6 +190,7 @@
         "fullNameFormat": "O nome pode conter apenas letras, números e sublinhados.",
         "agreementRequired": "Você deve concordar com os Termos de Serviço e a Política de Privacidade para se cadastrar.",
         "signUpFailed": "Erro durante o cadastro.",
+        "emailAlreadyExists": "Este e-mail já está cadastrado. Tente fazer login.",
         "googleSignUpFailed": "Cadastro com Google falhou.",
         "facebookSignUpFailed": "Cadastro com Facebook falhou.",
         "appleSignUpFailed": "Cadastro com Apple falhou.",

@@ -4,20 +4,30 @@ import { createContext, useContext, useEffect, useState, useCallback } from 'rea
 import { createClient } from '../utils/supabase/client'
 import type { User, Session } from '@supabase/supabase-js'
 import { Profile } from '../utils/supabase/types'
+import { useTranslation } from '../hooks/useTranslation'
 
 // Supabase 클라이언트를 컴포넌트 외부에서 한 번만 생성
 const supabase = createClient()
+
+
+interface AuthResult {
+  success: boolean
+  error?: string
+  shouldRedirectToOnboarding?: boolean
+}
 
 interface AuthContextType {
   user: User | null
   profile: Profile | null
   session: Session | null
   loading: boolean
-  signIn: (email: string, password: string) => Promise<{ error: any }>
-  signUp: (email: string, password: string, displayName?: string) => Promise<{ error: any }>
-  signOut: () => Promise<{ error: any }>
-  signInWithGoogle: () => Promise<{ error: any }>
-  resetPassword: (email: string) => Promise<{ error: any }>
+  signIn: (email: string, password: string) => Promise<AuthResult>
+  signUp: (email: string, password: string, displayName?: string) => Promise<AuthResult>
+  signOut: () => Promise<AuthResult>
+  signInWithGoogle: () => Promise<AuthResult>
+  signInWithFacebook: () => Promise<AuthResult>
+  signInWithApple: () => Promise<AuthResult>
+  resetPassword: (email: string) => Promise<AuthResult>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -35,6 +45,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { t } = useTranslation()
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [session, setSession] = useState<Session | null>(null)
@@ -159,55 +170,313 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [])
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider signIn called:', { email })
     setLoading(true)
-    const result = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-    setLoading(false)
-    return result
-  }
 
-  const signUp = async (email: string, password: string, displayName?: string) => {
-    setLoading(true)
-    const result = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: displayName || '익명 사용자'
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+
+      if (error) {
+        console.error('❌ Login error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.login.errors.loginFailed')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.loginFailed')
         }
       }
-    })
-    setLoading(false)
-    return result
-  }
 
-  const signOut = async () => {
-    setLoading(true)
-    const result = await supabase.auth.signOut()
-    setLoading(false)
-    return result
-  }
-
-  const signInWithGoogle = async () => {
-    setLoading(true)
-    const result = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+      if (!data.user) {
+        console.error('❌ No user data received')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.loginFailed')
+        }
       }
-    })
-    setLoading(false)
-    return result
+
+      console.log('✅ Login successful, checking onboarding status...')
+
+      // 프로필 정보 가져오기 (온보딩 완료 상태 확인용)
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', data.user.id)
+        .maybeSingle()
+
+      const shouldRedirectToOnboarding = !profileData?.onboarding_completed
+
+      console.log('📋 Login result:', {
+        success: true,
+        shouldRedirectToOnboarding,
+        onboardingCompleted: profileData?.onboarding_completed
+      })
+
+      setLoading(false)
+      return {
+        success: true,
+        shouldRedirectToOnboarding
+      }
+    } catch (err) {
+      console.error('💥 Login exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.login.errors.loginFailed')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.login.errors.loginFailed')
+      }
+    }
   }
 
-  const resetPassword = async (email: string) => {
-    const result = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`
-    })
-    return result
+  const signUp = async (email: string, password: string, displayName?: string): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider signUp called:', { email, displayName })
+    setLoading(true)
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            display_name: displayName || '익명 사용자'
+          }
+        }
+      })
+
+      if (error) {
+        console.error('❌ SignUp error:', error.message)
+
+        // 이미 가입된 이메일인지 확인
+        if (error.message.includes('User already registered') ||
+            error.message.includes('already registered') ||
+            error.message.includes('Email address already in use')) {
+          console.log('🌍 Using translation key: onboarding.signUp.errors.emailAlreadyExists')
+          setLoading(false)
+          return {
+            success: false,
+            error: t('onboarding.signUp.errors.emailAlreadyExists')
+          }
+        }
+
+        console.log('🌍 Using fixed translation key: onboarding.signUp.errors.signUpFailed')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.signUp.errors.signUpFailed')
+        }
+      }
+
+      console.log('✅ SignUp successful')
+      setLoading(false)
+      return {
+        success: true,
+        shouldRedirectToOnboarding: true
+      }
+    } catch (err) {
+      console.error('💥 SignUp exception:', err)
+
+      // catch 블록에서도 이메일 중복 체크
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      if (errorMessage.includes('User already registered') ||
+          errorMessage.includes('already registered') ||
+          errorMessage.includes('Email address already in use')) {
+        console.log('🌍 Using translation key: onboarding.signUp.errors.emailAlreadyExists')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.signUp.errors.emailAlreadyExists')
+        }
+      }
+
+      console.log('🌍 Using fixed translation key: onboarding.signUp.errors.signUpFailed')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.signUp.errors.signUpFailed')
+      }
+    }
+  }
+
+  const signOut = async (): Promise<AuthResult> => {
+    console.log('🚪 AuthProvider signOut called')
+    setLoading(true)
+
+    try {
+      const { error } = await supabase.auth.signOut()
+
+      if (error) {
+        console.error('❌ SignOut error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.login.errors.loginFailed')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.loginFailed')
+        }
+      }
+
+      console.log('✅ SignOut successful')
+      setLoading(false)
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 SignOut exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.login.errors.loginFailed')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.login.errors.loginFailed')
+      }
+    }
+  }
+
+  const signInWithGoogle = async (): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider signInWithGoogle called')
+    setLoading(true)
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        console.error('❌ Google login error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.login.errors.googleLoginError')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.googleLoginError')
+        }
+      }
+
+      console.log('✅ Google login initiated successfully')
+      setLoading(false)
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 Google login exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.login.errors.googleLoginError')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.login.errors.googleLoginError')
+      }
+    }
+  }
+
+  const signInWithFacebook = async (): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider signInWithFacebook called')
+    setLoading(true)
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        console.error('❌ Facebook login error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.login.errors.facebookLoginError')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.facebookLoginError')
+        }
+      }
+
+      console.log('✅ Facebook login initiated successfully')
+      setLoading(false)
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 Facebook login exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.login.errors.facebookLoginError')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.login.errors.facebookLoginError')
+      }
+    }
+  }
+
+  const signInWithApple = async (): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider signInWithApple called')
+    setLoading(true)
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        console.error('❌ Apple login error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.login.errors.appleLoginError')
+        setLoading(false)
+        return {
+          success: false,
+          error: t('onboarding.login.errors.appleLoginError')
+        }
+      }
+
+      console.log('✅ Apple login initiated successfully')
+      setLoading(false)
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 Apple login exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.login.errors.appleLoginError')
+      setLoading(false)
+      return {
+        success: false,
+        error: t('onboarding.login.errors.appleLoginError')
+      }
+    }
+  }
+
+  const resetPassword = async (email: string): Promise<AuthResult> => {
+    console.log('🔑 AuthProvider resetPassword called:', { email })
+
+    try {
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`
+      })
+
+      if (error) {
+        console.error('❌ Reset password error:', error.message)
+        console.log('🌍 Using fixed translation key: onboarding.forgotPassword.errors.resetFailed')
+        return {
+          success: false,
+          error: t('onboarding.forgotPassword.errors.resetFailed')
+        }
+      }
+
+      console.log('✅ Reset password email sent successfully')
+      return {
+        success: true
+      }
+    } catch (err) {
+      console.error('💥 Reset password exception:', err)
+      console.log('🌍 Using fixed translation key: onboarding.forgotPassword.errors.resetError')
+      return {
+        success: false,
+        error: t('onboarding.forgotPassword.errors.resetError')
+      }
+    }
   }
 
   const value: AuthContextType = {
@@ -219,6 +488,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signUp,
     signOut,
     signInWithGoogle,
+    signInWithFacebook,
+    signInWithApple,
     resetPassword
   }
 

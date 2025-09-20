@@ -1,6 +1,4 @@
 {
   "/[locale]/page": "app/[locale]/page.js",
-  "/[locale]/community/page": "app/[locale]/community/page.js",
-  "/[locale]/saved/page": "app/[locale]/saved/page.js",
-  "/[locale]/settings/page": "app/[locale]/settings/page.js"
+  "/[locale]/onboarding/page": "app/[locale]/onboarding/page.js"
 }
